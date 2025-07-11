@@ -1,0 +1,36 @@
+
+AI Trackdown PyTools - Coverage Dashboard
+=========================================
+Generated: 2025-07-11 15:32:40
+
+CURRENT COVERAGE
+----------------
+Line Coverage:   6.6%
+Branch Coverage: 0.0%
+Quality Score:   0
+
+COVERAGE DISTRIBUTION
+--------------------
+Excellent (≥90%): 4 files
+Good (75-89%):    0 files
+Fair (50-74%):    0 files
+Poor (<50%):      29 files
+
+TOP COVERAGE GAPS
+-----------------
+1. src/ai_trackdown_pytools/core/models.py (0.0%) - critical priority
+2. src/ai_trackdown_pytools/cli.py (0.0%) - critical priority
+3. src/ai_trackdown_pytools/core/task.py (28.9%) - critical priority
+4. src/ai_trackdown_pytools/core/project.py (31.4%) - critical priority
+5. src/ai_trackdown_pytools/core/config.py (31.0%) - critical priority
+
+CATEGORY COVERAGE
+-----------------
+Other: 96.6% (2 files)
+Cli: 0.0% (17 files)
+Core: 23.7% (5 files)
+Utils: 7.3% (9 files)
+
+TRENDS
+------
+Data points collected: 1

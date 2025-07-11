@@ -1,0 +1,54 @@
+name: "Default Task Template"
+description: "Standard task template for AI Trackdown projects"
+type: "task"
+version: "1.0.0"
+author: "AI Trackdown Team"
+
+variables:
+  title:
+    description: "Task title"
+    required: true
+  description:
+    description: "Task description"
+    default: ""
+  assignee:
+    description: "Task assignee"
+    default: ""
+  priority:
+    description: "Task priority"
+    default: "medium"
+    choices: ["low", "medium", "high", "critical"]
+  tags:
+    description: "Task tags (comma-separated)"
+    default: ""
+
+content: |
+  # {{ title }}
+
+  ## Description
+  {{ description or "No description provided." }}
+
+  ## Details
+  - **Status**: Open
+  - **Priority**: {{ priority }}
+  - **Assignee**: {{ assignee or "Unassigned" }}
+  - **Tags**: {{ tags or "None" }}
+  - **Created**: {{ created_at }}
+
+  ## Tasks
+  - [ ] Define acceptance criteria
+  - [ ] Implement solution
+  - [ ] Write tests
+  - [ ] Review and test
+  - [ ] Document changes
+
+  ## Notes
+  _Add any additional notes or context here._
+
+  ## Acceptance Criteria
+  _Define what constitutes completion of this task._
+
+  ## Links
+  - Related issues: 
+  - Documentation: 
+  - Pull requests:

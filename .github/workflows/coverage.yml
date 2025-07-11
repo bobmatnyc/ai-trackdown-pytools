@@ -1,0 +1,312 @@
+name: Coverage Analysis and Reporting
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run coverage analysis daily at 6 AM UTC
+    - cron: '0 6 * * *'
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for better coverage analysis
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .[test]
+
+    - name: Run comprehensive coverage analysis
+      run: |
+        python scripts/coverage_analysis.py --analyze --report --gaps --formats html xml json lcov
+      env:
+        COVERAGE_CORE: sysmon
+
+    - name: Generate coverage dashboard
+      run: |
+        python scripts/coverage_dashboard.py --format html
+        python scripts/coverage_dashboard.py --format json
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella-${{ matrix.python-version }}
+        fail_ci_if_error: false
+        verbose: true
+
+    - name: Upload coverage to Coveralls
+      uses: coverallsapp/github-action@master
+      if: matrix.python-version == '3.11'  # Only upload once
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: ./coverage.lcov
+
+    - name: Generate coverage badges
+      if: matrix.python-version == '3.11' && github.ref == 'refs/heads/main'
+      run: |
+        python scripts/ci_coverage.py --generate-badges
+
+    - name: Archive coverage reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report-${{ matrix.python-version }}
+        path: |
+          htmlcov/
+          coverage.xml
+          coverage.json
+          coverage.lcov
+          coverage-reports/
+        retention-days: 30
+
+    - name: Archive test reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-reports-${{ matrix.python-version }}
+        path: test-reports/
+        retention-days: 30
+
+    - name: Comment coverage on PR
+      if: github.event_name == 'pull_request' && matrix.python-version == '3.11'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          
+          // Read coverage data
+          let coverageData = {};
+          try {
+            const coverageJson = fs.readFileSync('coverage.json', 'utf8');
+            coverageData = JSON.parse(coverageJson);
+          } catch (error) {
+            console.log('Could not read coverage.json:', error.message);
+            return;
+          }
+          
+          const totals = coverageData.totals || {};
+          const lineCoverage = totals.percent_covered || 0;
+          const branchCoverage = totals.percent_covered_branches || 0;
+          
+          // Determine status
+          const statusEmoji = lineCoverage >= 85 ? '✅' : lineCoverage >= 75 ? '⚠️' : '❌';
+          const coverageStatus = lineCoverage >= 85 ? 'passing' : 'failing';
+          
+          // Create comment body
+          const commentBody = `
+          ## ${statusEmoji} Coverage Report
+          
+          | Metric | Value | Status |
+          |--------|--------|---------|
+          | Line Coverage | ${lineCoverage.toFixed(2)}% | ${lineCoverage >= 85 ? '✅' : '❌'} |
+          | Branch Coverage | ${branchCoverage.toFixed(2)}% | ${branchCoverage >= 80 ? '✅' : '❌'} |
+          | Overall Status | ${coverageStatus} | ${statusEmoji} |
+          
+          ### 📊 Coverage Quality
+          ${lineCoverage >= 90 ? '🟢 **Excellent** - Coverage is excellent!' :
+            lineCoverage >= 85 ? '🟢 **Good** - Coverage meets target threshold.' :
+            lineCoverage >= 75 ? '🟡 **Fair** - Coverage could be improved.' :
+            lineCoverage >= 50 ? '🟠 **Poor** - Coverage needs significant improvement.' :
+            '🔴 **Critical** - Coverage is critically low!'}
+          
+          <details>
+          <summary>📈 Detailed Coverage Information</summary>
+          
+          - **Total Statements**: ${totals.num_statements || 0}
+          - **Covered Statements**: ${totals.covered_lines || 0}
+          - **Missing Statements**: ${totals.missing_lines || 0}
+          - **Total Branches**: ${totals.num_branches || 0}
+          - **Covered Branches**: ${totals.covered_branches || 0}
+          
+          </details>
+          
+          ### 🔗 Reports
+          - [HTML Coverage Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          - [Coverage Dashboard](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          
+          ---
+          *🤖 Generated by AI Trackdown PyTools Coverage System*
+          `;
+          
+          // Find existing coverage comment
+          const { data: comments } = await github.rest.issues.listComments({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+          });
+          
+          const existingComment = comments.find(comment => 
+            comment.body.includes('Coverage Report') && 
+            comment.user.login === 'github-actions[bot]'
+          );
+          
+          if (existingComment) {
+            // Update existing comment
+            await github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: existingComment.id,
+              body: commentBody
+            });
+          } else {
+            // Create new comment
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: commentBody
+            });
+          }
+
+    - name: Check coverage threshold
+      run: |
+        python -c "
+        import json, sys
+        with open('coverage.json', 'r') as f:
+            data = json.load(f)
+        coverage = data.get('totals', {}).get('percent_covered', 0)
+        threshold = 85.0
+        if coverage < threshold:
+            print(f'❌ Coverage {coverage:.2f}% is below threshold {threshold}%')
+            sys.exit(1)
+        else:
+            print(f'✅ Coverage {coverage:.2f}% meets threshold {threshold}%')
+        "
+
+  coverage-trend:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    needs: coverage
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .[test]
+
+    - name: Download coverage artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: coverage-report-3.11
+
+    - name: Update coverage trends
+      run: |
+        python scripts/coverage_analysis.py --analyze --report --gaps
+        # Save trends to database (implement persistence as needed)
+
+    - name: Deploy coverage dashboard
+      run: |
+        python scripts/coverage_dashboard.py --format html
+        # Deploy to GitHub Pages or other hosting (implement as needed)
+
+  security-coverage:
+    runs-on: ubuntu-latest
+    needs: coverage
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .[test]
+        pip install bandit safety
+
+    - name: Download coverage artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: coverage-report-3.11
+
+    - name: Security analysis with coverage context
+      run: |
+        # Run security analysis on uncovered code
+        bandit -r src/ -f json -o bandit-report.json || true
+        safety check --json --output safety-report.json || true
+        
+        # Analyze security coverage gaps
+        python -c "
+        import json
+        
+        # Load coverage data
+        with open('coverage.json', 'r') as f:
+            coverage_data = json.load(f)
+        
+        # Load security reports
+        try:
+            with open('bandit-report.json', 'r') as f:
+                bandit_data = json.load(f)
+        except:
+            bandit_data = {'results': []}
+            
+        # Find security issues in uncovered code
+        files_data = coverage_data.get('files', {})
+        security_coverage_gaps = []
+        
+        for result in bandit_data.get('results', []):
+            filename = result.get('filename', '')
+            line_number = result.get('line_number', 0)
+            
+            if filename in files_data:
+                missing_lines = files_data[filename].get('missing_lines', [])
+                if line_number in missing_lines:
+                    security_coverage_gaps.append({
+                        'file': filename,
+                        'line': line_number,
+                        'issue': result.get('issue_text', ''),
+                        'severity': result.get('issue_severity', 'UNKNOWN')
+                    })
+        
+        if security_coverage_gaps:
+            print('⚠️  Security issues found in uncovered code:')
+            for gap in security_coverage_gaps:
+                print(f\"  {gap['file']}:{gap['line']} - {gap['severity']} - {gap['issue']}\")
+        else:
+            print('✅ No security issues found in uncovered code')
+        "
+
+    - name: Upload security reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-reports
+        path: |
+          bandit-report.json
+          safety-report.json
+        retention-days: 30

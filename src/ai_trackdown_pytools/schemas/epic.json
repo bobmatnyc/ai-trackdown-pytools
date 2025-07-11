@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AI Trackdown Epic Schema",
+  "description": "Schema for AI Trackdown epic files",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique epic identifier",
+      "pattern": "^EP-[0-9]+$"
+    },
+    "title": {
+      "type": "string",
+      "description": "Epic title",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "description": {
+      "type": "string",
+      "description": "Epic description"
+    },
+    "goal": {
+      "type": "string",
+      "description": "Epic goal or objective"
+    },
+    "business_value": {
+      "type": "string",
+      "description": "Business value or impact"
+    },
+    "success_criteria": {
+      "type": "string",
+      "description": "Success criteria for the epic"
+    },
+    "status": {
+      "type": "string",
+      "description": "Epic status",
+      "enum": ["planning", "in_progress", "on_hold", "completed", "cancelled"]
+    },
+    "priority": {
+      "type": "string",
+      "description": "Epic priority",
+      "enum": ["low", "medium", "high", "critical"]
+    },
+    "assignees": {
+      "type": "array",
+      "description": "Epic assignees",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "tags": {
+      "type": "array",
+      "description": "Epic tags",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "created_at": {
+      "type": "string",
+      "description": "Epic creation timestamp",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "description": "Epic last update timestamp",
+      "format": "date-time"
+    },
+    "target_date": {
+      "type": "string",
+      "description": "Target completion date",
+      "format": "date"
+    },
+    "estimated_story_points": {
+      "type": "number",
+      "description": "Total estimated story points",
+      "minimum": 0
+    },
+    "child_issues": {
+      "type": "array",
+      "description": "Child issue IDs",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "dependencies": {
+      "type": "array",
+      "description": "Epic dependencies",
+      "items": {
+        "type": "string"
+      }
+    },
+    "labels": {
+      "type": "array",
+      "description": "Epic labels",
+      "items": {
+        "type": "string"
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional epic metadata",
+      "additionalProperties": true
+    }
+  },
+  "required": ["id", "title", "status", "priority", "created_at", "updated_at"],
+  "additionalProperties": false
+}

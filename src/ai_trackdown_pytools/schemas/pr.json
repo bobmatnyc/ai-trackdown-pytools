@@ -1,0 +1,156 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AI Trackdown Pull Request Schema",
+  "description": "Schema for AI Trackdown pull request files",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique pull request identifier",
+      "pattern": "^PR-[0-9]+$"
+    },
+    "title": {
+      "type": "string",
+      "description": "Pull request title",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "description": {
+      "type": "string",
+      "description": "Pull request description"
+    },
+    "pr_type": {
+      "type": "string",
+      "description": "Type of pull request",
+      "enum": ["bug_fix", "feature", "breaking_change", "documentation", "refactoring", "performance", "other"]
+    },
+    "status": {
+      "type": "string",
+      "description": "Pull request status",
+      "enum": ["draft", "ready_for_review", "in_review", "changes_requested", "approved", "merged", "closed"]
+    },
+    "priority": {
+      "type": "string",
+      "description": "Pull request priority",
+      "enum": ["low", "medium", "high", "critical"]
+    },
+    "source_branch": {
+      "type": "string",
+      "description": "Source branch name",
+      "minLength": 1
+    },
+    "target_branch": {
+      "type": "string",
+      "description": "Target branch name",
+      "minLength": 1,
+      "default": "main"
+    },
+    "breaking_changes": {
+      "type": "boolean",
+      "description": "Whether this PR contains breaking changes",
+      "default": false
+    },
+    "assignees": {
+      "type": "array",
+      "description": "Pull request assignees",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "reviewers": {
+      "type": "array",
+      "description": "Pull request reviewers",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "tags": {
+      "type": "array",
+      "description": "Pull request tags",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "created_at": {
+      "type": "string",
+      "description": "Pull request creation timestamp",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "description": "Pull request last update timestamp",
+      "format": "date-time"
+    },
+    "merged_at": {
+      "type": "string",
+      "description": "Pull request merge timestamp",
+      "format": "date-time"
+    },
+    "related_issues": {
+      "type": "array",
+      "description": "Related issue IDs",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "closes_issues": {
+      "type": "array",
+      "description": "Issue IDs that this PR closes",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "commits": {
+      "type": "array",
+      "description": "Commit SHAs included in this PR",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-f0-9]{7,40}$"
+      },
+      "uniqueItems": true
+    },
+    "files_changed": {
+      "type": "array",
+      "description": "Files changed in this PR",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "lines_added": {
+      "type": "integer",
+      "description": "Number of lines added",
+      "minimum": 0
+    },
+    "lines_deleted": {
+      "type": "integer",
+      "description": "Number of lines deleted",
+      "minimum": 0
+    },
+    "test_coverage": {
+      "type": "number",
+      "description": "Test coverage percentage",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "labels": {
+      "type": "array",
+      "description": "Pull request labels",
+      "items": {
+        "type": "string"
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional pull request metadata",
+      "additionalProperties": true
+    }
+  },
+  "required": ["id", "title", "pr_type", "status", "priority", "source_branch", "target_branch", "created_at", "updated_at"],
+  "additionalProperties": false
+}

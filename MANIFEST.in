@@ -1,0 +1,9 @@
+include README.md
+include CHANGELOG.md
+include LICENSE
+include pyproject.toml
+recursive-include src/ai_trackdown_pytools/templates *
+recursive-include src/ai_trackdown_pytools/schemas *.json
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+recursive-exclude * .DS_Store

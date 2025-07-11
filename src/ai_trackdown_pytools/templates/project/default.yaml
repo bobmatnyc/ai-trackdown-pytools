@@ -1,0 +1,127 @@
+name: "Default Project Template"
+description: "Standard project template for AI Trackdown projects"
+type: "project"
+version: "1.0.0"
+author: "AI Trackdown Team"
+
+variables:
+  project_name:
+    description: "Project name"
+    required: true
+  description:
+    description: "Project description"
+    default: ""
+  author:
+    description: "Project author"
+    default: ""
+  license:
+    description: "Project license"
+    default: "MIT"
+  tech_stack:
+    description: "Technology stack"
+    default: ""
+
+content: |
+  # {{ project_name }}
+
+  {{ description or "AI Trackdown project for task and project management." }}
+
+  ## Overview
+  This project uses AI Trackdown PyTools for task management, issue tracking, and project organization.
+
+  {% if author %}
+  **Author**: {{ author }}
+  {% endif %}
+  {% if license %}
+  **License**: {{ license }}
+  {% endif %}
+  {% if tech_stack %}
+  **Tech Stack**: {{ tech_stack }}
+  {% endif %}
+
+  ## Getting Started
+
+  ### Prerequisites
+  - Python 3.8+
+  - AI Trackdown PyTools installed (`pip install ai-trackdown-pytools`)
+
+  ### Quick Start
+  1. Check project status: `aitrackdown status project`
+  2. Create your first task: `aitrackdown create task "My first task"`
+  3. List available templates: `aitrackdown template list`
+  4. View task status: `aitrackdown status tasks`
+
+  ## Project Structure
+  ```
+  {{ project_name }}/
+  ├── tasks/              # Task files and documentation
+  ├── docs/               # Project documentation
+  ├── .ai-trackdown/      # Configuration and templates
+  │   ├── config.yaml     # Project configuration
+  │   ├── project.yaml    # Project metadata
+  │   └── templates/      # Custom templates
+  ├── .gitignore          # Git ignore file
+  └── README.md           # This file
+  ```
+
+  ## Available Commands
+
+  ### Project Management
+  - `aitrackdown init project` - Initialize new project
+  - `aitrackdown status project` - Show project overview
+  - `aitrackdown status tasks` - Show task status
+
+  ### Task Management
+  - `aitrackdown create task` - Create new task
+  - `aitrackdown create issue` - Create new issue
+  - `aitrackdown create epic` - Create new epic
+  - `aitrackdown create pr` - Create PR template
+
+  ### Template Management
+  - `aitrackdown template list` - List available templates
+  - `aitrackdown template show <name>` - Show template details
+  - `aitrackdown template create <name>` - Create new template
+
+  ### System
+  - `aitrackdown health` - Check system health
+  - `aitrackdown info` - Show system information
+
+  ## Configuration
+  Project configuration is stored in `.ai-trackdown/config.yaml`. Key settings:
+
+  ```yaml
+  project:
+    name: "{{ project_name }}"
+    description: "{{ description }}"
+  
+  editor:
+    default: "code"  # Default editor for task files
+  
+  tasks:
+    directory: "tasks"
+    auto_id: true
+    id_format: "TSK-{counter:04d}"
+  
+  git:
+    auto_commit: false
+  ```
+
+  ## Contributing
+  1. Create a new task for your work: `aitrackdown create task "Task description"`
+  2. Create a feature branch
+  3. Make your changes
+  4. Create a pull request template: `aitrackdown create pr "PR title"`
+  5. Submit for review
+
+  ## Documentation
+  - [AI Trackdown PyTools Documentation](https://ai-trackdown-pytools.readthedocs.io/)
+  - [Task Templates](docs/templates.md)
+  - [Configuration Guide](docs/configuration.md)
+
+  ## Support
+  If you encounter issues:
+  1. Check system health: `aitrackdown health`
+  2. Review configuration: `aitrackdown info`
+  3. Create an issue: `aitrackdown create issue "Issue description"`
+
+  For more help, run `aitrackdown --help` or visit the documentation.

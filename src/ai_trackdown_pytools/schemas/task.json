@@ -1,0 +1,99 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AI Trackdown Task Schema",
+  "description": "Schema for AI Trackdown task files",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique task identifier",
+      "pattern": "^TSK-[0-9]+$"
+    },
+    "title": {
+      "type": "string",
+      "description": "Task title",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "description": {
+      "type": "string",
+      "description": "Task description"
+    },
+    "status": {
+      "type": "string",
+      "description": "Task status",
+      "enum": ["open", "in_progress", "completed", "cancelled", "blocked"]
+    },
+    "priority": {
+      "type": "string",
+      "description": "Task priority",
+      "enum": ["low", "medium", "high", "critical"]
+    },
+    "assignees": {
+      "type": "array",
+      "description": "Task assignees",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "tags": {
+      "type": "array",
+      "description": "Task tags",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "created_at": {
+      "type": "string",
+      "description": "Task creation timestamp",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "description": "Task last update timestamp",
+      "format": "date-time"
+    },
+    "due_date": {
+      "type": "string",
+      "description": "Task due date",
+      "format": "date"
+    },
+    "estimated_hours": {
+      "type": "number",
+      "description": "Estimated hours to complete",
+      "minimum": 0
+    },
+    "actual_hours": {
+      "type": "number",
+      "description": "Actual hours spent",
+      "minimum": 0
+    },
+    "dependencies": {
+      "type": "array",
+      "description": "Task dependencies",
+      "items": {
+        "type": "string"
+      }
+    },
+    "parent": {
+      "type": "string",
+      "description": "Parent task or epic ID"
+    },
+    "labels": {
+      "type": "array",
+      "description": "Task labels",
+      "items": {
+        "type": "string"
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional task metadata",
+      "additionalProperties": true
+    }
+  },
+  "required": ["id", "title", "status", "priority", "created_at", "updated_at"],
+  "additionalProperties": false
+}

@@ -1,0 +1,146 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AI Trackdown Issue Schema",
+  "description": "Schema for AI Trackdown issue files",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique issue identifier",
+      "pattern": "^ISS-[0-9]+$"
+    },
+    "title": {
+      "type": "string",
+      "description": "Issue title",
+      "minLength": 1,
+      "maxLength": 250
+    },
+    "description": {
+      "type": "string",
+      "description": "Issue description"
+    },
+    "issue_type": {
+      "type": "string",
+      "description": "Type of issue",
+      "enum": ["bug", "feature", "enhancement", "documentation", "question", "epic_task"]
+    },
+    "severity": {
+      "type": "string",
+      "description": "Issue severity",
+      "enum": ["low", "medium", "high", "critical"]
+    },
+    "status": {
+      "type": "string",
+      "description": "Issue status",
+      "enum": ["open", "in_progress", "testing", "completed", "cancelled", "blocked"]
+    },
+    "priority": {
+      "type": "string",
+      "description": "Issue priority",
+      "enum": ["low", "medium", "high", "critical"]
+    },
+    "assignees": {
+      "type": "array",
+      "description": "Issue assignees",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "tags": {
+      "type": "array",
+      "description": "Issue tags",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "created_at": {
+      "type": "string",
+      "description": "Issue creation timestamp",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "description": "Issue last update timestamp",
+      "format": "date-time"
+    },
+    "due_date": {
+      "type": "string",
+      "description": "Issue due date",
+      "format": "date"
+    },
+    "estimated_hours": {
+      "type": "number",
+      "description": "Estimated hours to complete",
+      "minimum": 0
+    },
+    "actual_hours": {
+      "type": "number",
+      "description": "Actual hours spent",
+      "minimum": 0
+    },
+    "story_points": {
+      "type": "number",
+      "description": "Story points for estimation",
+      "minimum": 0
+    },
+    "environment": {
+      "type": "string",
+      "description": "Environment where issue occurs"
+    },
+    "steps_to_reproduce": {
+      "type": "string",
+      "description": "Steps to reproduce the issue"
+    },
+    "expected_behavior": {
+      "type": "string",
+      "description": "Expected behavior"
+    },
+    "actual_behavior": {
+      "type": "string",
+      "description": "Actual behavior"
+    },
+    "dependencies": {
+      "type": "array",
+      "description": "Issue dependencies",
+      "items": {
+        "type": "string"
+      }
+    },
+    "parent": {
+      "type": "string",
+      "description": "Parent epic ID"
+    },
+    "child_tasks": {
+      "type": "array",
+      "description": "Child task IDs",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "related_prs": {
+      "type": "array",
+      "description": "Related pull request IDs",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "labels": {
+      "type": "array",
+      "description": "Issue labels",
+      "items": {
+        "type": "string"
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional issue metadata",
+      "additionalProperties": true
+    }
+  },
+  "required": ["id", "title", "issue_type", "severity", "status", "priority", "created_at", "updated_at"],
+  "additionalProperties": false
+}

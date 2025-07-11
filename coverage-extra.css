@@ -1,0 +1,296 @@
+/* Custom CSS for AI Trackdown PyTools Coverage Reports */
+
+/* Enhanced color scheme for better readability */
+:root {
+    --coverage-excellent: #22c55e;  /* Green for >90% */
+    --coverage-good: #84cc16;       /* Light green for >75% */
+    --coverage-fair: #eab308;       /* Yellow for >50% */
+    --coverage-poor: #ef4444;       /* Red for <50% */
+    --coverage-critical: #dc2626;   /* Dark red for <25% */
+    --coverage-bg: #f8fafc;
+    --coverage-border: #e2e8f0;
+    --coverage-text: #334155;
+    --coverage-header-bg: #1e293b;
+    --coverage-header-text: #f1f5f9;
+}
+
+/* Enhanced header styling */
+#header {
+    background: linear-gradient(135deg, var(--coverage-header-bg) 0%, #475569 100%);
+    color: var(--coverage-header-text);
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+#header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+#header .subtitle {
+    opacity: 0.8;
+    font-size: 1.1rem;
+}
+
+/* Enhanced coverage statistics */
+.coverage-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.coverage-stat {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--coverage-good);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.coverage-stat.excellent {
+    border-left-color: var(--coverage-excellent);
+}
+
+.coverage-stat.good {
+    border-left-color: var(--coverage-good);
+}
+
+.coverage-stat.fair {
+    border-left-color: var(--coverage-fair);
+}
+
+.coverage-stat.poor {
+    border-left-color: var(--coverage-poor);
+}
+
+.coverage-stat.critical {
+    border-left-color: var(--coverage-critical);
+}
+
+.coverage-stat h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.coverage-stat .value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--coverage-text);
+    margin-bottom: 0.25rem;
+}
+
+.coverage-stat .description {
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+/* Enhanced table styling */
+#index table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#index th {
+    background: var(--coverage-header-bg);
+    color: var(--coverage-header-text);
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+#index td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--coverage-border);
+}
+
+#index tr:hover {
+    background-color: #f1f5f9;
+}
+
+/* Enhanced coverage percentage styling */
+.coverage-percentage {
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    color: white;
+    text-align: center;
+    min-width: 4rem;
+    display: inline-block;
+}
+
+.coverage-excellent { background-color: var(--coverage-excellent); }
+.coverage-good { background-color: var(--coverage-good); }
+.coverage-fair { background-color: var(--coverage-fair); }
+.coverage-poor { background-color: var(--coverage-poor); }
+.coverage-critical { background-color: var(--coverage-critical); }
+
+/* Enhanced file view styling */
+.source pre {
+    background: #f8fafc;
+    border: 1px solid var(--coverage-border);
+    border-radius: 6px;
+    padding: 1rem;
+    font-family: 'SF Mono', 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    overflow-x: auto;
+}
+
+.source .line {
+    display: block;
+    padding: 0.125rem 0.5rem;
+    border-radius: 2px;
+    margin: 0.125rem 0;
+}
+
+.source .missed {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-left: 3px solid var(--coverage-poor);
+}
+
+.source .covered {
+    background-color: rgba(34, 197, 94, 0.1);
+    border-left: 3px solid var(--coverage-excellent);
+}
+
+.source .partial {
+    background-color: rgba(234, 179, 8, 0.1);
+    border-left: 3px solid var(--coverage-fair);
+}
+
+/* Line numbers styling */
+.source .lineno {
+    color: #94a3b8;
+    text-align: right;
+    padding-right: 1rem;
+    user-select: none;
+    display: inline-block;
+    min-width: 3rem;
+}
+
+/* Enhanced navigation */
+.breadcrumbs {
+    background: white;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    border: 1px solid var(--coverage-border);
+}
+
+.breadcrumbs a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.breadcrumbs a:hover {
+    text-decoration: underline;
+}
+
+/* Summary information box */
+.summary-info {
+    background: white;
+    border: 1px solid var(--coverage-border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+}
+
+.summary-info h2 {
+    margin-top: 0;
+    color: var(--coverage-header-bg);
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.summary-info .metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.summary-info .metric:last-child {
+    border-bottom: none;
+}
+
+.summary-info .metric-label {
+    font-weight: 500;
+    color: var(--coverage-text);
+}
+
+.summary-info .metric-value {
+    font-weight: 700;
+    color: var(--coverage-header-bg);
+}
+
+/* Coverage context information */
+.context-info {
+    background: #fef3c7;
+    border: 1px solid #fbbf24;
+    border-radius: 6px;
+    padding: 1rem;
+    margin: 1rem 0;
+    font-size: 0.875rem;
+}
+
+.context-info h4 {
+    margin: 0 0 0.5rem 0;
+    color: #92400e;
+    font-weight: 600;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .coverage-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    #index table {
+        font-size: 0.75rem;
+    }
+    
+    #index th,
+    #index td {
+        padding: 0.5rem;
+    }
+    
+    .source pre {
+        font-size: 0.75rem;
+        padding: 0.5rem;
+    }
+}
+
+/* Print styles */
+@media print {
+    #header {
+        background: white !important;
+        color: black !important;
+        box-shadow: none;
+    }
+    
+    .coverage-stat {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+    
+    #index table {
+        box-shadow: none;
+    }
+}

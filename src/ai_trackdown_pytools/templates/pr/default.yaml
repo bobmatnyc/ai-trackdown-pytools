@@ -1,0 +1,89 @@
+name: "Default Pull Request Template"
+description: "Standard pull request template for code reviews"
+type: "pr"
+version: "1.0.0"
+author: "AI Trackdown Team"
+
+variables:
+  title:
+    description: "Pull request title"
+    required: true
+  description:
+    description: "Pull request description"
+    default: ""
+  source_branch:
+    description: "Source branch"
+    default: ""
+  target_branch:
+    description: "Target branch"
+    default: "main"
+  issue_number:
+    description: "Related issue number"
+    default: ""
+  breaking_changes:
+    description: "Are there breaking changes?"
+    default: "no"
+    choices: ["yes", "no"]
+
+content: |
+  # Pull Request: {{ title }}
+
+  ## Description
+  {{ description or "Brief description of the changes made." }}
+
+  ## Type of Change
+  Please delete options that are not relevant.
+
+  - [ ] Bug fix (non-breaking change which fixes an issue)
+  - [ ] New feature (non-breaking change which adds functionality)
+  - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+  - [ ] Documentation update
+  - [ ] Refactoring
+  - [ ] Performance improvement
+  - [ ] Other (please describe):
+
+  ## Related Issues
+  {% if issue_number %}
+  Closes #{{ issue_number }}
+  {% else %}
+  - List any related issues or tickets
+  {% endif %}
+
+  ## Changes Made
+  - Change 1
+  - Change 2
+  - Change 3
+
+  ## Testing
+  - [ ] Unit tests pass
+  - [ ] Integration tests pass
+  - [ ] Manual testing completed
+  - [ ] No new linting errors
+  - [ ] Code coverage maintained/improved
+
+  ## Screenshots (if applicable)
+  _Add screenshots of UI changes or new features._
+
+  ## Checklist
+  - [ ] My code follows the project's style guidelines
+  - [ ] I have performed a self-review of my own code
+  - [ ] I have commented my code, particularly in hard-to-understand areas
+  - [ ] I have made corresponding changes to the documentation
+  - [ ] My changes generate no new warnings
+  - [ ] I have added tests that prove my fix is effective or that my feature works
+  - [ ] New and existing unit tests pass locally with my changes
+
+  ## Branch Information
+  - **Source**: {{ source_branch or "feature/branch-name" }}
+  - **Target**: {{ target_branch }}
+  - **Breaking Changes**: {{ breaking_changes }}
+
+  ## Additional Notes
+  _Any additional information that reviewers should know._
+
+  ## Review Focus Areas
+  _Specific areas where you'd like reviewers to focus._
+
+  - Area 1
+  - Area 2
+  - Area 3

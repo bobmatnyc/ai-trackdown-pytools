@@ -1,0 +1,379 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ai-trackdown-pytools"
+version = "0.9.0"
+description = "Python CLI tools for AI project tracking and task management"
+authors = [
+    {name = "AI Trackdown Team", email = "dev@ai-trackdown.com"},
+]
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Version Control",
+    "Topic :: Utilities",
+]
+keywords = ["ai", "project-management", "cli", "tracking", "tasks", "git"]
+dependencies = [
+    "click>=8.0.0",
+    "pydantic>=2.0.0",
+    "pyyaml>=6.0",
+    "gitpython>=3.1.30",
+    "rich>=13.0.0",
+    "typer>=0.9.0",
+    "jinja2>=3.1.0",
+    "jsonschema>=4.17.0",
+    "toml>=0.10.2",
+    "pathspec>=0.11.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    # Core testing
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.10.0",
+    "pytest-xdist>=3.0.0",  # Parallel test execution
+    "pytest-timeout>=2.1.0",  # Test timeouts
+    "pytest-benchmark>=4.0.0",  # Performance benchmarking
+    "pytest-stress>=1.0.0",  # Stress testing
+    "pytest-html>=3.1.0",  # HTML test reports
+    
+    # Code quality
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.5.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "flake8-docstrings>=1.7.0",
+    "flake8-bugbear>=23.0.0",
+    "flake8-comprehensions>=3.14.0",
+    "flake8-simplify>=0.20.0",
+    
+    # Security
+    "bandit[toml]>=1.7.5",
+    "safety>=2.3.0",
+    "pip-audit>=2.6.0",
+    "semgrep>=1.45.0",
+    
+    # Coverage and analysis
+    "coverage[toml]>=7.0.0",
+    "radon>=6.0.1",  # Complexity analysis
+    "vulture>=2.7",  # Dead code detection
+    "xenon>=0.9.0",  # Complexity monitoring
+    
+    # Performance monitoring
+    "psutil>=5.9.0",
+    "memory-profiler>=0.61.0",
+    "line-profiler>=4.1.0",
+    
+    # Development tools
+    "pre-commit>=3.0.0",
+    "tox>=4.0.0",
+    "bump2version>=1.0.1",
+    "twine>=4.0.0",
+    "build>=0.10.0",
+    "check-manifest>=0.49",
+    
+    # Documentation
+    "pydocstyle>=6.3.0",
+    "commitizen>=3.0.0",
+    
+    # Type checking
+    "types-PyYAML>=6.0.0",
+    "types-toml>=0.10.0",
+    "types-requests>=2.31.0",
+]
+test = [
+    # Core testing framework
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.10.0",
+    "pytest-xdist>=3.0.0",
+    "pytest-timeout>=2.1.0",
+    "pytest-benchmark>=4.0.0",
+    "pytest-html>=3.1.0",
+    
+    # Coverage
+    "coverage[toml]>=7.0.0",
+    
+    # Performance monitoring for tests
+    "psutil>=5.9.0",
+    "memory-profiler>=0.61.0",
+]
+security = [
+    # Security scanning tools
+    "bandit[toml]>=1.7.5",
+    "safety>=2.3.0",
+    "pip-audit>=2.6.0",
+    "semgrep>=1.45.0",
+    "cyclonedx-bom>=4.0.0",  # Software Bill of Materials
+    "pip-licenses>=4.3.0",  # License compliance
+]
+performance = [
+    # Performance testing and monitoring
+    "pytest-benchmark>=4.0.0",
+    "pytest-stress>=1.0.0",
+    "psutil>=5.9.0",
+    "memory-profiler>=0.61.0",
+    "line-profiler>=4.1.0",
+    "py-spy>=0.3.14",  # Production profiler
+]
+ci = [
+    # CI/CD specific dependencies
+    "pytest-github-actions-annotate-failures>=0.2.0",
+    "pytest-json-report>=1.5.0",
+    "pytest-cov>=4.0.0",
+    "coverage[toml]>=7.0.0",
+    "psutil>=5.9.0",
+]
+docs = [
+    "sphinx>=6.0.0",
+    "sphinx-rtd-theme>=1.2.0",
+    "myst-parser>=2.0.0",
+]
+
+[project.scripts]
+aitrackdown = "ai_trackdown_pytools.cli:main"
+atd = "ai_trackdown_pytools.cli:main"
+aitrackdown-init = "ai_trackdown_pytools.commands.init:main"
+aitrackdown-status = "ai_trackdown_pytools.commands.status:main"
+aitrackdown-create = "ai_trackdown_pytools.commands.create:main"
+aitrackdown-template = "ai_trackdown_pytools.commands.template:main"
+
+[project.urls]
+Homepage = "https://github.com/ai-trackdown/ai-trackdown-pytools"
+Documentation = "https://ai-trackdown-pytools.readthedocs.io/"
+Repository = "https://github.com/ai-trackdown/ai-trackdown-pytools.git"
+Issues = "https://github.com/ai-trackdown/ai-trackdown-pytools/issues"
+Changelog = "https://github.com/ai-trackdown/ai-trackdown-pytools/blob/main/CHANGELOG.md"
+
+[tool.hatch.build]
+include = [
+    "src/ai_trackdown_pytools/**/*.py",
+    "src/ai_trackdown_pytools/templates/**/*",
+    "src/ai_trackdown_pytools/schemas/**/*.json",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ai_trackdown_pytools"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--cov=ai_trackdown_pytools",
+    "--cov-branch",
+    "--cov-report=term-missing:skip-covered",
+    "--cov-report=html:htmlcov",
+    "--cov-report=xml:coverage.xml",
+    "--cov-report=json:coverage.json",
+    "--cov-report=lcov:coverage.lcov",
+    "--cov-fail-under=85",
+    "--cov-context=test",
+    "-ra",
+    "--tb=short",
+]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "e2e: End-to-end tests",
+    "slow: Slow tests",
+    "regression: Regression tests",
+]
+
+[tool.coverage.run]
+source = ["src/ai_trackdown_pytools"]
+branch = true
+parallel = true
+data_file = ".coverage"
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__pycache__/*",
+    "*/conftest.py",
+    "*/venv/*",
+    "*/.*",
+    "setup.py",
+    "*/migrations/*",
+    "*/locale/*",
+    "*/static/*",
+    "*/media/*",
+]
+dynamic_context = "test_function"
+relative_files = true
+
+[tool.coverage.report]
+# Minimum coverage percentage for failure
+fail_under = 85
+# Show missing lines in terminal report
+show_missing = true
+# Skip covered files in terminal report
+skip_covered = false
+# Skip empty files
+skip_empty = false
+# Include branches in precision calculation
+precision = 2
+# Sort by coverage percentage
+sort = "Cover"
+exclude_lines = [
+    "pragma: no cover",
+    "pragma: nocover",
+    "def __repr__",
+    "def __str__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "if DEBUG:",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if False:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+    "@abstractmethod",
+    "\\.\\.\\.",
+    "pass",
+    "except ImportError:",
+    "except ModuleNotFoundError:",
+    "# pragma: no cover",
+    "# noqa",
+    "# type: ignore",
+    "if TYPE_CHECKING:",
+    "@overload",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
+extra_css = "coverage-extra.css"
+show_contexts = true
+static_file_extensions = ["css", "js", "png", "gif", "jpg", "svg"]
+
+[tool.coverage.xml]
+output = "coverage.xml"
+
+[tool.coverage.json]
+output = "coverage.json"
+show_contexts = true
+pretty_print = true
+
+[tool.coverage.lcov]
+output = "coverage.lcov"
+
+[tool.black]
+line-length = 88
+target-version = ["py38", "py39", "py310", "py311", "py312"]
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.ruff]
+target-version = "py38"
+line-length = 88
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+    "ARG001", # unused-function-argument
+    "SIM", # flake8-simplify
+    "TCH", # flake8-type-checking
+    "ISC", # flake8-implicit-str-concat
+    "ICN", # flake8-import-conventions
+    "Q", # flake8-quotes
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+    "ISC001", # conflicts with formatter
+]
+
+[tool.ruff.per-file-ignores]
+"tests/**/*" = ["S101", "ARG", "FBT"]
+
+[tool.ruff.isort]
+known-first-party = ["ai_trackdown_pytools"]
+
+[tool.mypy]
+python_version = "3.8"
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+no_implicit_reexport = true
+strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = [
+    "git.*",
+    "yaml.*",
+]
+ignore_missing_imports = true
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py38,py39,py310,py311,py312,lint,type-check
+
+[testenv]
+extras = test
+commands = pytest {posargs}
+
+[testenv:lint]
+extras = dev
+commands = 
+    black --check src tests
+    ruff check src tests
+
+[testenv:type-check]
+extras = dev
+commands = mypy src
+
+[testenv:format]
+extras = dev
+commands = 
+    black src tests
+    ruff check --fix src tests
+
+[testenv:docs]
+extras = docs
+commands = sphinx-build -W -b html docs docs/_build/html
+"""

@@ -1,0 +1,102 @@
+name: "Default Epic Template"
+description: "Standard epic template for large features and initiatives"
+type: "epic"
+version: "1.0.0"
+author: "AI Trackdown Team"
+
+variables:
+  title:
+    description: "Epic title"
+    required: true
+  description:
+    description: "Epic description"
+    default: ""
+  goal:
+    description: "Epic goal or objective"
+    default: ""
+  business_value:
+    description: "Business value or impact"
+    default: ""
+  success_criteria:
+    description: "Success criteria"
+    default: ""
+  target_date:
+    description: "Target completion date"
+    default: ""
+
+content: |
+  # Epic: {{ title }}
+
+  ## Overview
+  {{ description or "No description provided." }}
+
+  ## Goal
+  {{ goal or "Define the main objective of this epic." }}
+
+  ## Business Value
+  {{ business_value or "Describe the business value and impact of this epic." }}
+
+  ## Success Criteria
+  {{ success_criteria or "Define what success looks like for this epic." }}
+
+  ## Epic Details
+  - **Status**: Open
+  - **Priority**: High
+  - **Created**: {{ created_at }}
+  {% if target_date %}- **Target Date**: {{ target_date }}{% endif %}
+  - **Tags**: {{ tags | join(', ') if tags else "epic" }}
+
+  ## User Stories / Features
+  _Break down this epic into smaller user stories or features._
+
+  - [ ] User story 1
+  - [ ] User story 2
+  - [ ] User story 3
+
+  ## Sub-tasks
+  _List the main tasks required to complete this epic._
+
+  - [ ] Research and planning
+  - [ ] Architecture design
+  - [ ] Implementation
+  - [ ] Testing
+  - [ ] Documentation
+  - [ ] Deployment
+
+  ## Acceptance Criteria
+  _High-level acceptance criteria for the epic._
+
+  - [ ] Criterion 1
+  - [ ] Criterion 2
+  - [ ] Criterion 3
+
+  ## Dependencies
+  _List any dependencies or prerequisites._
+
+  ## Risks and Assumptions
+  _Identify potential risks and assumptions._
+
+  **Risks:**
+  - Risk 1
+  - Risk 2
+
+  **Assumptions:**
+  - Assumption 1
+  - Assumption 2
+
+  ## Timeline
+  _High-level timeline and milestones._
+
+  | Milestone | Target Date | Status |
+  |-----------|-------------|---------|
+  | Planning Complete | | |
+  | Development Start | | |
+  | Feature Complete | | |
+  | Testing Complete | | |
+  | Release | | |
+
+  ## Links
+  - Related epics: 
+  - Documentation: 
+  - User research: 
+  - Design mockups:

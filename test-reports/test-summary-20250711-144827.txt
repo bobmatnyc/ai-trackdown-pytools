@@ -1,0 +1,26 @@
+
+AI Trackdown PyTools - Test Report
+=================================
+Generated: 2025-07-11T14:48:27.276322
+
+SUMMARY:
+--------
+Total Test Suites: 1
+Successful: 0
+Failed: 1
+Total Duration: 1.00s
+
+DETAILED RESULTS:
+
+❌ FAIL UNIT (1.00s)
+--------------------------------------------------
+
+COVERAGE REPORT:
+---------------
+HTML Coverage Report: /Users/masa/Projects/managed/ai-trackdown-pytools/htmlcov/index.html
+XML Coverage Report: /Users/masa/Projects/managed/ai-trackdown-pytools/test-reports/coverage.xml
+
+ARTIFACTS:
+----------
+JSON Report: /Users/masa/Projects/managed/ai-trackdown-pytools/test-reports/test-report-20250711-144827.json
+JUnit XML Files: /Users/masa/Projects/managed/ai-trackdown-pytools/test-reports/*.xml

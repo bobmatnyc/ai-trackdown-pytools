@@ -1,0 +1,82 @@
+name: "Default Issue Template"
+description: "Standard issue template for bug reports and feature requests"
+type: "issue"
+version: "1.0.0"
+author: "AI Trackdown Team"
+
+variables:
+  title:
+    description: "Issue title"
+    required: true
+  description:
+    description: "Issue description"
+    default: ""
+  issue_type:
+    description: "Type of issue"
+    default: "bug"
+    choices: ["bug", "feature", "enhancement", "documentation", "question"]
+  severity:
+    description: "Issue severity"
+    default: "medium"
+    choices: ["low", "medium", "high", "critical"]
+  environment:
+    description: "Environment where issue occurs"
+    default: ""
+  steps_to_reproduce:
+    description: "Steps to reproduce the issue"
+    default: ""
+  expected_behavior:
+    description: "Expected behavior"
+    default: ""
+  actual_behavior:
+    description: "Actual behavior"
+    default: ""
+
+content: |
+  # {{ title }}
+
+  ## Issue Type
+  **Type**: {{ issue_type }}
+  **Severity**: {{ severity }}
+  {% if environment %}**Environment**: {{ environment }}{% endif %}
+
+  ## Description
+  {{ description or "No description provided." }}
+
+  ## Steps to Reproduce
+  {% if steps_to_reproduce %}
+  {{ steps_to_reproduce }}
+  {% else %}
+  1. Go to '...'
+  2. Click on '....'
+  3. Scroll down to '....'
+  4. See error
+  {% endif %}
+
+  ## Expected Behavior
+  {{ expected_behavior or "A clear and concise description of what you expected to happen." }}
+
+  ## Actual Behavior
+  {{ actual_behavior or "A clear and concise description of what actually happened." }}
+
+  ## Additional Context
+  - **Created**: {{ created_at }}
+  - **Labels**: {{ tags | join(', ') if tags else "None" }}
+
+  ## Screenshots
+  _If applicable, add screenshots to help explain your problem._
+
+  ## Possible Solution
+  _If you have suggestions on a fix for the bug or ideas how to implement the feature._
+
+  ## Checklist
+  - [ ] Issue reproduced
+  - [ ] Root cause identified
+  - [ ] Solution implemented
+  - [ ] Tests added
+  - [ ] Documentation updated
+
+  ## Links
+  - Related issues: 
+  - Documentation: 
+  - Pull requests:

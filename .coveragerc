@@ -1,0 +1,144 @@
+# Coverage configuration file for ai-trackdown-pytools
+# This file provides additional coverage configuration options
+
+[run]
+# Source code directories to measure
+source = src/ai_trackdown_pytools
+
+# Enable branch coverage measurement
+branch = True
+
+# Run coverage in parallel mode for better performance
+parallel = True
+
+# Store coverage data in this file
+data_file = .coverage
+
+# Files and directories to exclude from coverage measurement
+omit = 
+    */tests/*
+    */test_*
+    */__pycache__/*
+    */conftest.py
+    */venv/*
+    */.*
+    setup.py
+    */migrations/*
+    */locale/*
+    */static/*
+    */media/*
+    */build/*
+    */dist/*
+    *.egg-info/*
+
+# Enable dynamic context tracking for test function names
+# This helps identify which tests cover which code
+[coverage:run]
+dynamic_context = test_function
+
+# Use relative file paths in reports
+relative_files = True
+
+
+[report]
+# Minimum coverage percentage for pass/fail
+fail_under = 85
+
+# Show missing line numbers in terminal output
+show_missing = True
+
+# Skip files with 100% coverage in terminal output
+skip_covered = False
+
+# Skip empty files in reports
+skip_empty = False
+
+# Precision for coverage percentages
+precision = 2
+
+# Sort order for coverage report
+sort = Cover
+
+# Lines to exclude from coverage analysis
+exclude_lines = 
+    # Standard pragmas
+    pragma: no cover
+    pragma: nocover
+    
+    # Debugging code
+    def __repr__
+    def __str__
+    if self\.debug
+    if settings\.DEBUG
+    if DEBUG:
+    
+    # Error and exception handling
+    raise AssertionError
+    raise NotImplementedError
+    except ImportError:
+    except ModuleNotFoundError:
+    
+    # Unreachable code
+    if 0:
+    if False:
+    pass
+    \.\.\.
+    
+    # Main execution blocks
+    if __name__ == .__main__.:
+    
+    # Abstract methods and protocols
+    class .*\bProtocol\):
+    @(abc\.)?abstractmethod
+    @abstractmethod
+    @overload
+    
+    # Type checking blocks
+    if TYPE_CHECKING:
+    
+    # Comments and type hints
+    # pragma: no cover
+    # noqa
+    # type: ignore
+
+[html]
+# HTML report output directory
+directory = htmlcov
+
+# Show test context information in HTML report
+show_contexts = True
+
+# Custom CSS for HTML reports
+extra_css = coverage-extra.css
+
+# Static file extensions to include in HTML report
+static_file_extensions = css, js, png, gif, jpg, svg
+
+# Title for HTML report
+title = AI Trackdown PyTools Coverage Report
+
+[xml]
+# XML report output file
+output = coverage.xml
+
+[json]
+# JSON report output file
+output = coverage.json
+
+# Show context information in JSON report
+show_contexts = True
+
+# Pretty print JSON output
+pretty_print = True
+
+[lcov]
+# LCOV report output file (for GitHub integration)
+output = coverage.lcov
+
+[paths]
+# Path mapping for coverage combining
+# This helps when running tests from different directories
+source = 
+    src/ai_trackdown_pytools/
+    */ai_trackdown_pytools/
+    */src/ai_trackdown_pytools/

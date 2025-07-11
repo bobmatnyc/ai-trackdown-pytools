@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="8" failures="0" skipped="0" tests="8" time="0.581" timestamp="2025-07-11T14:48:26.623032-04:00" hostname="Masas-M4-Air.local"><testcase classname="" name="tests.unit.test_cli" time="0.000"><error message="collection failure">tests/unit/test_cli.py:6: in &lt;module&gt;
+    from ai_trackdown_pytools.cli import app
+src/ai_trackdown_pytools/cli.py:12: in &lt;module&gt;
+    from .commands import (
+src/ai_trackdown_pytools/commands/__init__.py:3: in &lt;module&gt;
+    from ai_trackdown_pytools.commands import (
+src/ai_trackdown_pytools/commands/validate.py:18: in &lt;module&gt;
+    from ai_trackdown_pytools.utils.frontmatter import (
+src/ai_trackdown_pytools/utils/frontmatter.py:275: in &lt;module&gt;
+    class StatusWorkflowValidator:
+src/ai_trackdown_pytools/utils/frontmatter.py:358: in StatusWorkflowValidator
+    def get_valid_transitions(self, ticket_type: str, current_status: str) -&gt; List[str]:
+                                                                              ^^^^
+E   NameError: name 'List' is not defined</error></testcase><testcase classname="" name="tests.unit.test_cli_commands" time="0.000"><error message="collection failure">tests/unit/test_cli_commands.py:9: in &lt;module&gt;
+    from ai_trackdown_pytools.cli import app
+src/ai_trackdown_pytools/cli.py:12: in &lt;module&gt;
+    from .commands import (
+src/ai_trackdown_pytools/commands/__init__.py:3: in &lt;module&gt;
+    from ai_trackdown_pytools.commands import (
+src/ai_trackdown_pytools/commands/validate.py:18: in &lt;module&gt;
+    from ai_trackdown_pytools.utils.frontmatter import (
+src/ai_trackdown_pytools/utils/frontmatter.py:275: in &lt;module&gt;
+    class StatusWorkflowValidator:
+src/ai_trackdown_pytools/utils/frontmatter.py:358: in StatusWorkflowValidator
+    def get_valid_transitions(self, ticket_type: str, current_status: str) -&gt; List[str]:
+                                                                              ^^^^
+E   NameError: name 'List' is not defined</error></testcase><testcase classname="" name="tests.unit.test_core_models" time="0.000"><error message="collection failure">tests/unit/test_core_models.py:7: in &lt;module&gt;
+    from ai_trackdown_pytools.core.models import (
+src/ai_trackdown_pytools/core/models.py:99: in &lt;module&gt;
+    class BaseTicketModel(BaseModel):
+src/ai_trackdown_pytools/core/models.py:121: in BaseTicketModel
+    @validator('assignees', 'tags', 'labels')
+     ^^^^^^^^^
+E   NameError: name 'validator' is not defined</error></testcase><testcase classname="" name="tests.unit.test_project" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/masa/Projects/managed/ai-trackdown-pytools/tests/unit/test_project.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/unit/test_project.py:8: in &lt;module&gt;
+    from ai_trackdown_pytools.core.project import Project, ProjectError
+E   ImportError: cannot import name 'ProjectError' from 'ai_trackdown_pytools.core.project' (/Users/masa/Projects/managed/ai-trackdown-pytools/src/ai_trackdown_pytools/core/project.py)</error></testcase><testcase classname="" name="tests.unit.test_task" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/masa/Projects/managed/ai-trackdown-pytools/tests/unit/test_task.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/unit/test_task.py:9: in &lt;module&gt;
+    from ai_trackdown_pytools.core.task import Task, TaskManager, TaskError
+E   ImportError: cannot import name 'TaskError' from 'ai_trackdown_pytools.core.task' (/Users/masa/Projects/managed/ai-trackdown-pytools/src/ai_trackdown_pytools/core/task.py)</error></testcase><testcase classname="" name="tests.unit.test_utils_frontmatter" time="0.000"><error message="collection failure">tests/unit/test_utils_frontmatter.py:9: in &lt;module&gt;
+    from ai_trackdown_pytools.utils.frontmatter import (
+src/ai_trackdown_pytools/utils/frontmatter.py:275: in &lt;module&gt;
+    class StatusWorkflowValidator:
+src/ai_trackdown_pytools/utils/frontmatter.py:358: in StatusWorkflowValidator
+    def get_valid_transitions(self, ticket_type: str, current_status: str) -&gt; List[str]:
+                                                                              ^^^^
+E   NameError: name 'List' is not defined</error></testcase><testcase classname="" name="tests.unit.test_utils_git" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/masa/Projects/managed/ai-trackdown-pytools/tests/unit/test_utils_git.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/unit/test_utils_git.py:8: in &lt;module&gt;
+    from ai_trackdown_pytools.utils.git import (
+E   ImportError: cannot import name 'GitRepo' from 'ai_trackdown_pytools.utils.git' (/Users/masa/Projects/managed/ai-trackdown-pytools/src/ai_trackdown_pytools/utils/git.py)</error></testcase><testcase classname="" name="tests.unit.test_utils_templates" time="0.000"><error message="collection failure">ImportError while importing test module '/Users/masa/Projects/managed/ai-trackdown-pytools/tests/unit/test_utils_templates.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/unit/test_utils_templates.py:8: in &lt;module&gt;
+    from ai_trackdown_pytools.utils.templates import (
+E   ImportError: cannot import name 'TemplateEngine' from 'ai_trackdown_pytools.utils.templates' (/Users/masa/Projects/managed/ai-trackdown-pytools/src/ai_trackdown_pytools/utils/templates.py)</error></testcase></testsuite></testsuites>

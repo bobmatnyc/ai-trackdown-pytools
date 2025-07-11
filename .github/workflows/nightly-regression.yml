@@ -1,0 +1,269 @@
+name: Nightly Regression Testing
+
+on:
+  schedule:
+    # Run every night at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      test_scope:
+        description: 'Scope of regression testing'
+        required: false
+        default: 'full'
+        type: choice
+        options:
+          - 'full'
+          - 'performance'
+          - 'stress'
+          - 'compatibility'
+
+env:
+  PYTHONPATH: ${{ github.workspace }}/src
+  COVERAGE_THRESHOLD: 85
+
+jobs:
+  # Job 1: Full regression test suite
+  regression-tests:
+    name: Regression Tests (${{ matrix.os }}, Python ${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        include:
+          # Extended test configurations for regression
+          - os: ubuntu-20.04
+            python-version: "3.8"
+          - os: macos-12
+            python-version: "3.11"
+    
+    timeout-minutes: 90
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .[test,dev]
+        pip install pytest-benchmark pytest-stress pytest-timeout
+
+    - name: Run comprehensive regression tests
+      run: |
+        python scripts/test_runner.py full --verbose --threshold ${{ env.COVERAGE_THRESHOLD }}
+      env:
+        PYTEST_ADDOPTS: "--durations=20 --timeout=300"
+
+    - name: Run stress tests
+      if: github.event.inputs.test_scope == 'stress' || github.event.inputs.test_scope == 'full'
+      run: |
+        python -m pytest tests/ -m "stress" --timeout=600 -v
+      continue-on-error: true
+
+    - name: Upload regression artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: regression-results-${{ matrix.os }}-py${{ matrix.python-version }}
+        path: |
+          test-reports/
+          htmlcov/
+          coverage.xml
+        retention-days: 14
+
+  # Job 2: Performance benchmarking
+  performance-benchmarks:
+    name: Performance Benchmarks
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .[test,dev]
+        pip install pytest-benchmark pytest-profiling memory-profiler
+
+    - name: Run performance benchmarks
+      run: |
+        python -m pytest tests/ --benchmark-only --benchmark-json=benchmark_results.json --benchmark-min-rounds=5
+        echo "📊 Performance benchmarks completed"
+
+    - name: Memory profiling
+      run: |
+        python -m memory_profiler scripts/test_runner.py fast --no-reports
+        echo "🧠 Memory profiling completed"
+      continue-on-error: true
+
+    - name: Generate performance report
+      run: |
+        cat > performance-report.md << EOF
+        # Performance Benchmark Report
+        
+        **Generated**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+        **Commit**: ${{ github.sha }}
+        
+        ## Benchmark Results
+        
+        See benchmark_results.json for detailed performance metrics.
+        
+        ## Memory Usage
+        
+        Memory profiling results show resource utilization patterns.
+        
+        ## Recommendations
+        
+        - Monitor performance trends over time
+        - Investigate any significant regressions
+        - Consider optimization opportunities
+        EOF
+
+    - name: Upload performance artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: performance-benchmarks
+        path: |
+          benchmark_results.json
+          performance-report.md
+        retention-days: 30
+
+  # Job 3: Compatibility testing
+  compatibility-tests:
+    name: Compatibility Testing
+    runs-on: ubuntu-latest
+    if: github.event.inputs.test_scope == 'compatibility' || github.event.inputs.test_scope == 'full'
+    strategy:
+      matrix:
+        dependency-version:
+          - "minimal"  # Minimum supported versions
+          - "latest"   # Latest versions
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+        cache: 'pip'
+
+    - name: Install minimal dependencies
+      if: matrix.dependency-version == 'minimal'
+      run: |
+        python -m pip install --upgrade pip
+        # Install minimum supported versions
+        pip install click==8.0.0 pydantic==2.0.0 pyyaml==6.0 gitpython==3.1.30
+        pip install -e .[test]
+
+    - name: Install latest dependencies
+      if: matrix.dependency-version == 'latest'
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .[test,dev]
+        pip install --upgrade $(pip freeze | cut -d'=' -f1)
+
+    - name: Run compatibility tests
+      run: |
+        python scripts/test_runner.py fast --verbose
+        echo "✅ Compatibility tests with ${{ matrix.dependency-version }} dependencies passed"
+
+  # Job 4: Docker environment testing
+  docker-tests:
+    name: Docker Environment Testing
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build test Docker image
+      run: |
+        cat > Dockerfile.test << EOF
+        FROM python:3.11-slim
+        
+        WORKDIR /app
+        COPY . .
+        
+        RUN pip install --no-cache-dir -e .[test,dev]
+        
+        CMD ["python", "scripts/test_runner.py", "fast"]
+        EOF
+        
+        docker build -f Dockerfile.test -t ai-trackdown-test .
+
+    - name: Run tests in Docker
+      run: |
+        docker run --rm ai-trackdown-test
+        echo "🐳 Docker environment tests passed"
+
+  # Job 5: Report aggregation and notification
+  regression-summary:
+    name: Regression Test Summary
+    runs-on: ubuntu-latest
+    needs: [regression-tests, performance-benchmarks, compatibility-tests, docker-tests]
+    if: always()
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+
+    - name: Generate regression summary
+      run: |
+        cat > regression-summary.md << EOF
+        # Nightly Regression Test Summary
+        
+        **Date**: $(date -u '+%Y-%m-%d')
+        **Commit**: ${{ github.sha }}
+        **Trigger**: ${{ github.event_name }}
+        
+        ## Test Results
+        
+        - **Regression Tests**: ${{ needs.regression-tests.result }}
+        - **Performance Benchmarks**: ${{ needs.performance-benchmarks.result }}
+        - **Compatibility Tests**: ${{ needs.compatibility-tests.result }}
+        - **Docker Tests**: ${{ needs.docker-tests.result }}
+        
+        ## Status
+        
+        ${{ needs.regression-tests.result == 'success' && needs.performance-benchmarks.result == 'success' && '🟢 All systems operational' || '🔴 Issues detected' }}
+        
+        ## Artifacts
+        
+        - Test reports and coverage data available
+        - Performance benchmark results collected
+        - Compatibility test results available
+        
+        ## Next Steps
+        
+        ${{ needs.regression-tests.result != 'success' && '⚠️ Review failing regression tests' || '' }}
+        ${{ needs.performance-benchmarks.result != 'success' && '⚠️ Investigate performance issues' || '' }}
+        
+        EOF
+
+    - name: Upload regression summary
+      uses: actions/upload-artifact@v4
+      with:
+        name: regression-summary
+        path: regression-summary.md
+        retention-days: 90
+
+    - name: Notify on failure
+      if: failure()
+      run: |
+        echo "🚨 Nightly regression tests failed!"
+        echo "Check the artifacts and logs for detailed information."
+        # Add notification logic here (Slack, email, etc.)

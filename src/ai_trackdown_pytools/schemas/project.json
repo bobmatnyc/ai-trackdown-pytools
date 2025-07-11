@@ -1,0 +1,170 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AI Trackdown Project Schema",
+  "description": "Schema for AI Trackdown project files",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique project identifier",
+      "pattern": "^PROJ-[0-9]+$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Project name",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "description": {
+      "type": "string",
+      "description": "Project description"
+    },
+    "status": {
+      "type": "string",
+      "description": "Project status",
+      "enum": ["planning", "active", "on_hold", "completed", "cancelled", "archived"]
+    },
+    "priority": {
+      "type": "string",
+      "description": "Project priority",
+      "enum": ["low", "medium", "high", "critical"]
+    },
+    "author": {
+      "type": "string",
+      "description": "Project author"
+    },
+    "license": {
+      "type": "string",
+      "description": "Project license",
+      "default": "MIT"
+    },
+    "tech_stack": {
+      "type": "array",
+      "description": "Technology stack",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "team_members": {
+      "type": "array",
+      "description": "Project team members",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "tags": {
+      "type": "array",
+      "description": "Project tags",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "created_at": {
+      "type": "string",
+      "description": "Project creation timestamp",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "description": "Project last update timestamp",
+      "format": "date-time"
+    },
+    "start_date": {
+      "type": "string",
+      "description": "Project start date",
+      "format": "date"
+    },
+    "end_date": {
+      "type": "string",
+      "description": "Project end date",
+      "format": "date"
+    },
+    "target_completion": {
+      "type": "string",
+      "description": "Target completion date",
+      "format": "date"
+    },
+    "budget": {
+      "type": "number",
+      "description": "Project budget",
+      "minimum": 0
+    },
+    "estimated_hours": {
+      "type": "number",
+      "description": "Total estimated hours",
+      "minimum": 0
+    },
+    "actual_hours": {
+      "type": "number",
+      "description": "Total actual hours spent",
+      "minimum": 0
+    },
+    "progress_percentage": {
+      "type": "number",
+      "description": "Project completion percentage",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "epics": {
+      "type": "array",
+      "description": "Project epic IDs",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "repository_url": {
+      "type": "string",
+      "description": "Repository URL",
+      "format": "uri"
+    },
+    "documentation_url": {
+      "type": "string",
+      "description": "Documentation URL",
+      "format": "uri"
+    },
+    "milestones": {
+      "type": "array",
+      "description": "Project milestones",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string"
+          },
+          "target_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["planned", "in_progress", "completed", "delayed"]
+          }
+        },
+        "required": ["name", "target_date", "status"],
+        "additionalProperties": false
+      }
+    },
+    "labels": {
+      "type": "array",
+      "description": "Project labels",
+      "items": {
+        "type": "string"
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional project metadata",
+      "additionalProperties": true
+    }
+  },
+  "required": ["id", "name", "status", "priority", "created_at", "updated_at"],
+  "additionalProperties": false
+}
