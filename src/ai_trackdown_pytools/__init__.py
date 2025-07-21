@@ -1,6 +1,26 @@
 """AI Trackdown PyTools - Python CLI tools for AI project tracking and task management."""
 
-__version__ = "0.9.0"
+import os
+from pathlib import Path
+
+# Read version from VERSION file
+def _get_version():
+    """Read version from VERSION file."""
+    # Try to find VERSION file in several locations
+    possible_paths = [
+        Path(__file__).parent.parent.parent / "VERSION",  # Development install
+        Path(__file__).parent / "VERSION",  # Packaged install
+        Path(os.getcwd()) / "VERSION",  # Current directory
+    ]
+    
+    for version_path in possible_paths:
+        if version_path.exists():
+            return version_path.read_text().strip()
+    
+    # Fallback version if VERSION file not found
+    return "0.0.0"
+
+__version__ = _get_version()
 __author__ = "AI Trackdown Team"
 __email__ = "dev@ai-trackdown.com"
 

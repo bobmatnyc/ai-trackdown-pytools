@@ -11,7 +11,7 @@ from pydantic import BaseModel, ConfigDict
 class ConfigModel(BaseModel):
     """Configuration data model."""
     
-    version: str = "0.9.0"
+    version: str = "1.0.0"
     project: Dict[str, Any] = {}
     editor: Dict[str, Any] = {"default": "code"}
     templates: Dict[str, Any] = {"directory": "templates"}

@@ -1,9 +1,49 @@
 include README.md
 include CHANGELOG.md
+include CONTRIBUTING.md
 include LICENSE
 include pyproject.toml
-recursive-include src/ai_trackdown_pytools/templates *
+include setup.py
+include VERSION
+
+# Include version file
+include src/ai_trackdown_pytools/version.py
+
+# Include all template files
+recursive-include src/ai_trackdown_pytools/templates *.yaml *.yml *.md *.txt
+
+# Include all schema files
 recursive-include src/ai_trackdown_pytools/schemas *.json
+
+# Include package data
+include src/ai_trackdown_pytools/py.typed
+
+# Exclude unwanted files
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
 recursive-exclude * .DS_Store
+recursive-exclude * .gitignore
+recursive-exclude * .gitkeep
+recursive-exclude tests *
+recursive-exclude docs *
+recursive-exclude scripts *
+recursive-exclude htmlcov *
+recursive-exclude .tox *
+recursive-exclude .pytest_cache *
+recursive-exclude .mypy_cache *
+recursive-exclude .ruff_cache *
+
+# Exclude build artifacts
+exclude .coverage
+exclude coverage.xml
+exclude coverage.json
+exclude coverage.lcov
+exclude *.log
+exclude .pre-commit-config.yaml
+exclude Makefile
+exclude tox.ini
+
+# Exclude distribution files
+prune dist
+prune build
+prune *.egg-info

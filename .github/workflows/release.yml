@@ -1,410 +1,148 @@
-name: Release Automation
+name: Release Management
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
-  release:
-    types: [published]
   workflow_dispatch:
     inputs:
-      version_type:
-        description: 'Version bump type'
+      version:
+        description: 'Version number (e.g., 1.0.0)'
         required: true
+        type: string
+      release_type:
+        description: 'Release type'
+        required: true
+        default: 'patch'
         type: choice
         options:
-          - 'patch'
-          - 'minor'
-          - 'major'
-      pre_release:
-        description: 'Create pre-release'
-        required: false
-        default: false
-        type: boolean
-
-env:
-  PYTHONPATH: ${{ github.workspace }}/src
+          - major
+          - minor
+          - patch
+          - prerelease
 
 jobs:
-  # Job 1: Release validation and testing
-  release-validation:
-    name: Release Validation
+  prepare-release:
+    name: Prepare Release
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
-      is_prerelease: ${{ steps.version.outputs.is_prerelease }}
+      
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.11"
-        cache: 'pip'
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -e .[test,dev]
-        pip install bump2version
-
-    - name: Extract version information
-      id: version
-      run: |
-        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-          # Manual version bump
-          current_version=$(python -c "import toml; print(toml.load('pyproject.toml')['project']['version'])")
-          echo "Current version: $current_version"
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install bump2version commitizen toml
+      
+      - name: Determine version
+        id: version
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            # Auto-determine version based on release type
+            CURRENT_VERSION=$(python -c "import toml; print(toml.load('pyproject.toml')['project']['version'])")
+            case "${{ inputs.release_type }}" in
+              major)
+                VERSION=$(python -c "v='$CURRENT_VERSION'.split('.'); v[0]=str(int(v[0])+1); v[1]='0'; v[2]='0'; print('.'.join(v))")
+                ;;
+              minor)
+                VERSION=$(python -c "v='$CURRENT_VERSION'.split('.'); v[1]=str(int(v[1])+1); v[2]='0'; print('.'.join(v))")
+                ;;
+              patch)
+                VERSION=$(python -c "v='$CURRENT_VERSION'.split('.'); v[2]=str(int(v[2])+1); print('.'.join(v))")
+                ;;
+              prerelease)
+                VERSION="${CURRENT_VERSION}-rc.1"
+                ;;
+            esac
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Update version
+        run: |
+          # Update version in pyproject.toml
+          python -c "
+          import toml
+          data = toml.load('pyproject.toml')
+          data['project']['version'] = '${{ steps.version.outputs.version }}'
+          with open('pyproject.toml', 'w') as f:
+              toml.dump(data, f)
+          "
           
-          # Bump version based on input
-          bump2version ${{ github.event.inputs.version_type }} --dry-run --verbose
-          new_version=$(bump2version ${{ github.event.inputs.version_type }} --dry-run --list | grep new_version | cut -d= -f2)
+          # Update version in __init__.py if it exists
+          if [ -f "src/ai_trackdown_pytools/__init__.py" ]; then
+            sed -i "s/__version__ = .*/__version__ = \"${{ steps.version.outputs.version }}\"/" src/ai_trackdown_pytools/__init__.py
+          fi
+      
+      - name: Generate changelog
+        run: |
+          # Use commitizen to generate changelog
+          cz changelog --unreleased-version ${{ steps.version.outputs.version }} || true
           
-          echo "version=$new_version" >> $GITHUB_OUTPUT
-          echo "is_prerelease=${{ github.event.inputs.pre_release }}" >> $GITHUB_OUTPUT
-        else
-          # Extract from tag
-          version=${GITHUB_REF#refs/tags/v}
-          echo "version=$version" >> $GITHUB_OUTPUT
-          echo "is_prerelease=false" >> $GITHUB_OUTPUT
-        fi
+          # Generate release notes
+          git log --pretty=format:"* %s (%h)" $(git describe --tags --abbrev=0 2>/dev/null || git rev-list --max-parents=0 HEAD)..HEAD > RELEASE_NOTES.md
+          
+          # Add header to release notes
+          echo -e "# Release ${{ steps.version.outputs.version }}\n\n$(cat RELEASE_NOTES.md)" > RELEASE_NOTES.md
+      
+      - name: Create release commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add pyproject.toml
+          git add src/ai_trackdown_pytools/__init__.py || true
+          git add CHANGELOG.md || true
+          git add RELEASE_NOTES.md
+          
+          git commit -m "chore: release version ${{ steps.version.outputs.version }}"
+          
+          # Create and push tag
+          git tag -a "v${{ steps.version.outputs.version }}" -m "Release version ${{ steps.version.outputs.version }}"
+          git push origin HEAD:main
+          git push origin "v${{ steps.version.outputs.version }}"
+      
+      - name: Upload release notes
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-notes
+          path: RELEASE_NOTES.md
 
-    - name: Run release validation tests
-      run: |
-        echo "🧪 Running release validation tests..."
-        python scripts/test_runner.py full --threshold 90 --verbose
-        echo "✅ All release validation tests passed"
-
-    - name: Validate package metadata
-      run: |
-        python -c "
-        import toml
-        pyproject = toml.load('pyproject.toml')
-        assert 'project' in pyproject
-        assert 'name' in pyproject['project']
-        assert 'version' in pyproject['project']
-        assert 'description' in pyproject['project']
-        print('✅ Package metadata validation passed')
-        "
-
-    - name: Check changelog
-      run: |
-        if [[ ! -f CHANGELOG.md ]]; then
-          echo "❌ CHANGELOG.md not found"
-          exit 1
-        fi
-        
-        if ! grep -q "## \[" CHANGELOG.md; then
-          echo "❌ No version entries found in CHANGELOG.md"
-          exit 1
-        fi
-        
-        echo "✅ Changelog validation passed"
-
-  # Job 2: Multi-platform build and test
-  release-build:
-    name: Release Build (${{ matrix.os }})
-    needs: release-validation
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+  trigger-publish:
+    name: Trigger Publishing
+    needs: prepare-release
+    runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.11"
-        cache: 'pip'
-
-    - name: Install build dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install build twine check-manifest
-
-    - name: Build package
-      run: |
-        python -m build
-        echo "📦 Package built successfully on ${{ matrix.os }}"
-
-    - name: Validate package
-      run: |
-        twine check dist/*
-        echo "✅ Package validation passed on ${{ matrix.os }}"
-
-    - name: Test package installation
-      run: |
-        pip install dist/*.whl
-        python -c "import ai_trackdown_pytools; print('✅ Package installation test passed')"
-        aitrackdown --version
-
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: dist-${{ matrix.os }}
-        path: dist/
-        retention-days: 30
-
-  # Job 3: Security and quality validation
-  release-security:
-    name: Release Security Validation
-    needs: release-validation
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.11"
-        cache: 'pip'
-
-    - name: Install security tools
-      run: |
-        python -m pip install --upgrade pip
-        pip install -e .[dev]
-        pip install bandit safety pip-audit
-
-    - name: Run security scans
-      run: |
-        echo "🔒 Running security validation for release..."
-        
-        # Bandit security scan
-        bandit -r src -f json -o bandit-release-report.json
-        bandit -r src
-        
-        # Safety vulnerability check
-        safety check --json --output safety-release-report.json
-        safety check
-        
-        # pip-audit for additional vulnerability scanning
-        pip-audit --format=json --output=pip-audit-release-report.json
-        pip-audit
-        
-        echo "✅ Security validation completed"
-
-    - name: Upload security reports
-      uses: actions/upload-artifact@v4
-      with:
-        name: release-security-reports
-        path: |
-          bandit-release-report.json
-          safety-release-report.json
-          pip-audit-release-report.json
-
-  # Job 4: Package publishing
-  publish:
-    name: Publish Release
-    needs: [release-validation, release-build, release-security]
-    runs-on: ubuntu-latest
-    if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
-    environment: 
-      name: release
-      url: https://pypi.org/project/ai-trackdown-pytools/
-    
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.11"
-        cache: 'pip'
-
-    - name: Download build artifacts
-      uses: actions/download-artifact@v4
-      with:
-        name: dist-ubuntu-latest
-        path: dist/
-
-    - name: Install publishing tools
-      run: |
-        python -m pip install --upgrade pip
-        pip install twine
-
-    - name: Publish to Test PyPI (pre-release)
-      if: needs.release-validation.outputs.is_prerelease == 'true'
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
-      run: |
-        twine upload --repository testpypi dist/*
-        echo "📦 Published to Test PyPI"
-
-    - name: Publish to PyPI (production)
-      if: needs.release-validation.outputs.is_prerelease == 'false'
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-      run: |
-        twine upload dist/*
-        echo "🚀 Published to PyPI"
-
-    - name: Verify PyPI publication
-      if: needs.release-validation.outputs.is_prerelease == 'false'
-      run: |
-        sleep 60  # Wait for PyPI to update
-        pip install --upgrade ai-trackdown-pytools==${{ needs.release-validation.outputs.version }}
-        python -c "import ai_trackdown_pytools; print('✅ PyPI publication verified')"
-
-  # Job 5: GitHub release creation
-  github-release:
-    name: Create GitHub Release
-    needs: [release-validation, publish]
-    runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch'
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
-    - name: Generate release notes
-      id: release_notes
-      run: |
-        version=${{ needs.release-validation.outputs.version }}
-        
-        # Extract changelog section for this version
-        if grep -q "## \[$version\]" CHANGELOG.md; then
-          changelog_section=$(sed -n "/## \[$version\]/,/## \[/p" CHANGELOG.md | head -n -1)
-        else
-          changelog_section="No changelog entry found for version $version"
-        fi
-        
-        # Generate release notes
-        cat > release_notes.md << EOF
-        # AI Trackdown PyTools v$version
-        
-        ## What's Changed
-        
-        $changelog_section
-        
-        ## Installation
-        
-        \`\`\`bash
-        pip install ai-trackdown-pytools==$version
-        \`\`\`
-        
-        ## Verification
-        
-        \`\`\`bash
-        aitrackdown --version
-        \`\`\`
-        
-        ## Full Changelog
-        
-        **Full Changelog**: https://github.com/ai-trackdown/ai-trackdown-pytools/compare/v${{ needs.release-validation.outputs.previous_version }}...v$version
-        EOF
-
-    - name: Create/Update Git Tag
-      run: |
-        version=${{ needs.release-validation.outputs.version }}
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        
-        if git tag -l | grep -q "v$version"; then
-          echo "Tag v$version already exists"
-        else
-          git tag -a "v$version" -m "Release version $version"
-          git push origin "v$version"
-        fi
-
-    - name: Create GitHub Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: v${{ needs.release-validation.outputs.version }}
-        release_name: AI Trackdown PyTools v${{ needs.release-validation.outputs.version }}
-        body_path: release_notes.md
-        draft: false
-        prerelease: ${{ needs.release-validation.outputs.is_prerelease == 'true' }}
-
-    - name: Download and attach artifacts
-      uses: actions/download-artifact@v4
-      with:
-        name: dist-ubuntu-latest
-        path: dist/
-
-    - name: Upload release assets
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: dist/
-        asset_content_type: application/zip
-
-  # Job 6: Post-release tasks
-  post-release:
-    name: Post-Release Tasks
-    needs: [release-validation, publish, github-release]
-    runs-on: ubuntu-latest
-    if: always() && (needs.publish.result == 'success' || needs.github-release.result == 'success')
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Update version for development
-      if: github.event_name == 'workflow_dispatch' && needs.release-validation.outputs.is_prerelease == 'false'
-      run: |
-        echo "🔄 Preparing for next development cycle..."
-        
-        # This would typically bump to next development version
-        # Implementation depends on your versioning strategy
-        echo "Next development version preparation completed"
-
-    - name: Generate release summary
-      run: |
-        cat > release-summary.md << EOF
-        # Release Summary: v${{ needs.release-validation.outputs.version }}
-        
-        **Released**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
-        **Version**: ${{ needs.release-validation.outputs.version }}
-        **Type**: ${{ needs.release-validation.outputs.is_prerelease == 'true' && 'Pre-release' || 'Production Release' }}
-        
-        ## Release Status
-        
-        - ✅ **Validation**: All release validation tests passed
-        - ✅ **Build**: Multi-platform builds successful
-        - ✅ **Security**: Security validation completed
-        - ✅ **Publishing**: Package published to PyPI
-        - ✅ **GitHub**: GitHub release created
-        
-        ## Artifacts
-        
-        - 📦 Python packages available on PyPI
-        - 📋 Release notes published on GitHub
-        - 🔒 Security reports archived
-        
-        ## Installation
-        
-        \`\`\`bash
-        pip install ai-trackdown-pytools==${{ needs.release-validation.outputs.version }}
-        \`\`\`
-        
-        ## Next Steps
-        
-        - Monitor PyPI downloads and user feedback
-        - Watch for any post-release issues
-        - Continue development for next version
-        
-        **🎉 Release completed successfully!**
-        EOF
-
-    - name: Upload release summary
-      uses: actions/upload-artifact@v4
-      with:
-        name: release-summary
-        path: release-summary.md
-        retention-days: 180
-
-    - name: Notify success
-      run: |
-        echo "🎉 Release v${{ needs.release-validation.outputs.version }} completed successfully!"
-        echo "Package is now available on PyPI"
-        echo "GitHub release has been created"
+      - name: Trigger PyPI publish workflow
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'publish-pypi.yml',
+              ref: 'v${{ needs.prepare-release.outputs.version }}',
+              inputs: {
+                environment: 'production'
+              }
+            })
+      
+      - name: Create draft release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ needs.prepare-release.outputs.version }}
+          release_name: Release ${{ needs.prepare-release.outputs.version }}
+          draft: true
+          prerelease: ${{ inputs.release_type == 'prerelease' }}

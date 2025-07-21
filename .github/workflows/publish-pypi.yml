@@ -1,0 +1,366 @@
+name: Publish to PyPI
+
+on:
+  # Trigger on version tags
+  push:
+    tags:
+      - 'v*.*.*'
+      - '[0-9]+.[0-9]+.[0-9]+'
+  
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'test'
+        type: choice
+        options:
+          - test
+          - production
+      skip_tests:
+        description: 'Skip tests before publishing'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  PYTHON_VERSION: '3.10'
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    if: ${{ !inputs.skip_tests }}
+    
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for version detection
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test,dev]"
+      
+      - name: Run linters
+        run: |
+          black --check src tests
+          ruff check src tests
+          mypy src
+      
+      - name: Run tests with coverage
+        run: |
+          pytest -v --cov=ai_trackdown_pytools --cov-report=xml --cov-report=term
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-${{ matrix.python-version }}
+          fail_ci_if_error: false
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Install security tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[security]"
+      
+      - name: Run Bandit
+        run: bandit -r src -f json -o bandit-report.json || true
+      
+      - name: Run Safety check
+        run: safety check --json --output safety-report.json || true
+      
+      - name: Run pip-audit
+        run: pip-audit --format json --output pip-audit-report.json || true
+      
+      - name: Upload security reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports
+          path: |
+            bandit-report.json
+            safety-report.json
+            pip-audit-report.json
+
+  build:
+    name: Build Distribution
+    runs-on: ubuntu-latest
+    needs: [test, security-scan]
+    if: always() && (needs.test.result == 'success' || needs.test.result == 'skipped') && needs.security-scan.result == 'success'
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for version detection
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine check-manifest
+      
+      - name: Check manifest
+        run: check-manifest
+      
+      - name: Build package
+        run: python -m build
+      
+      - name: Check distribution
+        run: |
+          twine check dist/*
+          ls -la dist/
+      
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Extract version from tag or use current version
+          if [[ "${{ github.ref }}" == "refs/tags/"* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/}
+            VERSION=${VERSION#v}
+          else
+            VERSION=$(python -c "import toml; print(toml.load('pyproject.toml')['project']['version'])")
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          
+          # Generate changelog for this version
+          git log --pretty=format:"- %s" $(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || git rev-list --max-parents=0 HEAD)..HEAD > RELEASE_NOTES.md
+      
+      - name: Upload distribution artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      
+      - name: Upload release notes
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-notes
+          path: RELEASE_NOTES.md
+
+  publish-test:
+    name: Publish to TestPyPI
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'workflow_dispatch' || github.ref_type == 'tag'
+    environment:
+      name: test
+      url: https://test.pypi.org/project/ai-trackdown-pytools/
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      
+      - name: Install twine
+        run: |
+          python -m pip install --upgrade pip
+          pip install twine
+      
+      - name: Publish to TestPyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
+        run: |
+          twine upload --repository testpypi dist/* --verbose
+      
+      - name: Verify installation from TestPyPI
+        run: |
+          # Wait for package to be available
+          sleep 30
+          
+          # Create virtual environment for testing
+          python -m venv test-env
+          source test-env/bin/activate
+          
+          # Install from TestPyPI
+          pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ ai-trackdown-pytools
+          
+          # Test import and CLI
+          python -c "import ai_trackdown_pytools; print(f'Version: {ai_trackdown_pytools.__version__}')"
+          aitrackdown --version
+          
+          deactivate
+
+  publish-prod:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    needs: publish-test
+    if: |
+      github.ref_type == 'tag' || 
+      (github.event_name == 'workflow_dispatch' && inputs.environment == 'production')
+    environment:
+      name: production
+      url: https://pypi.org/project/ai-trackdown-pytools/
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      
+      - name: Download release notes
+        uses: actions/download-artifact@v4
+        with:
+          name: release-notes
+          path: ./
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install twine
+      
+      - name: Publish to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          twine upload dist/* --verbose
+      
+      - name: Create GitHub Release
+        if: github.ref_type == 'tag'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          body_path: ./RELEASE_NOTES.md
+          draft: false
+          prerelease: false
+      
+      - name: Verify installation from PyPI
+        run: |
+          # Wait for package to be available
+          sleep 60
+          
+          # Create virtual environment for testing
+          python -m venv verify-env
+          source verify-env/bin/activate
+          
+          # Install from PyPI
+          pip install ai-trackdown-pytools
+          
+          # Test import and CLI
+          python -c "import ai_trackdown_pytools; print(f'Version: {ai_trackdown_pytools.__version__}')"
+          aitrackdown --version
+          
+          deactivate
+
+  sign-artifacts:
+    name: Sign Artifacts
+    runs-on: ubuntu-latest
+    needs: publish-prod
+    if: github.ref_type == 'tag'
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      
+      - name: Set up GPG
+        if: ${{ secrets.GPG_PRIVATE_KEY }}
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+          gpg --list-secret-keys
+      
+      - name: Sign artifacts
+        if: ${{ secrets.GPG_PRIVATE_KEY }}
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          for file in dist/*; do
+            gpg --batch --yes --detach-sign --armor --passphrase "$GPG_PASSPHRASE" "$file"
+          done
+      
+      - name: Upload signed artifacts
+        if: ${{ secrets.GPG_PRIVATE_KEY }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: signed-artifacts
+          path: dist/*.asc
+
+  notify:
+    name: Send Notifications
+    runs-on: ubuntu-latest
+    needs: [publish-prod]
+    if: always()
+    
+    steps:
+      - name: Send success notification
+        if: needs.publish-prod.result == 'success'
+        run: |
+          echo "✅ Successfully published ai-trackdown-pytools to PyPI!"
+          echo "Version: ${{ github.ref_name }}"
+          echo "PyPI: https://pypi.org/project/ai-trackdown-pytools/"
+      
+      - name: Send failure notification
+        if: needs.publish-prod.result == 'failure'
+        run: |
+          echo "❌ Failed to publish ai-trackdown-pytools to PyPI"
+          echo "Check the workflow logs for details"

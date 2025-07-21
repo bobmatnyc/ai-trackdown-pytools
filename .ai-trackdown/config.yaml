@@ -1,0 +1,17 @@
+version: 1.0.0
+project:
+  name: ai-trackdown-pytools
+  description: ''
+  version: 1.0.0
+editor:
+  default: vim
+templates:
+  directory: templates
+tasks:
+  directory: tasks
+  auto_id: true
+  id_format: TSK-{counter:04d}
+git:
+  auto_commit: false
+  commit_prefix: '[ai-trackdown]'
+plugins: {}

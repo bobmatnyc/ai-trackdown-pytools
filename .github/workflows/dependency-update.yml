@@ -1,0 +1,67 @@
+name: Dependency Updates
+
+on:
+  schedule:
+    # Run every Monday at 00:00 UTC
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+jobs:
+  update-dependencies:
+    name: Update Dependencies
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      
+      - name: Install pip-tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install pip-tools pip-audit safety
+      
+      - name: Update dependencies
+        run: |
+          # Generate requirements files from pyproject.toml
+          pip-compile --upgrade --resolver=backtracking -o requirements.txt pyproject.toml
+          pip-compile --upgrade --resolver=backtracking --extra dev -o requirements-dev.txt pyproject.toml
+          pip-compile --upgrade --resolver=backtracking --extra test -o requirements-test.txt pyproject.toml
+      
+      - name: Security audit
+        run: |
+          # Check for vulnerabilities
+          pip-audit -r requirements.txt --format json --output audit-report.json
+          safety check -r requirements.txt --json --output safety-report.json
+      
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: update dependencies'
+          title: 'Automated dependency updates'
+          body: |
+            ## Automated Dependency Updates
+            
+            This PR contains automated dependency updates generated on schedule.
+            
+            ### Security Scan Results
+            - pip-audit report: see `audit-report.json`
+            - safety report: see `safety-report.json`
+            
+            ### Changed Files
+            - `requirements.txt`
+            - `requirements-dev.txt`
+            - `requirements-test.txt`
+            
+            Please review the changes and ensure all tests pass before merging.
+          branch: deps/automated-update
+          delete-branch: true
+          labels: |
+            dependencies
+            automated

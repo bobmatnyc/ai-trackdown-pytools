@@ -15,7 +15,7 @@ class TestConfigModel:
         """Test default configuration values."""
         config = ConfigModel()
         
-        assert config.version == "0.9.0"
+        assert config.version == "1.0.0"
         assert config.project == {}
         assert config.editor == {"default": "code"}
         assert config.templates == {"directory": "templates"}
@@ -55,7 +55,7 @@ class TestConfig:
         assert config.config_path == config_path
         
         # Check default values
-        assert config.get("version") == "0.9.0"
+        assert config.get("version") == "1.0.0"
         assert config.get("project.name") == temp_dir.name
         assert config.get("editor.default") is not None
     

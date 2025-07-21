@@ -4,29 +4,68 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ai-trackdown-pytools"
-version = "0.9.0"
-description = "Python CLI tools for AI project tracking and task management"
+dynamic = ["version"]
+description = "Modern Python CLI tools for AI project tracking and task management"
 authors = [
     {name = "AI Trackdown Team", email = "dev@ai-trackdown.com"},
 ]
+maintainers = [
+    {name = "AI Trackdown Team", email = "support@ai-trackdown.com"},
+]
 readme = "README.md"
+license = {text = "MIT"}
 requires-python = ">=3.8"
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Information Technology",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
     "Topic :: Software Development",
     "Topic :: Software Development :: Version Control",
+    "Topic :: Software Development :: Version Control :: Git",
+    "Topic :: Software Development :: Bug Tracking",
+    "Topic :: Software Development :: Documentation",
     "Topic :: Utilities",
+    "Topic :: Office/Business :: Scheduling",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Environment :: Console",
+    "Framework :: Pydantic",
+    "Framework :: Pydantic :: 2",
+    "Natural Language :: English",
+    "Typing :: Typed",
 ]
-keywords = ["ai", "project-management", "cli", "tracking", "tasks", "git"]
+keywords = [
+    "ai",
+    "artificial-intelligence", 
+    "machine-learning",
+    "project-management",
+    "task-management",
+    "cli",
+    "terminal",
+    "tracking",
+    "tasks",
+    "git",
+    "workflow",
+    "productivity",
+    "agile",
+    "scrum",
+    "kanban",
+    "typer",
+    "rich",
+    "pydantic"
+]
 dependencies = [
     "click>=8.0.0",
     "pydantic>=2.0.0",
@@ -148,6 +187,7 @@ docs = [
 
 [project.scripts]
 aitrackdown = "ai_trackdown_pytools.cli:main"
+aitrackdown-py = "ai_trackdown_pytools.cli:main"
 atd = "ai_trackdown_pytools.cli:main"
 aitrackdown-init = "ai_trackdown_pytools.commands.init:main"
 aitrackdown-status = "ai_trackdown_pytools.commands.status:main"
@@ -155,21 +195,30 @@ aitrackdown-create = "ai_trackdown_pytools.commands.create:main"
 aitrackdown-template = "ai_trackdown_pytools.commands.template:main"
 
 [project.urls]
-Homepage = "https://github.com/ai-trackdown/ai-trackdown-pytools"
+Homepage = "https://ai-trackdown.com"
 Documentation = "https://ai-trackdown-pytools.readthedocs.io/"
 Repository = "https://github.com/ai-trackdown/ai-trackdown-pytools.git"
-Issues = "https://github.com/ai-trackdown/ai-trackdown-pytools/issues"
+"Bug Tracker" = "https://github.com/ai-trackdown/ai-trackdown-pytools/issues"
 Changelog = "https://github.com/ai-trackdown/ai-trackdown-pytools/blob/main/CHANGELOG.md"
+"Source Code" = "https://github.com/ai-trackdown/ai-trackdown-pytools"
+"Discord" = "https://discord.gg/ai-trackdown"
+"Twitter" = "https://twitter.com/aitrackdown"
+"Funding" = "https://github.com/sponsors/ai-trackdown"
 
 [tool.hatch.build]
 include = [
     "src/ai_trackdown_pytools/**/*.py",
     "src/ai_trackdown_pytools/templates/**/*",
     "src/ai_trackdown_pytools/schemas/**/*.json",
+    "VERSION",
 ]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ai_trackdown_pytools"]
+
+[tool.hatch.version]
+path = "VERSION"
+pattern = "(?P<version>.+)"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

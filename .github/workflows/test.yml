@@ -1,0 +1,343 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run tests weekly on Monday at 00:00 UTC
+    - cron: '0 0 * * 1'
+
+env:
+  PYTHON_VERSION: '3.10'
+
+jobs:
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-lint-${{ hashFiles('pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-lint-
+            ${{ runner.os }}-pip-
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install black ruff mypy types-PyYAML types-toml types-requests
+      
+      - name: Run Black
+        run: black --check --diff src tests
+      
+      - name: Run Ruff
+        run: ruff check src tests --output-format=github
+      
+      - name: Run MyPy
+        run: mypy src --show-error-codes --pretty
+
+  test:
+    name: Test Python ${{ matrix.python-version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        exclude:
+          # Skip some combinations to save CI time
+          - os: windows-latest
+            python-version: '3.8'
+          - os: windows-latest
+            python-version: '3.9'
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for coverage
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - name: Get pip cache dir
+        id: pip-cache
+        run: |
+          echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
+      
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ runner.os }}-pip-test-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-test-${{ matrix.python-version }}-
+            ${{ runner.os }}-pip-test-
+            ${{ runner.os }}-pip-
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test,ci]"
+      
+      - name: Run tests with coverage
+        run: |
+          pytest -v \
+            --cov=ai_trackdown_pytools \
+            --cov-report=xml \
+            --cov-report=term-missing:skip-covered \
+            --cov-report=html \
+            --junit-xml=test-results.xml \
+            --benchmark-disable
+        env:
+          COVERAGE_CORE: sysmon
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.os }}-${{ matrix.python-version }}
+          path: test-results.xml
+      
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.os }}-${{ matrix.python-version }}
+          path: |
+            coverage.xml
+            htmlcov/
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-${{ matrix.os }}-${{ matrix.python-version }}
+          fail_ci_if_error: false
+          verbose: true
+
+  benchmark:
+    name: Performance Benchmarks
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test,performance]"
+      
+      - name: Run benchmarks
+        run: |
+          pytest tests/ \
+            --benchmark-only \
+            --benchmark-json=benchmark-results.json \
+            --benchmark-compare-fail=min:10%
+      
+      - name: Store benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: benchmark-results.json
+      
+      - name: Comment PR with benchmark results
+        if: github.event_name == 'pull_request'
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          tool: 'pytest'
+          output-file-path: benchmark-results.json
+          comment-on-alert: true
+          alert-threshold: '110%'
+          fail-on-alert: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: false
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[security]"
+      
+      - name: Run Bandit
+        run: |
+          bandit -r src -ll -f json -o bandit-report.json
+        continue-on-error: true
+      
+      - name: Run Safety
+        run: |
+          safety check --json --output safety-report.json
+        continue-on-error: true
+      
+      - name: Run pip-audit
+        run: |
+          pip-audit --format json --output pip-audit-report.json
+        continue-on-error: true
+      
+      - name: Generate SBOM
+        run: |
+          cyclonedx-py -r -i pyproject.toml -o sbom.json --format json
+      
+      - name: Check licenses
+        run: |
+          pip-licenses --format=json --output-file=licenses.json
+      
+      - name: Upload security reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports
+          path: |
+            bandit-report.json
+            safety-report.json
+            pip-audit-report.json
+            sbom.json
+            licenses.json
+
+  integration:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+      
+      - name: Run integration tests
+        run: |
+          pytest tests/ -v -m integration \
+            --cov=ai_trackdown_pytools \
+            --cov-report=xml \
+            --cov-append
+      
+      - name: Test CLI commands
+        run: |
+          # Test all CLI commands
+          aitrackdown --version
+          aitrackdown --help
+          atd --help
+          
+          # Test in temporary directory
+          cd /tmp
+          mkdir -p test-project && cd test-project
+          aitrackdown-init
+          aitrackdown-status
+          aitrackdown-template --list
+
+  docs:
+    name: Documentation Build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[docs]"
+      
+      - name: Build documentation
+        run: |
+          cd docs || mkdir docs
+          # Create minimal conf.py if it doesn't exist
+          if [ ! -f conf.py ]; then
+            cat > conf.py << 'EOF'
+project = 'AI Trackdown PyTools'
+copyright = '2025, AI Trackdown Team'
+author = 'AI Trackdown Team'
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon', 'myst_parser']
+html_theme = 'sphinx_rtd_theme'
+EOF
+          fi
+          
+          # Create index.rst if it doesn't exist
+          if [ ! -f index.rst ]; then
+            cat > index.rst << 'EOF'
+AI Trackdown PyTools Documentation
+==================================
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   readme
+   api
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+EOF
+          fi
+          
+          # Build docs
+          sphinx-build -W -b html . _build/html
+      
+      - name: Upload documentation
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation
+          path: docs/_build/html/
+
+  all-tests-pass:
+    name: All Tests Pass
+    runs-on: ubuntu-latest
+    needs: [lint, test, security, integration, docs]
+    if: always()
+    
+    steps:
+      - name: Check test results
+        run: |
+          if [[ "${{ needs.lint.result }}" != "success" || \
+                "${{ needs.test.result }}" != "success" || \
+                "${{ needs.security.result }}" != "success" || \
+                "${{ needs.integration.result }}" != "success" || \
+                "${{ needs.docs.result }}" != "success" ]]; then
+            echo "One or more test jobs failed"
+            exit 1
+          fi
+          echo "All test jobs passed successfully!"

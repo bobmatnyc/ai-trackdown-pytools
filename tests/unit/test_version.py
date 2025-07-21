@@ -153,7 +153,7 @@ class TestVersionFunctions:
         """Test getting version string."""
         version = get_version()
         assert isinstance(version, str)
-        assert version == "0.9.0"  # Current version
+        assert version == "1.0.0"  # Current version
     
     def test_get_version_info(self):
         """Test getting version info object."""
@@ -163,27 +163,26 @@ class TestVersionFunctions:
     
     def test_is_development_version(self):
         """Test development version detection."""
-        # Current version is 0.9.0, which is development
-        assert is_development_version()
+        # Current version is 1.0.0, which is not development
+        assert not is_development_version()
     
     def test_is_stable_version(self):
         """Test stable version detection."""
-        # Current version is 0.9.0, which is not stable
-        assert not is_stable_version()
+        # Current version is 1.0.0, which is stable
+        assert is_stable_version()
     
     def test_format_version_info(self):
         """Test version info formatting."""
         info = format_version_info()
         assert "AI Trackdown PyTools" in info
-        assert "0.9.0" in info
-        assert "(Beta)" in info  # Since it's 0.x version
+        assert "1.0.0" in info
+        # Version 1.0.0 is stable, no beta tag
     
     @pytest.mark.parametrize("required,expected", [
-        ("0.9.0", True),   # Exact match
-        ("0.8.0", False),  # Lower minor version (0.x is not backward compatible)
-        ("0.9.1", False),  # Higher patch version (not compatible for 0.x)
-        ("0.10.0", False), # Higher minor version
-        ("1.0.0", False),  # Different major version
+        ("1.0.0", True),   # Exact match
+        ("1.0.1", False),  # Higher patch version
+        ("0.9.0", False),  # Different major version
+        ("2.0.0", False),  # Different major version
     ])
     def test_check_version_compatibility(self, required, expected):
         """Test version compatibility checking."""
@@ -210,7 +209,7 @@ class TestVersionFunctions:
         """Test getting version history."""
         history = get_version_history()
         assert isinstance(history, list)
-        assert "0.9.0" in history
+        assert "1.0.0" in history
         
         # Ensure it returns a copy
         history.append("test")
@@ -219,7 +218,7 @@ class TestVersionFunctions:
     def test_get_latest_version(self):
         """Test getting latest version."""
         latest = get_latest_version()
-        assert latest == "0.9.0"
+        assert latest == "1.0.0"
 
 
 class TestFeatureFlags:

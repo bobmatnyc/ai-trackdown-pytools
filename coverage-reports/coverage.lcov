@@ -1,0 +1,5917 @@
+SF:src/ai_trackdown_pytools/__init__.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:7,1
+DA:8,1
+DA:9,1
+DA:10,1
+DA:12,1
+LF:8
+LH:8
+end_of_record
+SF:src/ai_trackdown_pytools/cli.py
+DA:3,1
+DA:4,1
+DA:6,1
+DA:7,1
+DA:8,1
+DA:9,1
+DA:11,1
+DA:12,1
+DA:16,1
+DA:17,1
+DA:18,1
+DA:21,1
+DA:23,1
+DA:30,1
+DA:33,1
+DA:35,0
+DA:36,0
+DA:37,0
+DA:40,1
+DA:41,1
+DA:87,0
+DA:90,0
+DA:91,0
+DA:92,0
+DA:93,0
+DA:94,0
+DA:96,0
+DA:97,0
+DA:98,0
+DA:99,0
+DA:100,0
+DA:101,0
+DA:104,0
+DA:105,0
+DA:109,1
+DA:110,1
+DA:111,1
+DA:112,1
+DA:113,1
+DA:116,1
+DA:117,1
+DA:118,1
+DA:119,1
+DA:122,1
+DA:123,1
+DA:124,1
+DA:125,1
+DA:126,1
+DA:129,1
+DA:130,1
+DA:132,0
+DA:134,0
+DA:136,0
+DA:155,1
+DA:156,1
+DA:158,0
+DA:160,0
+DA:162,0
+DA:165,0
+DA:167,0
+DA:168,0
+DA:169,0
+DA:171,0
+DA:172,0
+DA:175,1
+DA:176,1
+DA:183,0
+DA:185,0
+DA:187,0
+DA:188,0
+DA:194,0
+DA:196,0
+DA:198,0
+DA:199,0
+DA:200,0
+DA:201,0
+DA:203,0
+DA:205,0
+DA:206,0
+DA:207,0
+DA:209,0
+DA:212,0
+DA:213,0
+DA:214,0
+DA:217,1
+DA:218,1
+DA:220,0
+DA:221,0
+DA:226,0
+DA:227,0
+DA:229,0
+DA:230,0
+DA:231,0
+DA:233,0
+DA:236,0
+DA:237,0
+DA:239,0
+DA:240,0
+DA:241,0
+DA:243,0
+DA:244,0
+DA:245,0
+DA:247,0
+DA:249,0
+DA:252,0
+DA:253,0
+DA:254,0
+DA:255,0
+DA:258,0
+DA:259,0
+DA:260,0
+DA:262,0
+DA:263,0
+DA:264,0
+DA:265,0
+DA:266,0
+DA:267,0
+DA:268,0
+DA:270,0
+DA:272,0
+DA:275,1
+DA:276,1
+DA:278,0
+DA:280,0
+DA:282,0
+DA:399,1
+DA:400,1
+DA:406,0
+DA:407,0
+DA:412,0
+DA:413,0
+DA:414,0
+DA:416,0
+DA:418,0
+DA:420,0
+DA:421,0
+DA:423,0
+DA:424,0
+DA:425,0
+DA:427,0
+DA:429,0
+DA:431,0
+DA:432,0
+DA:434,0
+DA:435,0
+DA:436,0
+DA:438,0
+DA:439,0
+DA:440,0
+DA:441,0
+DA:443,0
+DA:444,0
+DA:446,0
+DA:447,0
+DA:448,0
+DA:450,0
+DA:451,0
+DA:453,0
+DA:455,0
+DA:456,0
+DA:457,0
+DA:458,0
+DA:460,0
+DA:461,0
+DA:463,0
+DA:464,0
+DA:466,0
+DA:467,0
+DA:469,0
+DA:470,0
+DA:471,0
+DA:473,0
+DA:474,0
+DA:475,0
+DA:477,0
+DA:483,0
+DA:484,0
+DA:486,0
+DA:487,0
+DA:489,0
+DA:490,0
+DA:492,0
+DA:494,0
+DA:496,0
+DA:497,0
+DA:499,0
+DA:500,0
+DA:501,0
+DA:503,0
+DA:504,0
+DA:505,0
+DA:506,0
+DA:509,0
+DA:510,0
+DA:511,0
+DA:514,1
+DA:516,0
+DA:517,0
+DA:518,0
+DA:519,0
+DA:520,0
+DA:521,0
+DA:522,0
+DA:523,0
+DA:524,0
+LF:205
+LH:44
+FN:33,37,version_callback
+FNDA:0,version_callback
+FN:41,105,main
+FNDA:0,main
+FN:130,152,info
+FNDA:0,info
+FN:156,172,health
+FNDA:0,health
+FN:176,214,config
+FNDA:0,config
+FN:218,272,doctor
+FNDA:0,doctor
+FN:276,300,version
+FNDA:0,version
+FN:304,331,edit
+FNDA:0,edit
+FN:335,396,search
+FNDA:0,search
+FN:400,511,validate
+FNDA:0,validate
+FN:514,524,main
+FNDA:0,main
+FNF:11
+FNH:0
+BRDA:35,0,jump to line 36,-
+BRDA:35,0,return from function 'version_callback',-
+BRDA:90,0,jump to line 91,-
+BRDA:90,0,jump to line 104,-
+BRDA:96,0,jump to line 97,-
+BRDA:96,0,jump to line 104,-
+BRDA:104,0,jump to line 105,-
+BRDA:104,0,return from function 'main',-
+BRDA:167,0,jump to line 168,-
+BRDA:167,0,jump to line 171,-
+BRDA:171,0,jump to line 172,-
+BRDA:171,0,return from function 'health',-
+BRDA:185,0,jump to line 187,-
+BRDA:185,0,jump to line 196,-
+BRDA:196,0,jump to line 198,-
+BRDA:196,0,jump to line 203,-
+BRDA:203,0,jump to line 205,-
+BRDA:203,0,jump to line 212,-
+BRDA:206,0,jump to line 207,-
+BRDA:206,0,jump to line 209,-
+BRDA:229,0,jump to line 230,-
+BRDA:229,0,jump to line 233,-
+BRDA:239,0,jump to line 240,-
+BRDA:239,0,jump to line 247,-
+BRDA:243,0,jump to line 244,-
+BRDA:243,0,jump to line 249,-
+BRDA:262,0,jump to line 263,-
+BRDA:262,0,jump to line 272,-
+BRDA:264,0,jump to line 265,-
+BRDA:264,0,jump to line 270,-
+BRDA:416,0,jump to line 418,-
+BRDA:416,0,jump to line 420,-
+BRDA:420,0,jump to line 421,-
+BRDA:420,0,jump to line 443,-
+BRDA:423,0,jump to line 424,-
+BRDA:423,0,jump to line 427,-
+BRDA:431,0,jump to line 432,-
+BRDA:431,0,jump to line 434,-
+BRDA:435,0,jump to line 436,-
+BRDA:435,0,jump to line 438,-
+BRDA:438,0,jump to line 439,-
+BRDA:438,0,return from function 'validate',-
+BRDA:440,0,jump to line 441,-
+BRDA:440,0,return from function 'validate',-
+BRDA:443,0,jump to line 444,-
+BRDA:443,0,jump to line 486,-
+BRDA:446,0,jump to line 447,-
+BRDA:446,0,jump to line 450,-
+BRDA:463,0,jump to line 464,-
+BRDA:463,0,jump to line 483,-
+BRDA:469,0,jump to line 470,-
+BRDA:469,0,jump to line 473,-
+BRDA:473,0,jump to line 474,-
+BRDA:473,0,jump to line 477,-
+BRDA:486,0,jump to line 487,-
+BRDA:486,0,jump to line 509,-
+BRDA:496,0,jump to line 497,-
+BRDA:496,0,jump to line 499,-
+BRDA:500,0,jump to line 501,-
+BRDA:500,0,jump to line 503,-
+BRDA:503,0,jump to line 504,-
+BRDA:503,0,return from function 'validate',-
+BRDA:505,0,jump to line 506,-
+BRDA:505,0,return from function 'validate',-
+BRF:64
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/commands/__init__.py
+DA:3,1
+DA:8,1
+LF:2
+LH:2
+end_of_record
+SF:src/ai_trackdown_pytools/commands/ai.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:7,1
+DA:8,1
+DA:9,1
+DA:10,1
+DA:12,1
+DA:13,1
+DA:15,1
+DA:16,1
+DA:19,1
+DA:20,1
+DA:30,0
+DA:32,0
+DA:33,0
+DA:34,0
+DA:37,0
+DA:38,0
+DA:41,0
+DA:42,0
+DA:43,0
+DA:44,0
+DA:46,0
+DA:48,0
+DA:49,0
+DA:50,0
+DA:53,0
+DA:54,0
+DA:55,0
+DA:57,0
+DA:58,0
+DA:59,0
+DA:61,0
+DA:62,0
+DA:63,0
+DA:65,0
+DA:66,0
+DA:67,0
+DA:70,0
+DA:83,0
+DA:86,0
+DA:87,0
+DA:88,0
+DA:91,0
+DA:92,0
+DA:94,0
+DA:109,1
+DA:110,1
+DA:117,0
+DA:119,0
+DA:120,0
+DA:121,0
+DA:123,0
+DA:124,0
+DA:125,0
+DA:126,0
+DA:128,0
+DA:129,0
+DA:131,0
+DA:134,0
+DA:135,0
+DA:137,0
+DA:138,0
+DA:140,0
+DA:141,0
+DA:142,0
+DA:145,0
+DA:146,0
+DA:147,0
+DA:148,0
+DA:151,0
+DA:165,0
+DA:166,0
+DA:168,0
+DA:169,0
+DA:170,0
+DA:171,0
+DA:172,0
+DA:173,0
+DA:174,0
+DA:176,0
+DA:177,0
+DA:186,0
+DA:189,0
+DA:190,0
+DA:191,0
+DA:193,0
+DA:194,0
+DA:195,0
+DA:197,0
+DA:198,0
+DA:199,0
+DA:201,0
+DA:204,1
+DA:205,1
+DA:214,0
+DA:216,0
+DA:217,0
+DA:218,0
+DA:221,0
+DA:228,0
+DA:229,0
+DA:232,0
+DA:233,0
+DA:234,0
+DA:236,0
+DA:237,0
+DA:238,0
+DA:239,0
+DA:240,0
+DA:243,0
+DA:245,0
+DA:246,0
+DA:247,0
+DA:248,0
+DA:249,0
+DA:250,0
+DA:252,0
+DA:253,0
+DA:255,0
+DA:256,0
+DA:258,0
+DA:259,0
+DA:262,0
+DA:263,0
+DA:266,0
+DA:267,0
+DA:270,0
+DA:271,0
+DA:273,0
+DA:276,0
+DA:278,0
+DA:280,0
+DA:281,0
+DA:282,0
+DA:283,0
+DA:286,0
+DA:287,0
+DA:290,0
+DA:291,0
+DA:292,0
+DA:294,0
+DA:295,0
+DA:296,0
+DA:297,0
+DA:298,0
+DA:300,0
+DA:301,0
+DA:302,0
+DA:304,0
+DA:305,0
+DA:308,0
+DA:310,0
+DA:311,0
+DA:312,0
+DA:314,0
+DA:315,0
+DA:316,0
+DA:317,0
+DA:318,0
+DA:319,0
+DA:320,0
+DA:321,0
+DA:322,0
+DA:323,0
+DA:324,0
+DA:326,0
+DA:340,1
+DA:341,1
+DA:349,0
+DA:351,0
+DA:352,0
+DA:353,0
+DA:355,0
+DA:357,0
+DA:358,0
+DA:359,0
+DA:360,0
+DA:361,0
+DA:363,0
+DA:376,0
+DA:377,0
+DA:380,0
+DA:381,0
+DA:382,0
+DA:383,0
+DA:386,0
+DA:387,0
+DA:388,0
+DA:389,0
+DA:392,0
+DA:393,0
+DA:394,0
+DA:395,0
+DA:397,0
+DA:399,0
+DA:402,0
+DA:403,0
+DA:421,0
+DA:424,0
+DA:426,0
+DA:427,0
+DA:428,0
+DA:430,0
+DA:431,0
+DA:432,0
+DA:433,0
+DA:434,0
+DA:435,0
+DA:436,0
+DA:437,0
+DA:438,0
+DA:439,0
+DA:441,0
+DA:442,0
+DA:443,0
+DA:444,0
+DA:445,0
+DA:447,0
+DA:448,0
+DA:449,0
+DA:450,0
+DA:451,0
+DA:452,0
+DA:455,0
+DA:456,0
+DA:457,0
+DA:458,0
+DA:459,0
+DA:460,0
+DA:461,0
+DA:462,0
+DA:464,0
+DA:465,0
+DA:466,0
+DA:468,0
+LF:237
+LH:19
+FN:20,106,track_tokens
+FNDA:0,track_tokens
+FN:110,201,token_stats
+FNDA:0,token_stats
+FN:205,337,generate_llms_txt
+FNDA:0,generate_llms_txt
+FN:245,250,generate_llms_txt.should_exclude
+FNDA:0,generate_llms_txt.should_exclude
+FN:252,253,generate_llms_txt.is_test_file
+FNDA:0,generate_llms_txt.is_test_file
+FN:290,302,generate_llms_txt.write_tree
+FNDA:0,generate_llms_txt.write_tree
+FN:341,468,context
+FNDA:0,context
+FNF:7
+FNH:0
+BRDA:32,0,jump to line 33,-
+BRDA:32,0,jump to line 37,-
+BRDA:42,0,jump to line 43,-
+BRDA:42,0,jump to line 46,-
+BRDA:48,0,jump to line 49,-
+BRDA:48,0,jump to line 53,-
+BRDA:53,0,jump to line 54,-
+BRDA:53,0,jump to line 57,-
+BRDA:57,0,jump to line 58,-
+BRDA:57,0,jump to line 61,-
+BRDA:61,0,jump to line 62,-
+BRDA:61,0,jump to line 65,-
+BRDA:65,0,jump to line 66,-
+BRDA:65,0,jump to line 70,-
+BRDA:119,0,jump to line 120,-
+BRDA:119,0,jump to line 123,-
+BRDA:124,0,jump to line 125,-
+BRDA:124,0,jump to line 128,-
+BRDA:134,0,jump to line 135,-
+BRDA:134,0,jump to line 137,-
+BRDA:137,0,jump to line 138,-
+BRDA:137,0,jump to line 140,-
+BRDA:140,0,jump to line 141,-
+BRDA:140,0,jump to line 145,-
+BRDA:165,0,jump to line 166,-
+BRDA:165,0,jump to line 189,-
+BRDA:176,0,jump to line 177,-
+BRDA:176,0,jump to line 186,-
+BRDA:189,0,jump to line 190,-
+BRDA:189,0,return from function 'token_stats',-
+BRDA:198,0,jump to line 199,-
+BRDA:198,0,jump to line 201,-
+BRDA:216,0,jump to line 217,-
+BRDA:216,0,jump to line 221,-
+BRDA:228,0,jump to line 229,-
+BRDA:228,0,jump to line 232,-
+BRDA:237,0,jump to line 238,-
+BRDA:237,0,jump to line 239,-
+BRDA:239,0,jump to line 240,-
+BRDA:239,0,jump to line 243,-
+BRDA:247,0,jump to line 248,-
+BRDA:247,0,jump to line 250,-
+BRDA:248,0,jump to line 247,-
+BRDA:248,0,jump to line 249,-
+BRDA:255,0,jump to line 256,-
+BRDA:255,0,jump to line 276,-
+BRDA:256,0,jump to line 255,-
+BRDA:256,0,jump to line 258,-
+BRDA:258,0,jump to line 259,-
+BRDA:258,0,jump to line 262,-
+BRDA:262,0,jump to line 263,-
+BRDA:262,0,jump to line 266,-
+BRDA:266,0,jump to line 267,-
+BRDA:266,0,jump to line 270,-
+BRDA:270,0,jump to line 271,-
+BRDA:270,0,jump to line 273,-
+BRDA:291,0,jump to line 292,-
+BRDA:291,0,jump to line 294,-
+BRDA:295,0,jump to line 296,-
+BRDA:295,0,return from function 'write_tree',-
+BRDA:300,0,jump to line 295,-
+BRDA:300,0,jump to line 301,-
+BRDA:310,0,jump to line 311,-
+BRDA:310,0,jump to line 326,-
+BRDA:318,0,jump to line 319,-
+BRDA:318,0,jump to line 320,-
+BRDA:351,0,jump to line 352,-
+BRDA:351,0,jump to line 355,-
+BRDA:357,0,jump to line 358,-
+BRDA:357,0,jump to line 402,-
+BRDA:359,0,jump to line 360,-
+BRDA:359,0,jump to line 363,-
+BRDA:376,0,jump to line 377,-
+BRDA:376,0,jump to line 399,-
+BRDA:380,0,jump to line 381,-
+BRDA:380,0,jump to line 386,-
+BRDA:382,0,jump to line 383,-
+BRDA:382,0,jump to line 386,-
+BRDA:386,0,jump to line 387,-
+BRDA:386,0,jump to line 392,-
+BRDA:388,0,jump to line 386,-
+BRDA:388,0,jump to line 389,-
+BRDA:392,0,jump to line 393,-
+BRDA:392,0,jump to line 397,-
+BRDA:394,0,jump to line 392,-
+BRDA:394,0,jump to line 395,-
+BRDA:426,0,jump to line 427,-
+BRDA:426,0,jump to line 430,-
+BRDA:430,0,jump to line 431,-
+BRDA:430,0,jump to line 455,-
+BRDA:432,0,jump to line 433,-
+BRDA:432,0,jump to line 447,-
+BRDA:441,0,jump to line 442,-
+BRDA:441,0,jump to line 468,-
+BRDA:443,0,jump to line 444,-
+BRDA:443,0,jump to line 468,-
+BRDA:451,0,jump to line 452,-
+BRDA:451,0,jump to line 468,-
+BRDA:456,0,jump to line 457,-
+BRDA:456,0,jump to line 464,-
+BRF:100
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/commands/create.py
+DA:3,1
+DA:4,1
+DA:6,1
+DA:7,1
+DA:8,1
+DA:9,1
+DA:11,1
+DA:12,1
+DA:13,1
+DA:14,1
+DA:16,1
+DA:17,1
+DA:20,1
+DA:21,1
+DA:66,0
+DA:68,0
+DA:69,0
+DA:70,0
+DA:71,0
+DA:73,0
+DA:76,0
+DA:77,0
+DA:78,0
+DA:79,0
+DA:85,0
+DA:86,0
+DA:87,0
+DA:89,0
+DA:90,0
+DA:91,0
+DA:94,0
+DA:103,0
+DA:104,0
+DA:105,0
+DA:106,0
+DA:107,0
+DA:108,0
+DA:110,0
+DA:112,0
+DA:125,0
+DA:126,0
+DA:129,1
+DA:130,1
+DA:162,0
+DA:164,0
+DA:165,0
+DA:166,0
+DA:169,0
+DA:171,0
+DA:172,0
+DA:174,0
+DA:175,0
+DA:178,0
+DA:179,0
+DA:180,0
+DA:182,0
+DA:194,0
+DA:207,1
+DA:208,1
+DA:229,0
+DA:231,0
+DA:232,0
+DA:233,0
+DA:235,0
+DA:237,0
+DA:238,0
+DA:240,0
+DA:241,0
+DA:243,0
+DA:244,0
+DA:247,0
+DA:259,0
+DA:275,1
+DA:276,1
+DA:303,0
+DA:305,0
+DA:306,0
+DA:307,0
+DA:309,0
+DA:311,0
+DA:313,0
+DA:314,0
+DA:315,0
+DA:318,0
+DA:319,0
+DA:321,0
+DA:322,0
+DA:324,0
+DA:325,0
+DA:328,0
+DA:330,0
+DA:343,0
+LF:92
+LH:20
+FN:21,126,task
+FNDA:0,task
+FN:130,204,issue
+FNDA:0,issue
+FN:208,272,epic
+FNDA:0,epic
+FN:276,358,pr
+FNDA:0,pr
+FN:362,438,update
+FNDA:0,update
+FNF:5
+FNH:0
+BRDA:68,0,jump to line 69,-
+BRDA:68,0,jump to line 73,-
+BRDA:76,0,jump to line 77,-
+BRDA:76,0,jump to line 94,-
+BRDA:86,0,jump to line 87,-
+BRDA:86,0,jump to line 89,-
+BRDA:90,0,jump to line 91,-
+BRDA:90,0,jump to line 94,-
+BRDA:103,0,jump to line 104,-
+BRDA:103,0,jump to line 110,-
+BRDA:106,0,jump to line 107,-
+BRDA:106,0,jump to line 110,-
+BRDA:125,0,jump to line 126,-
+BRDA:125,0,return from function 'task',-
+BRDA:164,0,jump to line 165,-
+BRDA:164,0,jump to line 169,-
+BRDA:171,0,jump to line 172,-
+BRDA:171,0,jump to line 174,-
+BRDA:174,0,jump to line 175,-
+BRDA:174,0,jump to line 178,-
+BRDA:179,0,jump to line 180,-
+BRDA:179,0,jump to line 182,-
+BRDA:231,0,jump to line 232,-
+BRDA:231,0,jump to line 235,-
+BRDA:237,0,jump to line 238,-
+BRDA:237,0,jump to line 240,-
+BRDA:240,0,jump to line 241,-
+BRDA:240,0,jump to line 243,-
+BRDA:243,0,jump to line 244,-
+BRDA:243,0,jump to line 247,-
+BRDA:305,0,jump to line 306,-
+BRDA:305,0,jump to line 309,-
+BRDA:313,0,jump to line 314,-
+BRDA:313,0,jump to line 318,-
+BRDA:318,0,jump to line 319,-
+BRDA:318,0,jump to line 321,-
+BRDA:321,0,jump to line 322,-
+BRDA:321,0,jump to line 324,-
+BRDA:324,0,jump to line 325,-
+BRDA:324,0,jump to line 328,-
+BRF:40
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/commands/epic.py
+DA:3,1
+DA:4,1
+DA:6,1
+DA:7,1
+DA:8,1
+DA:9,1
+DA:11,1
+DA:12,1
+DA:13,1
+DA:15,1
+DA:16,1
+DA:19,1
+DA:20,1
+DA:47,0
+DA:49,0
+DA:50,0
+DA:51,0
+DA:53,0
+DA:55,0
+DA:56,0
+DA:57,0
+DA:59,0
+DA:60,0
+DA:61,0
+DA:63,0
+DA:64,0
+DA:65,0
+DA:68,0
+DA:82,0
+DA:83,0
+DA:84,0
+DA:85,0
+DA:86,0
+DA:87,0
+DA:89,0
+DA:91,0
+DA:108,1
+DA:109,1
+DA:115,0
+DA:117,0
+DA:118,0
+DA:119,0
+DA:121,0
+DA:122,0
+DA:125,0
+DA:127,0
+DA:128,0
+DA:130,0
+DA:131,0
+DA:133,0
+DA:134,0
+DA:136,0
+DA:137,0
+DA:138,0
+DA:140,0
+DA:141,0
+DA:142,0
+DA:143,0
+DA:144,0
+DA:145,0
+DA:146,0
+DA:148,0
+DA:149,0
+DA:150,0
+DA:151,0
+DA:162,0
+LF:66
+LH:15
+FN:20,105,create
+FNDA:0,create
+FN:109,162,list
+FNDA:0,list
+FN:166,233,status
+FNDA:0,status
+FN:237,275,add_task
+FNDA:0,add_task
+FN:279,318,remove_task
+FNDA:0,remove_task
+FN:322,386,update
+FNDA:0,update
+FNF:6
+FNH:0
+BRDA:49,0,jump to line 50,-
+BRDA:49,0,jump to line 53,-
+BRDA:55,0,jump to line 56,-
+BRDA:55,0,jump to line 59,-
+BRDA:59,0,jump to line 60,-
+BRDA:59,0,jump to line 63,-
+BRDA:63,0,jump to line 64,-
+BRDA:63,0,jump to line 68,-
+BRDA:82,0,jump to line 83,-
+BRDA:82,0,jump to line 89,-
+BRDA:85,0,jump to line 86,-
+BRDA:85,0,jump to line 89,-
+BRDA:117,0,jump to line 118,-
+BRDA:117,0,jump to line 121,-
+BRDA:127,0,jump to line 128,-
+BRDA:127,0,jump to line 130,-
+BRDA:130,0,jump to line 131,-
+BRDA:130,0,jump to line 133,-
+BRDA:133,0,jump to line 134,-
+BRDA:133,0,jump to line 136,-
+BRDA:136,0,jump to line 137,-
+BRDA:136,0,jump to line 140,-
+BRDA:148,0,jump to line 149,-
+BRDA:148,0,jump to line 162,-
+BRF:24
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/commands/init.py
+DA:3,1
+DA:4,1
+DA:6,1
+DA:7,1
+DA:8,1
+DA:10,1
+DA:11,1
+DA:12,1
+DA:14,1
+DA:15,1
+DA:18,1
+DA:19,1
+DA:43,0
+DA:45,0
+DA:46,0
+DA:47,0
+DA:48,0
+DA:50,0
+DA:53,0
+DA:56,0
+DA:57,0
+DA:58,0
+DA:61,0
+DA:62,0
+DA:63,0
+DA:64,0
+DA:66,0
+DA:68,0
+DA:86,1
+DA:87,1
+DA:102,0
+DA:104,0
+DA:105,0
+DA:106,0
+DA:108,0
+DA:109,0
+DA:111,0
+DA:113,0
+DA:114,0
+DA:115,0
+DA:117,0
+DA:120,1
+DA:121,1
+DA:130,0
+DA:132,0
+DA:133,0
+DA:134,0
+DA:136,0
+DA:137,0
+LF:49
+LH:16
+FN:19,83,project
+FNDA:0,project
+FN:87,117,config
+FNDA:0,config
+FN:121,137,templates
+FNDA:0,templates
+FNF:3
+FNH:0
+BRDA:45,0,jump to line 46,-
+BRDA:45,0,jump to line 50,-
+BRDA:56,0,jump to line 57,-
+BRDA:56,0,jump to line 61,-
+BRDA:61,0,jump to line 62,-
+BRDA:61,0,jump to line 68,-
+BRDA:63,0,jump to line 64,-
+BRDA:63,0,jump to line 66,-
+BRDA:104,0,jump to line 105,-
+BRDA:104,0,jump to line 108,-
+BRDA:113,0,jump to line 114,-
+BRDA:113,0,jump to line 117,-
+BRDA:132,0,jump to line 133,-
+BRDA:132,0,jump to line 136,-
+BRF:14
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/commands/issue.py
+DA:3,1
+DA:4,1
+DA:6,1
+DA:7,1
+DA:8,1
+DA:9,1
+DA:11,1
+DA:12,1
+DA:13,1
+DA:15,1
+DA:16,1
+DA:19,1
+DA:20,1
+DA:69,0
+DA:71,0
+DA:72,0
+DA:73,0
+DA:75,0
+DA:77,0
+DA:78,0
+DA:79,0
+DA:81,0
+DA:82,0
+DA:83,0
+DA:86,0
+DA:87,0
+DA:88,0
+DA:91,0
+DA:109,0
+DA:110,0
+DA:111,0
+DA:112,0
+DA:113,0
+DA:114,0
+DA:116,0
+DA:118,0
+DA:133,1
+DA:134,1
+DA:144,0
+DA:146,0
+DA:147,0
+DA:148,0
+DA:150,0
+DA:151,0
+DA:154,0
+DA:157,0
+DA:158,0
+DA:160,0
+DA:161,0
+DA:163,0
+DA:164,0
+DA:166,0
+DA:167,0
+DA:169,0
+DA:170,0
+DA:172,0
+DA:173,0
+DA:176,0
+DA:178,0
+DA:179,0
+DA:180,0
+DA:182,0
+DA:183,0
+DA:184,0
+DA:185,0
+DA:186,0
+DA:187,0
+DA:188,0
+DA:189,0
+DA:191,0
+DA:192,0
+DA:204,0
+LF:72
+LH:15
+FN:20,130,create
+FNDA:0,create
+FN:134,204,list
+FNDA:0,list
+FN:208,259,show
+FNDA:0,show
+FN:263,349,update
+FNDA:0,update
+FN:353,405,resolve
+FNDA:0,resolve
+FN:409,444,close
+FNDA:0,close
+FN:448,493,reopen
+FNDA:0,reopen
+FNF:7
+FNH:0
+BRDA:71,0,jump to line 72,-
+BRDA:71,0,jump to line 75,-
+BRDA:77,0,jump to line 78,-
+BRDA:77,0,jump to line 81,-
+BRDA:81,0,jump to line 82,-
+BRDA:81,0,jump to line 86,-
+BRDA:87,0,jump to line 88,-
+BRDA:87,0,jump to line 91,-
+BRDA:109,0,jump to line 110,-
+BRDA:109,0,jump to line 116,-
+BRDA:112,0,jump to line 113,-
+BRDA:112,0,jump to line 116,-
+BRDA:146,0,jump to line 147,-
+BRDA:146,0,jump to line 150,-
+BRDA:157,0,jump to line 158,-
+BRDA:157,0,jump to line 160,-
+BRDA:160,0,jump to line 161,-
+BRDA:160,0,jump to line 163,-
+BRDA:163,0,jump to line 164,-
+BRDA:163,0,jump to line 166,-
+BRDA:166,0,jump to line 167,-
+BRDA:166,0,jump to line 169,-
+BRDA:169,0,jump to line 170,-
+BRDA:169,0,jump to line 172,-
+BRDA:172,0,jump to line 173,-
+BRDA:172,0,jump to line 176,-
+BRDA:178,0,jump to line 179,-
+BRDA:178,0,jump to line 182,-
+BRDA:191,0,jump to line 192,-
+BRDA:191,0,jump to line 204,-
+BRF:30
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/commands/migrate.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:7,1
+DA:8,1
+DA:9,1
+DA:10,1
+DA:12,1
+DA:13,1
+DA:15,1
+DA:16,1
+DA:19,1
+DA:20,1
+DA:22,0
+DA:24,0
+DA:25,0
+DA:26,0
+DA:28,0
+DA:30,0
+DA:46,1
+DA:47,1
+DA:52,0
+DA:54,0
+DA:55,0
+DA:56,0
+DA:58,0
+DA:59,0
+DA:60,0
+DA:63,0
+DA:64,0
+DA:65,0
+DA:67,0
+DA:69,0
+DA:71,0
+DA:79,0
+DA:81,0
+DA:82,0
+DA:83,0
+DA:84,0
+DA:85,0
+DA:86,0
+DA:89,0
+DA:90,0
+DA:91,0
+DA:92,0
+DA:93,0
+DA:94,0
+DA:95,0
+DA:96,0
+DA:97,0
+DA:100,0
+DA:102,0
+DA:103,0
+DA:148,1
+DA:149,1
+DA:154,0
+DA:156,0
+DA:157,0
+DA:158,0
+DA:160,0
+DA:161,0
+DA:162,0
+DA:164,0
+DA:166,0
+DA:167,0
+DA:168,0
+DA:171,0
+DA:178,0
+DA:179,0
+DA:181,0
+DA:182,0
+DA:183,0
+DA:184,0
+DA:185,0
+DA:186,0
+DA:188,0
+DA:189,0
+DA:190,0
+DA:192,0
+DA:193,0
+DA:195,0
+DA:196,0
+DA:197,0
+DA:198,0
+DA:199,0
+DA:202,0
+DA:207,0
+DA:210,0
+DA:211,0
+DA:212,0
+DA:213,0
+DA:214,0
+DA:215,0
+DA:218,0
+DA:219,0
+DA:220,0
+DA:222,0
+DA:225,1
+DA:227,0
+DA:228,0
+DA:230,0
+DA:232,0
+DA:233,0
+DA:234,0
+DA:235,0
+DA:236,0
+DA:237,0
+DA:239,0
+DA:242,1
+DA:244,0
+DA:245,0
+DA:247,0
+DA:249,0
+DA:250,0
+DA:251,0
+DA:252,0
+DA:255,0
+DA:256,0
+DA:258,0
+DA:261,1
+DA:263,0
+DA:264,0
+DA:266,0
+DA:268,0
+DA:269,0
+DA:270,0
+DA:271,0
+DA:274,0
+DA:275,0
+DA:277,0
+DA:280,1
+DA:281,1
+DA:286,0
+DA:288,0
+DA:289,0
+DA:290,0
+DA:292,0
+DA:293,0
+DA:295,0
+DA:300,0
+DA:302,0
+DA:304,0
+DA:305,0
+DA:306,0
+DA:314,0
+DA:315,0
+DA:316,0
+DA:317,0
+DA:325,0
+DA:326,0
+DA:327,0
+DA:328,0
+DA:336,0
+DA:337,0
+DA:338,0
+DA:340,0
+DA:342,0
+DA:343,0
+DA:345,0
+DA:346,0
+DA:348,0
+DA:351,0
+DA:352,0
+DA:353,0
+DA:354,0
+DA:356,0
+DA:357,0
+DA:358,0
+DA:360,0
+DA:361,0
+DA:362,0
+DA:363,0
+DA:364,0
+DA:365,0
+DA:367,0
+DA:368,0
+DA:369,0
+DA:370,0
+DA:371,0
+DA:372,0
+DA:374,0
+DA:376,0
+DA:378,0
+LF:183
+LH:22
+FN:20,43,version_check
+FNDA:0,version_check
+FN:47,103,backup
+FNDA:0,backup
+FN:107,145,restore
+FNDA:0,restore
+FN:149,222,schema_upgrade
+FNDA:0,schema_upgrade
+FN:225,239,_migrate_1_0_to_1_1
+FNDA:0,_migrate_1_0_to_1_1
+FN:242,258,_migrate_1_1_to_1_2
+FNDA:0,_migrate_1_1_to_1_2
+FN:261,277,_migrate_1_2_to_1_3
+FNDA:0,_migrate_1_2_to_1_3
+FN:281,378,repair
+FNDA:0,repair
+FNF:8
+FNH:0
+BRDA:24,0,jump to line 25,-
+BRDA:24,0,jump to line 28,-
+BRDA:54,0,jump to line 55,-
+BRDA:54,0,jump to line 58,-
+BRDA:63,0,jump to line 64,-
+BRDA:63,0,jump to line 67,-
+BRDA:82,0,jump to line 83,-
+BRDA:82,0,jump to line 89,-
+BRDA:83,0,jump to line 84,-
+BRDA:83,0,jump to line 89,-
+BRDA:84,0,jump to line 83,-
+BRDA:84,0,jump to line 85,-
+BRDA:89,0,jump to line 90,-
+BRDA:89,0,jump to line 100,-
+BRDA:91,0,jump to line 92,-
+BRDA:91,0,jump to line 100,-
+BRDA:92,0,jump to line 93,-
+BRDA:92,0,jump to line 100,-
+BRDA:93,0,jump to line 92,-
+BRDA:93,0,jump to line 94,-
+BRDA:156,0,jump to line 157,-
+BRDA:156,0,jump to line 160,-
+BRDA:166,0,jump to line 167,-
+BRDA:166,0,jump to line 171,-
+BRDA:181,0,jump to line 182,-
+BRDA:181,0,jump to line 195,-
+BRDA:183,0,jump to line 184,-
+BRDA:183,0,jump to line 188,-
+BRDA:184,0,jump to line 183,-
+BRDA:184,0,jump to line 185,-
+BRDA:188,0,jump to line 189,-
+BRDA:188,0,jump to line 192,-
+BRDA:195,0,jump to line 196,-
+BRDA:195,0,jump to line 202,-
+BRDA:197,0,jump to line 198,-
+BRDA:197,0,jump to line 199,-
+BRDA:230,0,jump to line 232,-
+BRDA:230,0,return from function '_migrate_1_0_to_1_1',-
+BRDA:232,0,jump to line 233,-
+BRDA:232,0,jump to line 234,-
+BRDA:234,0,jump to line 235,-
+BRDA:234,0,jump to line 236,-
+BRDA:236,0,jump to line 237,-
+BRDA:236,0,jump to line 239,-
+BRDA:247,0,jump to line 249,-
+BRDA:247,0,return from function '_migrate_1_1_to_1_2',-
+BRDA:249,0,jump to line 250,-
+BRDA:249,0,jump to line 251,-
+BRDA:251,0,jump to line 252,-
+BRDA:251,0,jump to line 255,-
+BRDA:255,0,jump to line 256,-
+BRDA:255,0,jump to line 258,-
+BRDA:266,0,jump to line 268,-
+BRDA:266,0,return from function '_migrate_1_2_to_1_3',-
+BRDA:268,0,jump to line 269,-
+BRDA:268,0,jump to line 270,-
+BRDA:270,0,jump to line 271,-
+BRDA:270,0,jump to line 274,-
+BRDA:274,0,jump to line 275,-
+BRDA:274,0,jump to line 277,-
+BRDA:288,0,jump to line 289,-
+BRDA:288,0,jump to line 292,-
+BRDA:302,0,jump to line 304,-
+BRDA:302,0,jump to line 336,-
+BRDA:305,0,jump to line 306,-
+BRDA:305,0,jump to line 314,-
+BRDA:315,0,jump to line 316,-
+BRDA:315,0,jump to line 325,-
+BRDA:316,0,jump to line 315,-
+BRDA:316,0,jump to line 317,-
+BRDA:326,0,jump to line 302,-
+BRDA:326,0,jump to line 327,-
+BRDA:327,0,jump to line 326,-
+BRDA:327,0,jump to line 328,-
+BRDA:336,0,jump to line 337,-
+BRDA:336,0,jump to line 340,-
+BRDA:342,0,jump to line 343,-
+BRDA:342,0,jump to line 345,-
+BRDA:345,0,jump to line 346,-
+BRDA:345,0,jump to line 348,-
+BRDA:351,0,jump to line 352,-
+BRDA:351,0,jump to line 376,-
+BRDA:353,0,jump to line 354,-
+BRDA:353,0,jump to line 356,-
+BRDA:356,0,jump to line 357,-
+BRDA:356,0,jump to line 360,-
+BRDA:360,0,jump to line 361,-
+BRDA:360,0,jump to line 367,-
+BRDA:362,0,jump to line 363,-
+BRDA:362,0,jump to line 365,-
+BRDA:367,0,jump to line 368,-
+BRDA:367,0,jump to line 374,-
+BRDA:369,0,jump to line 370,-
+BRDA:369,0,jump to line 372,-
+BRF:94
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/commands/portfolio.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:7,1
+DA:8,1
+DA:9,1
+DA:10,1
+DA:11,1
+DA:13,1
+DA:14,1
+DA:16,1
+DA:17,1
+DA:20,1
+DA:21,1
+DA:26,0
+DA:28,0
+DA:29,0
+DA:30,0
+DA:32,0
+DA:33,0
+DA:35,0
+DA:36,0
+DA:39,0
+DA:40,0
+DA:41,0
+DA:42,0
+DA:45,0
+DA:46,0
+DA:48,0
+DA:49,0
+DA:50,0
+DA:53,0
+DA:54,0
+DA:55,0
+DA:56,0
+DA:57,0
+DA:59,0
+DA:61,0
+DA:63,0
+DA:70,0
+DA:96,0
+DA:97,0
+DA:99,0
+DA:100,0
+DA:101,0
+DA:102,0
+DA:103,0
+DA:105,0
+DA:106,0
+DA:107,0
+DA:108,0
+DA:110,0
+DA:119,0
+DA:122,0
+DA:123,0
+DA:126,0
+DA:127,0
+DA:128,0
+DA:129,0
+DA:131,0
+DA:132,0
+DA:133,0
+DA:134,0
+DA:137,0
+DA:138,0
+DA:139,0
+DA:140,0
+DA:141,0
+DA:143,0
+DA:144,0
+DA:145,0
+DA:146,0
+DA:149,1
+DA:150,1
+DA:158,0
+DA:160,0
+DA:161,0
+DA:162,0
+DA:164,0
+DA:165,0
+DA:168,0
+DA:171,0
+DA:172,0
+DA:174,0
+DA:175,0
+DA:177,0
+DA:178,0
+DA:181,0
+DA:182,0
+DA:185,0
+DA:187,0
+DA:188,0
+DA:189,0
+DA:191,0
+DA:193,0
+DA:194,0
+DA:195,0
+DA:196,0
+DA:197,0
+DA:198,0
+DA:200,0
+DA:201,0
+DA:202,0
+DA:203,0
+DA:205,0
+DA:206,0
+DA:207,0
+DA:208,0
+DA:209,0
+DA:210,0
+DA:212,0
+DA:213,0
+DA:214,0
+DA:215,0
+DA:225,0
+DA:228,0
+DA:229,0
+DA:230,0
+DA:231,0
+DA:232,0
+DA:233,0
+DA:234,0
+DA:235,0
+DA:237,0
+DA:238,0
+DA:239,0
+DA:240,0
+DA:252,0
+DA:255,1
+DA:256,1
+DA:262,0
+DA:264,0
+DA:265,0
+DA:266,0
+DA:268,0
+DA:269,0
+DA:272,0
+DA:274,0
+DA:275,0
+DA:276,0
+DA:279,0
+DA:280,0
+DA:282,0
+DA:284,0
+DA:286,0
+DA:288,0
+DA:289,0
+DA:290,0
+DA:292,0
+DA:294,0
+DA:296,0
+DA:297,0
+DA:300,0
+DA:301,0
+DA:302,0
+DA:303,0
+DA:306,0
+DA:307,0
+DA:309,0
+DA:310,0
+DA:311,0
+DA:312,0
+DA:315,0
+DA:318,0
+DA:322,0
+DA:323,0
+DA:324,0
+DA:325,0
+DA:326,0
+DA:327,0
+DA:328,0
+DA:330,0
+DA:331,0
+DA:332,0
+DA:333,0
+DA:335,0
+DA:337,0
+DA:339,0
+DA:350,0
+DA:538,1
+DA:540,0
+DA:541,0
+DA:542,0
+DA:543,0
+DA:544,0
+DA:545,0
+DA:547,0
+DA:550,1
+DA:552,0
+DA:558,0
+LF:190
+LH:20
+FN:21,146,overview
+FNDA:0,overview
+FN:150,252,backlog
+FNDA:0,backlog
+FN:256,350,roadmap
+FNDA:0,roadmap
+FN:354,535,sprint
+FNDA:0,sprint
+FN:538,547,_get_task_type
+FNDA:0,_get_task_type
+FN:550,558,_get_priority_color
+FNDA:0,_get_priority_color
+FNF:6
+FNH:0
+BRDA:28,0,jump to line 29,-
+BRDA:28,0,jump to line 32,-
+BRDA:35,0,jump to line 36,-
+BRDA:35,0,jump to line 39,-
+BRDA:48,0,jump to line 49,-
+BRDA:48,0,jump to line 53,-
+BRDA:54,0,jump to line 55,-
+BRDA:54,0,jump to line 70,-
+BRDA:56,0,jump to line 57,-
+BRDA:56,0,jump to line 61,-
+BRDA:96,0,jump to line 97,-
+BRDA:96,0,jump to line 122,-
+BRDA:105,0,jump to line 106,-
+BRDA:105,0,jump to line 119,-
+BRDA:122,0,jump to line 123,-
+BRDA:122,0,return from function 'overview',-
+BRDA:127,0,jump to line 128,-
+BRDA:127,0,jump to line 131,-
+BRDA:128,0,jump to line 127,-
+BRDA:128,0,jump to line 129,-
+BRDA:131,0,jump to line 132,-
+BRDA:131,0,jump to line 137,-
+BRDA:133,0,jump to line 134,-
+BRDA:133,0,jump to line 137,-
+BRDA:138,0,jump to line 139,-
+BRDA:138,0,jump to line 143,-
+BRDA:139,0,jump to line 138,-
+BRDA:139,0,jump to line 140,-
+BRDA:140,0,jump to line 139,-
+BRDA:140,0,jump to line 141,-
+BRDA:143,0,jump to line 144,-
+BRDA:143,0,return from function 'overview',-
+BRDA:145,0,jump to line 146,-
+BRDA:145,0,return from function 'overview',-
+BRDA:160,0,jump to line 161,-
+BRDA:160,0,jump to line 164,-
+BRDA:171,0,jump to line 172,-
+BRDA:171,0,jump to line 174,-
+BRDA:174,0,jump to line 175,-
+BRDA:174,0,jump to line 177,-
+BRDA:177,0,jump to line 178,-
+BRDA:177,0,jump to line 181,-
+BRDA:187,0,jump to line 188,-
+BRDA:187,0,jump to line 191,-
+BRDA:191,0,jump to line 193,-
+BRDA:191,0,jump to line 228,-
+BRDA:194,0,jump to line 195,-
+BRDA:194,0,jump to line 200,-
+BRDA:196,0,jump to line 197,-
+BRDA:196,0,jump to line 198,-
+BRDA:200,0,jump to line 201,-
+BRDA:200,0,return from function 'backlog',-
+BRDA:201,0,jump to line 200,-
+BRDA:201,0,jump to line 202,-
+BRDA:212,0,jump to line 213,-
+BRDA:212,0,jump to line 225,-
+BRDA:237,0,jump to line 238,-
+BRDA:237,0,jump to line 252,-
+BRDA:264,0,jump to line 265,-
+BRDA:264,0,jump to line 268,-
+BRDA:274,0,jump to line 275,-
+BRDA:274,0,jump to line 279,-
+BRDA:282,0,jump to line 284,-
+BRDA:282,0,jump to line 322,-
+BRDA:286,0,jump to line 288,-
+BRDA:286,0,jump to line 318,-
+BRDA:289,0,jump to line 290,-
+BRDA:289,0,jump to line 294,-
+BRDA:302,0,jump to line 303,-
+BRDA:302,0,jump to line 306,-
+BRDA:306,0,jump to line 286,-
+BRDA:306,0,jump to line 307,-
+BRDA:309,0,jump to line 310,-
+BRDA:309,0,jump to line 315,-
+BRDA:311,0,jump to line 309,-
+BRDA:311,0,jump to line 312,-
+BRDA:330,0,jump to line 331,-
+BRDA:330,0,jump to line 350,-
+BRDA:332,0,jump to line 333,-
+BRDA:332,0,jump to line 337,-
+BRDA:540,0,jump to line 541,-
+BRDA:540,0,jump to line 542,-
+BRDA:542,0,jump to line 543,-
+BRDA:542,0,jump to line 544,-
+BRDA:544,0,jump to line 545,-
+BRDA:544,0,jump to line 547,-
+BRF:86
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/commands/pr.py
+DA:3,1
+DA:4,1
+DA:6,1
+DA:7,1
+DA:8,1
+DA:9,1
+DA:11,1
+DA:12,1
+DA:13,1
+DA:14,1
+DA:16,1
+DA:17,1
+DA:20,1
+DA:21,1
+DA:76,0
+DA:78,0
+DA:79,0
+DA:80,0
+DA:82,0
+DA:84,0
+DA:85,0
+DA:86,0
+DA:89,0
+DA:90,0
+DA:91,0
+DA:92,0
+DA:93,0
+DA:95,0
+DA:96,0
+DA:97,0
+DA:99,0
+DA:100,0
+DA:101,0
+DA:104,0
+DA:105,0
+DA:106,0
+DA:107,0
+DA:108,0
+DA:111,0
+DA:113,0
+DA:134,0
+DA:135,0
+DA:136,0
+DA:137,0
+DA:138,0
+DA:139,0
+DA:142,0
+DA:143,0
+DA:144,0
+DA:145,0
+DA:148,0
+DA:171,1
+DA:172,1
+DA:182,0
+DA:184,0
+DA:185,0
+DA:186,0
+DA:188,0
+DA:189,0
+DA:192,0
+DA:195,0
+DA:196,0
+DA:198,0
+DA:199,0
+DA:201,0
+DA:202,0
+DA:204,0
+DA:205,0
+DA:207,0
+DA:208,0
+DA:210,0
+DA:211,0
+DA:214,0
+DA:216,0
+DA:217,0
+DA:218,0
+DA:220,0
+DA:221,0
+DA:222,0
+DA:223,0
+DA:224,0
+DA:225,0
+DA:226,0
+DA:228,0
+DA:229,0
+DA:230,0
+DA:231,0
+DA:232,0
+DA:233,0
+DA:234,0
+DA:245,0
+LF:91
+LH:16
+FN:21,168,create
+FNDA:0,create
+FN:172,245,list
+FNDA:0,list
+FN:249,327,show
+FNDA:0,show
+FN:331,419,update
+FNDA:0,update
+FN:423,481,review
+FNDA:0,review
+FN:485,546,merge
+FNDA:0,merge
+FN:550,587,close
+FNDA:0,close
+FNF:7
+FNH:0
+BRDA:78,0,jump to line 79,-
+BRDA:78,0,jump to line 82,-
+BRDA:84,0,jump to line 85,-
+BRDA:84,0,jump to line 89,-
+BRDA:89,0,jump to line 90,-
+BRDA:89,0,jump to line 95,-
+BRDA:91,0,jump to line 92,-
+BRDA:91,0,jump to line 95,-
+BRDA:95,0,jump to line 96,-
+BRDA:95,0,jump to line 99,-
+BRDA:99,0,jump to line 100,-
+BRDA:99,0,jump to line 104,-
+BRDA:105,0,jump to line 106,-
+BRDA:105,0,jump to line 107,-
+BRDA:107,0,jump to line 108,-
+BRDA:107,0,jump to line 111,-
+BRDA:134,0,jump to line 135,-
+BRDA:134,0,jump to line 142,-
+BRDA:137,0,jump to line 138,-
+BRDA:137,0,jump to line 142,-
+BRDA:184,0,jump to line 185,-
+BRDA:184,0,jump to line 188,-
+BRDA:195,0,jump to line 196,-
+BRDA:195,0,jump to line 198,-
+BRDA:198,0,jump to line 199,-
+BRDA:198,0,jump to line 201,-
+BRDA:201,0,jump to line 202,-
+BRDA:201,0,jump to line 204,-
+BRDA:204,0,jump to line 205,-
+BRDA:204,0,jump to line 207,-
+BRDA:207,0,jump to line 208,-
+BRDA:207,0,jump to line 210,-
+BRDA:210,0,jump to line 211,-
+BRDA:210,0,jump to line 214,-
+BRDA:216,0,jump to line 217,-
+BRDA:216,0,jump to line 220,-
+BRDA:228,0,jump to line 229,-
+BRDA:228,0,jump to line 245,-
+BRF:38
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/commands/search.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:7,1
+DA:8,1
+DA:9,1
+DA:10,1
+DA:12,1
+DA:13,1
+DA:15,1
+DA:16,1
+DA:343,1
+DA:344,1
+DA:349,0
+DA:351,0
+DA:352,0
+DA:353,0
+DA:355,0
+DA:356,0
+DA:358,0
+DA:359,0
+DA:360,0
+DA:362,0
+DA:364,0
+DA:365,0
+DA:366,0
+DA:367,0
+DA:369,0
+DA:370,0
+DA:371,0
+DA:372,0
+DA:373,0
+DA:374,0
+DA:375,0
+DA:376,0
+DA:377,0
+DA:379,0
+DA:380,0
+DA:381,0
+DA:383,0
+DA:384,0
+DA:385,0
+DA:403,0
+LF:43
+LH:13
+FN:20,213,tasks
+FNDA:0,tasks
+FN:217,340,content
+FNDA:0,content
+FN:344,428,filters
+FNDA:0,filters
+FNF:3
+FNH:0
+BRDA:351,0,jump to line 352,-
+BRDA:351,0,jump to line 355,-
+BRDA:358,0,jump to line 359,-
+BRDA:358,0,jump to line 362,-
+BRDA:362,0,jump to line 364,-
+BRDA:362,0,jump to line 403,-
+BRDA:370,0,jump to line 371,-
+BRDA:370,0,jump to line 372,-
+BRDA:372,0,jump to line 373,-
+BRDA:372,0,jump to line 374,-
+BRDA:374,0,jump to line 375,-
+BRDA:374,0,jump to line 376,-
+BRDA:376,0,jump to line 377,-
+BRDA:376,0,jump to line 379,-
+BRDA:384,0,jump to line 385,-
+BRDA:384,0,return from function 'filters',-
+BRF:16
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/commands/status.py
+DA:3,1
+DA:4,1
+DA:6,1
+DA:7,1
+DA:8,1
+DA:9,1
+DA:10,1
+DA:12,1
+DA:13,1
+DA:14,1
+DA:16,1
+DA:17,1
+DA:20,1
+DA:21,1
+DA:34,0
+DA:36,0
+DA:37,0
+DA:38,0
+DA:39,0
+DA:41,0
+DA:42,0
+DA:43,0
+DA:46,0
+DA:58,0
+DA:61,0
+DA:62,0
+DA:63,0
+DA:64,0
+DA:66,0
+DA:79,0
+DA:80,0
+DA:81,0
+DA:83,0
+DA:84,0
+DA:85,0
+DA:86,0
+DA:87,0
+DA:89,0
+DA:92,0
+DA:93,0
+DA:94,0
+DA:96,0
+DA:97,0
+DA:98,0
+DA:99,0
+DA:101,0
+DA:104,0
+DA:105,0
+DA:106,0
+DA:114,0
+DA:116,0
+DA:118,0
+DA:119,0
+DA:120,0
+DA:121,0
+DA:122,0
+DA:128,0
+DA:129,0
+DA:132,0
+DA:133,0
+DA:134,0
+DA:135,0
+DA:136,0
+DA:137,0
+DA:139,0
+DA:141,0
+DA:143,0
+DA:147,1
+DA:148,1
+DA:175,0
+DA:177,0
+DA:178,0
+DA:179,0
+DA:181,0
+DA:182,0
+DA:185,0
+DA:186,0
+DA:187,0
+DA:188,0
+DA:189,0
+DA:190,0
+DA:193,0
+DA:195,0
+DA:196,0
+DA:197,0
+DA:200,0
+DA:201,0
+DA:202,0
+DA:203,0
+DA:204,0
+DA:205,0
+DA:206,0
+DA:208,0
+DA:209,0
+DA:215,0
+DA:224,0
+DA:227,1
+DA:228,1
+DA:230,0
+DA:232,0
+DA:233,0
+DA:235,0
+DA:238,0
+DA:240,0
+DA:241,0
+DA:242,0
+LF:106
+LH:18
+FN:21,144,project
+FNDA:0,project
+FN:148,224,tasks
+FNDA:0,tasks
+FN:228,242,health
+FNDA:0,health
+FNF:3
+FNH:0
+BRDA:36,0,jump to line 37,-
+BRDA:36,0,jump to line 41,-
+BRDA:104,0,jump to line 105,-
+BRDA:104,0,jump to line 116,-
+BRDA:116,0,jump to line 118,-
+BRDA:116,0,return from function 'project',-
+BRDA:119,0,jump to line 120,-
+BRDA:119,0,jump to line 132,-
+BRDA:121,0,jump to line 122,-
+BRDA:121,0,jump to line 129,-
+BRDA:132,0,jump to line 133,-
+BRDA:132,0,return from function 'project',-
+BRDA:134,0,jump to line 135,-
+BRDA:134,0,return from function 'project',-
+BRDA:136,0,jump to line 137,-
+BRDA:136,0,jump to line 141,-
+BRDA:177,0,jump to line 178,-
+BRDA:177,0,jump to line 181,-
+BRDA:185,0,jump to line 186,-
+BRDA:185,0,jump to line 187,-
+BRDA:187,0,jump to line 188,-
+BRDA:187,0,jump to line 189,-
+BRDA:189,0,jump to line 190,-
+BRDA:189,0,jump to line 193,-
+BRDA:195,0,jump to line 196,-
+BRDA:195,0,jump to line 200,-
+BRDA:208,0,jump to line 209,-
+BRDA:208,0,jump to line 224,-
+BRDA:240,0,jump to line 241,-
+BRDA:240,0,return from function 'health',-
+BRF:30
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/commands/sync.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:7,1
+DA:8,1
+DA:9,1
+DA:10,1
+DA:12,1
+DA:13,1
+DA:14,1
+DA:16,1
+DA:17,1
+LF:12
+LH:12
+FN:21,139,github
+FNDA:0,github
+FN:143,222,config
+FNDA:0,config
+FN:226,325,import_data
+FNDA:0,import_data
+FN:329,424,export
+FNDA:0,export
+FNF:4
+FNH:0
+end_of_record
+SF:src/ai_trackdown_pytools/commands/task.py
+DA:3,1
+DA:4,1
+DA:6,1
+DA:7,1
+DA:8,1
+DA:9,1
+DA:11,1
+DA:12,1
+DA:13,1
+DA:14,1
+DA:16,1
+DA:17,1
+DA:20,1
+DA:21,1
+DA:81,0
+DA:83,0
+DA:84,0
+DA:85,0
+DA:86,0
+DA:88,0
+DA:91,0
+DA:92,0
+DA:93,0
+DA:94,0
+DA:95,0
+DA:101,0
+DA:102,0
+DA:103,0
+DA:105,0
+DA:106,0
+DA:107,0
+DA:109,0
+DA:112,0
+DA:113,0
+DA:114,0
+DA:115,0
+DA:116,0
+DA:119,0
+DA:120,0
+DA:121,0
+DA:122,0
+DA:123,0
+DA:126,0
+DA:143,0
+DA:144,0
+DA:145,0
+DA:146,0
+DA:147,0
+DA:148,0
+DA:150,0
+DA:153,0
+DA:154,0
+DA:155,0
+DA:156,0
+DA:157,0
+DA:158,0
+DA:161,0
+DA:162,0
+DA:163,0
+DA:164,0
+DA:165,0
+DA:166,0
+DA:168,0
+DA:184,0
+DA:185,0
+DA:188,1
+DA:189,1
+DA:200,0
+DA:202,0
+DA:203,0
+DA:204,0
+DA:206,0
+DA:207,0
+DA:210,0
+DA:214,0
+DA:215,0
+DA:217,0
+DA:218,0
+DA:220,0
+DA:221,0
+DA:223,0
+DA:224,0
+DA:226,0
+DA:227,0
+DA:229,0
+DA:230,0
+DA:232,0
+DA:233,0
+DA:236,0
+DA:238,0
+DA:239,0
+DA:240,0
+DA:242,0
+DA:243,0
+DA:244,0
+DA:245,0
+DA:246,0
+DA:247,0
+DA:248,0
+DA:249,0
+DA:251,0
+DA:252,0
+DA:253,0
+DA:254,0
+DA:266,0
+LF:105
+LH:16
+FN:21,185,create
+FNDA:0,create
+FN:189,266,list
+FNDA:0,list
+FN:270,350,show
+FNDA:0,show
+FN:354,439,update
+FNDA:0,update
+FN:443,485,block
+FNDA:0,block
+FN:489,553,unblock
+FNDA:0,unblock
+FN:557,592,complete
+FNDA:0,complete
+FN:596,638,start
+FNDA:0,start
+FNF:8
+FNH:0
+BRDA:83,0,jump to line 84,-
+BRDA:83,0,jump to line 88,-
+BRDA:91,0,jump to line 92,-
+BRDA:91,0,jump to line 112,-
+BRDA:102,0,jump to line 103,-
+BRDA:102,0,jump to line 105,-
+BRDA:106,0,jump to line 107,-
+BRDA:106,0,jump to line 109,-
+BRDA:112,0,jump to line 113,-
+BRDA:112,0,jump to line 119,-
+BRDA:114,0,jump to line 115,-
+BRDA:114,0,jump to line 119,-
+BRDA:119,0,jump to line 120,-
+BRDA:119,0,jump to line 126,-
+BRDA:121,0,jump to line 122,-
+BRDA:121,0,jump to line 126,-
+BRDA:143,0,jump to line 144,-
+BRDA:143,0,jump to line 150,-
+BRDA:146,0,jump to line 147,-
+BRDA:146,0,jump to line 150,-
+BRDA:153,0,jump to line 154,-
+BRDA:153,0,jump to line 161,-
+BRDA:161,0,jump to line 162,-
+BRDA:161,0,jump to line 168,-
+BRDA:184,0,jump to line 185,-
+BRDA:184,0,return from function 'create',-
+BRDA:202,0,jump to line 203,-
+BRDA:202,0,jump to line 206,-
+BRDA:214,0,jump to line 215,-
+BRDA:214,0,jump to line 217,-
+BRDA:217,0,jump to line 218,-
+BRDA:217,0,jump to line 220,-
+BRDA:220,0,jump to line 221,-
+BRDA:220,0,jump to line 223,-
+BRDA:223,0,jump to line 224,-
+BRDA:223,0,jump to line 226,-
+BRDA:226,0,jump to line 227,-
+BRDA:226,0,jump to line 229,-
+BRDA:229,0,jump to line 230,-
+BRDA:229,0,jump to line 232,-
+BRDA:232,0,jump to line 233,-
+BRDA:232,0,jump to line 236,-
+BRDA:238,0,jump to line 239,-
+BRDA:238,0,jump to line 242,-
+BRDA:251,0,jump to line 252,-
+BRDA:251,0,jump to line 266,-
+BRF:46
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/commands/template.py
+DA:3,1
+DA:4,1
+DA:6,1
+DA:7,1
+DA:8,1
+DA:9,1
+DA:11,1
+DA:12,1
+DA:14,1
+DA:15,1
+DA:18,1
+DA:19,1
+DA:34,0
+DA:35,0
+DA:37,0
+DA:38,0
+DA:39,0
+DA:40,0
+DA:42,0
+DA:43,0
+DA:44,0
+DA:45,0
+DA:47,0
+DA:48,0
+DA:49,0
+DA:51,0
+DA:58,0
+DA:59,0
+DA:64,0
+DA:66,0
+LF:30
+LH:12
+FN:19,66,list
+FNDA:0,list
+FN:70,123,show
+FNDA:0,show
+FN:127,189,create
+FNDA:0,create
+FN:193,248,apply
+FNDA:0,apply
+FN:252,278,validate
+FNDA:0,validate
+FN:282,313,install
+FNDA:0,install
+FNF:6
+FNH:0
+BRDA:37,0,jump to line 38,-
+BRDA:37,0,jump to line 42,-
+BRDA:47,0,jump to line 48,-
+BRDA:47,0,jump to line 51,-
+BRDA:58,0,jump to line 59,-
+BRDA:58,0,jump to line 64,-
+BRF:6
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/commands/validate.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:7,1
+DA:8,1
+DA:9,1
+DA:10,1
+DA:11,1
+DA:12,1
+DA:14,1
+DA:18,1
+DA:21,1
+DA:24,1
+DA:27,1
+DA:28,1
+DA:33,1
+DA:34,1
+DA:35,1
+DA:37,1
+DA:39,1
+DA:40,1
+DA:42,0
+DA:43,0
+DA:45,0
+DA:46,0
+DA:47,0
+DA:48,0
+DA:50,0
+DA:53,0
+DA:54,0
+DA:56,0
+DA:57,0
+DA:58,0
+DA:61,1
+DA:62,1
+DA:63,1
+DA:64,1
+DA:66,1
+DA:68,1
+DA:69,1
+DA:72,0
+DA:73,0
+DA:74,0
+DA:75,0
+DA:77,0
+DA:78,0
+DA:79,0
+DA:80,0
+DA:81,0
+DA:82,0
+DA:83,0
+DA:84,0
+DA:85,0
+DA:87,0
+DA:88,0
+DA:97,0
+DA:98,0
+DA:99,0
+DA:108,0
+DA:110,0
+DA:113,1
+DA:114,1
+DA:115,1
+DA:116,1
+DA:118,1
+DA:120,1
+DA:122,0
+DA:124,0
+DA:125,0
+DA:127,0
+DA:130,0
+DA:131,0
+DA:133,0
+DA:134,0
+DA:135,0
+DA:136,0
+DA:138,0
+DA:140,0
+DA:141,0
+DA:143,0
+DA:144,0
+DA:145,0
+DA:146,0
+DA:147,0
+DA:148,0
+DA:151,1
+DA:152,1
+DA:153,1
+DA:154,1
+DA:156,0
+DA:158,0
+DA:159,0
+DA:161,0
+DA:162,0
+DA:163,0
+DA:165,0
+DA:166,0
+DA:169,1
+DA:170,1
+DA:171,1
+DA:172,1
+DA:173,1
+DA:175,0
+DA:176,0
+DA:178,0
+DA:179,0
+DA:181,0
+DA:182,0
+DA:183,0
+DA:186,0
+DA:187,0
+DA:188,0
+DA:189,0
+DA:190,0
+DA:192,0
+DA:194,0
+DA:195,0
+DA:198,1
+DA:199,1
+DA:200,1
+DA:201,1
+DA:203,0
+DA:204,0
+DA:205,0
+DA:206,0
+DA:209,0
+DA:210,0
+DA:212,0
+DA:213,0
+DA:214,0
+DA:215,0
+DA:216,0
+DA:217,0
+DA:218,0
+DA:220,0
+DA:221,0
+DA:222,0
+DA:225,0
+DA:227,0
+DA:228,0
+DA:230,0
+DA:231,0
+DA:233,0
+DA:235,0
+DA:236,0
+DA:237,0
+DA:238,0
+DA:240,0
+DA:241,0
+DA:242,0
+DA:243,0
+DA:245,0
+DA:246,0
+DA:249,1
+DA:250,1
+DA:252,0
+DA:253,0
+DA:255,0
+DA:256,0
+DA:257,0
+DA:259,0
+DA:260,0
+DA:261,0
+DA:263,0
+DA:271,0
+DA:272,0
+DA:273,0
+DA:275,0
+DA:278,1
+DA:280,0
+DA:283,0
+DA:285,0
+DA:286,0
+DA:287,0
+DA:288,0
+DA:290,0
+DA:291,0
+DA:292,0
+DA:293,0
+DA:295,0
+DA:296,0
+DA:299,1
+DA:301,0
+DA:302,0
+DA:303,0
+DA:306,0
+DA:307,0
+DA:308,0
+DA:309,0
+DA:311,0
+DA:312,0
+DA:315,0
+DA:316,0
+DA:317,0
+DA:318,0
+DA:319,0
+DA:320,0
+DA:321,0
+DA:322,0
+DA:323,0
+DA:324,0
+DA:327,0
+DA:328,0
+DA:329,0
+DA:330,0
+DA:331,0
+DA:332,0
+DA:333,0
+LF:208
+LH:51
+FN:28,30,validate
+FNDA:0,validate
+FN:40,58,file
+FNDA:0,file
+FN:69,110,directory
+FNDA:0,directory
+FN:120,148,data
+FNDA:0,data
+FN:154,166,id_format
+FNDA:0,id_format
+FN:173,195,transition
+FNDA:0,transition
+FN:201,246,relationships
+FNDA:0,relationships
+FN:250,275,schemas
+FNDA:0,schemas
+FN:278,296,_display_validation_result
+FNDA:0,_display_validation_result
+FN:299,333,_display_directory_results
+FNDA:0,_display_directory_results
+FNF:10
+FNH:0
+BRDA:45,0,jump to line 46,-
+BRDA:45,0,jump to line 47,-
+BRDA:47,0,jump to line 48,-
+BRDA:47,0,jump to line 50,-
+BRDA:53,0,jump to line 54,-
+BRDA:53,0,return from function 'file',-
+BRDA:73,0,jump to line 74,-
+BRDA:73,0,jump to line 77,-
+BRDA:78,0,jump to line 79,-
+BRDA:78,0,jump to line 87,-
+BRDA:87,0,jump to line 88,-
+BRDA:87,0,jump to line 98,-
+BRDA:98,0,jump to line 99,-
+BRDA:98,0,jump to line 110,-
+BRDA:124,0,jump to line 125,-
+BRDA:124,0,jump to line 127,-
+BRDA:133,0,jump to line 134,-
+BRDA:133,0,jump to line 135,-
+BRDA:135,0,jump to line 136,-
+BRDA:135,0,jump to line 138,-
+BRDA:140,0,jump to line 141,-
+BRDA:140,0,return from function 'data',-
+BRDA:158,0,jump to line 159,-
+BRDA:158,0,jump to line 161,-
+BRDA:162,0,jump to line 163,-
+BRDA:162,0,jump to line 165,-
+BRDA:165,0,jump to line 166,-
+BRDA:165,0,return from function 'id_format',-
+BRDA:178,0,jump to line 179,-
+BRDA:178,0,jump to line 181,-
+BRDA:182,0,jump to line 183,-
+BRDA:182,0,jump to line 186,-
+BRDA:187,0,jump to line 188,-
+BRDA:187,0,jump to line 192,-
+BRDA:189,0,jump to line 190,-
+BRDA:189,0,jump to line 194,-
+BRDA:194,0,jump to line 195,-
+BRDA:194,0,return from function 'transition',-
+BRDA:204,0,jump to line 205,-
+BRDA:204,0,jump to line 209,-
+BRDA:212,0,jump to line 213,-
+BRDA:212,0,jump to line 220,-
+BRDA:215,0,jump to line 212,-
+BRDA:215,0,jump to line 216,-
+BRDA:220,0,jump to line 221,-
+BRDA:220,0,jump to line 225,-
+BRDA:230,0,jump to line 231,-
+BRDA:230,0,jump to line 233,-
+BRDA:235,0,jump to line 236,-
+BRDA:235,0,jump to line 240,-
+BRDA:237,0,jump to line 238,-
+BRDA:237,0,jump to line 240,-
+BRDA:240,0,jump to line 241,-
+BRDA:240,0,jump to line 245,-
+BRDA:242,0,jump to line 243,-
+BRDA:242,0,jump to line 245,-
+BRDA:245,0,jump to line 246,-
+BRDA:245,0,return from function 'relationships',-
+BRDA:255,0,jump to line 256,-
+BRDA:255,0,jump to line 259,-
+BRDA:271,0,jump to line 272,-
+BRDA:271,0,jump to line 275,-
+BRDA:285,0,jump to line 286,-
+BRDA:285,0,jump to line 290,-
+BRDA:287,0,jump to line 288,-
+BRDA:287,0,jump to line 290,-
+BRDA:290,0,jump to line 291,-
+BRDA:290,0,jump to line 295,-
+BRDA:292,0,jump to line 293,-
+BRDA:292,0,jump to line 295,-
+BRDA:295,0,jump to line 296,-
+BRDA:295,0,return from function '_display_validation_result',-
+BRDA:311,0,jump to line 312,-
+BRDA:311,0,jump to line 315,-
+BRDA:315,0,jump to line 316,-
+BRDA:315,0,jump to line 327,-
+BRDA:317,0,jump to line 318,-
+BRDA:317,0,jump to line 327,-
+BRDA:318,0,jump to line 317,-
+BRDA:318,0,jump to line 319,-
+BRDA:320,0,jump to line 321,-
+BRDA:320,0,jump to line 322,-
+BRDA:322,0,jump to line 317,-
+BRDA:322,0,jump to line 323,-
+BRDA:323,0,jump to line 317,-
+BRDA:323,0,jump to line 324,-
+BRDA:328,0,jump to line 329,-
+BRDA:328,0,return from function '_display_directory_results',-
+BRDA:330,0,jump to line 331,-
+BRDA:330,0,return from function '_display_directory_results',-
+BRDA:332,0,jump to line 330,-
+BRDA:332,0,jump to line 333,-
+BRF:92
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/commands/validate_typer.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:7,1
+DA:8,1
+DA:9,1
+DA:10,1
+DA:11,1
+DA:12,1
+DA:14,1
+DA:18,1
+DA:21,1
+DA:24,1
+DA:25,1
+DA:249,1
+DA:250,1
+DA:252,0
+DA:253,0
+DA:255,0
+DA:256,0
+DA:257,0
+DA:259,0
+DA:260,0
+DA:261,0
+DA:263,0
+DA:271,0
+DA:272,0
+DA:273,0
+DA:275,0
+DA:278,1
+DA:280,0
+DA:283,0
+DA:285,0
+DA:286,0
+DA:287,0
+DA:288,0
+DA:290,0
+DA:291,0
+DA:292,0
+DA:293,0
+DA:295,0
+DA:296,0
+DA:299,1
+DA:301,0
+DA:302,0
+DA:303,0
+DA:306,0
+DA:307,0
+DA:308,0
+DA:309,0
+DA:311,0
+DA:312,0
+DA:315,0
+DA:316,0
+DA:317,0
+DA:318,0
+DA:319,0
+DA:320,0
+DA:321,0
+DA:322,0
+DA:323,0
+DA:324,0
+DA:327,0
+DA:328,0
+DA:329,0
+DA:330,0
+DA:331,0
+DA:332,0
+DA:333,0
+LF:69
+LH:18
+FN:29,52,file
+FNDA:0,file
+FN:56,106,directory
+FNDA:0,directory
+FN:110,143,data
+FNDA:0,data
+FN:147,164,id_format
+FNDA:0,id_format
+FN:168,194,transition
+FNDA:0,transition
+FN:198,246,relationships
+FNDA:0,relationships
+FN:250,275,schemas
+FNDA:0,schemas
+FN:278,296,_display_validation_result
+FNDA:0,_display_validation_result
+FN:299,333,_display_directory_results
+FNDA:0,_display_directory_results
+FNF:9
+FNH:0
+BRDA:255,0,jump to line 256,-
+BRDA:255,0,jump to line 259,-
+BRDA:271,0,jump to line 272,-
+BRDA:271,0,jump to line 275,-
+BRDA:285,0,jump to line 286,-
+BRDA:285,0,jump to line 290,-
+BRDA:287,0,jump to line 288,-
+BRDA:287,0,jump to line 290,-
+BRDA:290,0,jump to line 291,-
+BRDA:290,0,jump to line 295,-
+BRDA:292,0,jump to line 293,-
+BRDA:292,0,jump to line 295,-
+BRDA:295,0,jump to line 296,-
+BRDA:295,0,return from function '_display_validation_result',-
+BRDA:311,0,jump to line 312,-
+BRDA:311,0,jump to line 315,-
+BRDA:315,0,jump to line 316,-
+BRDA:315,0,jump to line 327,-
+BRDA:317,0,jump to line 318,-
+BRDA:317,0,jump to line 327,-
+BRDA:318,0,jump to line 317,-
+BRDA:318,0,jump to line 319,-
+BRDA:320,0,jump to line 321,-
+BRDA:320,0,jump to line 322,-
+BRDA:322,0,jump to line 317,-
+BRDA:322,0,jump to line 323,-
+BRDA:323,0,jump to line 317,-
+BRDA:323,0,jump to line 324,-
+BRDA:328,0,jump to line 329,-
+BRDA:328,0,return from function '_display_directory_results',-
+BRDA:330,0,jump to line 331,-
+BRDA:330,0,return from function '_display_directory_results',-
+BRDA:332,0,jump to line 330,-
+BRDA:332,0,jump to line 333,-
+BRF:34
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/core/__init__.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:7,1
+LF:4
+LH:4
+end_of_record
+SF:src/ai_trackdown_pytools/core/config.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:7,1
+DA:8,1
+DA:11,1
+DA:14,1
+DA:15,1
+DA:16,1
+DA:17,1
+DA:18,1
+DA:19,1
+DA:20,1
+DA:22,1
+DA:25,1
+DA:28,1
+DA:29,1
+DA:30,1
+DA:32,1
+DA:34,0
+DA:35,0
+DA:36,0
+DA:37,0
+DA:39,1
+DA:40,1
+DA:42,0
+DA:44,0
+DA:46,0
+DA:48,0
+DA:49,0
+DA:50,0
+DA:52,0
+DA:53,0
+DA:55,0
+DA:57,1
+DA:58,1
+DA:60,0
+DA:63,0
+DA:66,0
+DA:91,0
+DA:92,0
+DA:94,0
+DA:95,0
+DA:97,0
+DA:99,1
+DA:100,1
+DA:102,0
+DA:105,0
+DA:106,0
+DA:107,0
+DA:108,0
+DA:111,0
+DA:112,0
+DA:113,0
+DA:115,0
+DA:117,1
+DA:118,1
+DA:120,0
+DA:122,1
+DA:124,0
+DA:125,0
+DA:127,0
+DA:128,0
+DA:129,0
+DA:131,0
+DA:133,0
+DA:135,1
+DA:137,0
+DA:138,0
+DA:139,0
+DA:141,0
+DA:142,0
+DA:143,0
+DA:144,0
+DA:146,0
+DA:147,0
+DA:149,1
+DA:151,0
+DA:152,0
+DA:154,0
+DA:155,0
+DA:162,1
+DA:164,0
+DA:166,1
+DA:167,1
+DA:169,0
+DA:171,1
+DA:172,1
+DA:174,0
+DA:176,0
+DA:177,0
+LF:91
+LH:35
+FN:32,37,Config.__new__
+FNDA:0,Config.__new__
+FN:40,55,Config.load
+FNDA:0,Config.load
+FN:58,97,Config.create_default
+FNDA:0,Config.create_default
+FN:100,115,Config.find_config_file
+FNDA:0,Config.find_config_file
+FN:118,120,Config.get_global_config_path
+FNDA:0,Config.get_global_config_path
+FN:122,133,Config.get
+FNDA:0,Config.get
+FN:135,147,Config.set
+FNDA:0,Config.set
+FN:149,160,Config.save
+FNDA:0,Config.save
+FN:162,164,Config.to_dict
+FNDA:0,Config.to_dict
+FN:167,169,Config.config_path
+FNDA:0,Config.config_path
+FN:172,177,Config.project_root
+FNDA:0,Config.project_root
+FNF:11
+FNH:0
+BRDA:34,0,jump to line 35,-
+BRDA:34,0,jump to line 37,-
+BRDA:44,0,jump to line 46,-
+BRDA:44,0,jump to line 48,-
+BRDA:48,0,jump to line 49,-
+BRDA:48,0,jump to line 55,-
+BRDA:105,0,jump to line 106,-
+BRDA:105,0,jump to line 111,-
+BRDA:107,0,jump to line 105,-
+BRDA:107,0,jump to line 108,-
+BRDA:112,0,jump to line 113,-
+BRDA:112,0,jump to line 115,-
+BRDA:127,0,jump to line 128,-
+BRDA:127,0,jump to line 133,-
+BRDA:128,0,jump to line 129,-
+BRDA:128,0,jump to line 131,-
+BRDA:141,0,jump to line 142,-
+BRDA:141,0,jump to line 146,-
+BRDA:142,0,jump to line 143,-
+BRDA:142,0,jump to line 144,-
+BRDA:151,0,jump to line 152,-
+BRDA:151,0,return from function 'save',-
+BRDA:174,0,jump to line 176,-
+BRDA:174,0,jump to line 177,-
+BRF:24
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/core/models.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:7,1
+DA:8,1
+DA:9,1
+DA:13,1
+DA:15,1
+DA:16,1
+DA:17,1
+DA:18,1
+DA:19,1
+DA:22,1
+DA:24,1
+DA:25,1
+DA:26,1
+DA:27,1
+DA:28,1
+DA:31,1
+DA:33,1
+DA:34,1
+DA:35,1
+DA:36,1
+DA:37,1
+DA:38,1
+DA:41,1
+DA:43,1
+DA:44,1
+DA:45,1
+DA:46,1
+DA:47,1
+DA:48,1
+DA:49,1
+DA:52,1
+DA:54,1
+DA:55,1
+DA:56,1
+DA:57,1
+DA:58,1
+DA:59,1
+DA:62,1
+DA:64,1
+DA:65,1
+DA:66,1
+DA:67,1
+DA:70,1
+DA:72,1
+DA:73,1
+DA:74,1
+DA:75,1
+DA:76,1
+DA:77,1
+DA:80,1
+DA:82,1
+DA:83,1
+DA:84,1
+DA:85,1
+DA:86,1
+DA:87,1
+DA:88,1
+DA:91,1
+DA:93,1
+DA:94,1
+DA:95,1
+DA:96,1
+DA:100,1
+DA:103,1
+DA:104,1
+DA:105,1
+DA:106,1
+DA:107,1
+DA:108,1
+DA:111,1
+DA:112,1
+DA:114,1
+DA:116,1
+DA:117,1
+DA:119,0
+DA:121,1
+DA:122,1
+DA:123,1
+DA:125,0
+DA:126,0
+DA:127,0
+DA:129,1
+DA:130,1
+DA:132,0
+DA:133,0
+DA:134,0
+DA:137,1
+DA:142,1
+DA:143,1
+DA:144,1
+DA:145,1
+DA:146,1
+DA:147,1
+DA:149,1
+DA:150,1
+DA:152,0
+DA:154,1
+DA:155,1
+DA:157,0
+DA:158,0
+DA:159,0
+DA:161,1
+DA:162,1
+DA:164,0
+DA:165,0
+DA:166,0
+DA:168,1
+DA:169,1
+DA:171,0
+DA:172,0
+DA:173,0
+DA:174,0
+DA:177,1
+DA:182,1
+DA:183,1
+DA:184,1
+DA:185,1
+DA:186,1
+DA:187,1
+DA:188,1
+DA:189,1
+DA:191,1
+DA:192,1
+DA:194,0
+DA:196,1
+DA:197,1
+DA:198,1
+DA:200,0
+DA:201,0
+DA:202,0
+DA:204,1
+DA:205,1
+DA:206,1
+DA:208,0
+DA:209,0
+DA:210,0
+DA:213,1
+DA:218,1
+DA:219,1
+DA:220,1
+DA:221,1
+DA:222,1
+DA:223,1
+DA:224,1
+DA:225,1
+DA:226,1
+DA:227,1
+DA:228,1
+DA:229,1
+DA:230,1
+DA:231,1
+DA:232,1
+DA:234,1
+DA:235,1
+DA:237,0
+DA:239,1
+DA:240,1
+DA:241,1
+DA:243,0
+DA:244,0
+DA:245,0
+DA:247,1
+DA:248,1
+DA:249,1
+DA:251,0
+DA:252,0
+DA:253,0
+DA:254,0
+DA:255,0
+DA:258,1
+DA:262,1
+DA:264,1
+DA:266,1
+DA:268,1
+DA:269,1
+DA:271,0
+DA:274,1
+DA:279,1
+DA:280,1
+DA:282,1
+DA:283,1
+DA:284,1
+DA:285,1
+DA:286,1
+DA:287,1
+DA:288,1
+DA:289,1
+DA:290,1
+DA:291,1
+DA:292,1
+DA:294,1
+DA:295,1
+DA:297,0
+DA:299,1
+DA:300,1
+DA:302,0
+DA:303,0
+DA:304,0
+DA:305,0
+DA:306,0
+DA:307,0
+DA:309,1
+DA:310,1
+DA:311,1
+DA:313,0
+DA:314,0
+DA:315,0
+DA:316,0
+DA:317,0
+DA:320,1
+DA:325,1
+DA:326,1
+DA:327,1
+DA:328,1
+DA:329,1
+DA:330,1
+DA:331,1
+DA:332,1
+DA:333,1
+DA:334,1
+DA:335,1
+DA:336,1
+DA:337,1
+DA:338,1
+DA:339,1
+DA:340,1
+DA:342,1
+DA:343,1
+DA:345,0
+DA:347,1
+DA:348,1
+DA:350,0
+DA:351,0
+DA:352,0
+DA:354,1
+DA:355,1
+DA:357,0
+DA:358,0
+DA:359,0
+DA:360,0
+DA:361,0
+DA:362,0
+DA:364,1
+DA:365,1
+DA:366,1
+DA:368,0
+DA:369,0
+DA:370,0
+DA:371,0
+DA:372,0
+DA:376,1
+DA:377,1
+DA:380,1
+DA:383,1
+DA:385,0
+DA:392,0
+DA:395,1
+DA:397,0
+DA:404,0
+LF:262
+LH:196
+FN:117,119,BaseTicketModel.serialize_datetime
+FNDA:0,BaseTicketModel.serialize_datetime
+FN:123,127,BaseTicketModel.ensure_unique_items
+FNDA:0,BaseTicketModel.ensure_unique_items
+FN:130,134,BaseTicketModel.updated_at_after_created_at
+FNDA:0,BaseTicketModel.updated_at_after_created_at
+FN:150,152,TaskModel.serialize_due_date
+FNDA:0,TaskModel.serialize_due_date
+FN:155,159,TaskModel.parent_not_self
+FNDA:0,TaskModel.parent_not_self
+FN:162,166,TaskModel.dependencies_not_self
+FNDA:0,TaskModel.dependencies_not_self
+FN:169,174,TaskModel.actual_hours_validation
+FNDA:0,TaskModel.actual_hours_validation
+FN:192,194,EpicModel.serialize_target_date
+FNDA:0,EpicModel.serialize_target_date
+FN:198,202,EpicModel.unique_child_issues
+FNDA:0,EpicModel.unique_child_issues
+FN:206,210,EpicModel.target_date_in_future
+FNDA:0,EpicModel.target_date_in_future
+FN:235,237,IssueModel.serialize_due_date
+FNDA:0,IssueModel.serialize_due_date
+FN:241,245,IssueModel.parent_is_epic
+FNDA:0,IssueModel.parent_is_epic
+FN:249,255,IssueModel.child_tasks_are_tasks
+FNDA:0,IssueModel.child_tasks_are_tasks
+FN:269,271,MilestoneModel.serialize_target_date
+FNDA:0,MilestoneModel.serialize_target_date
+FN:295,297,PRModel.serialize_merged_at
+FNDA:0,PRModel.serialize_merged_at
+FN:300,307,PRModel.merged_at_validation
+FNDA:0,PRModel.merged_at_validation
+FN:311,317,PRModel.closes_issues_are_issues
+FNDA:0,PRModel.closes_issues_are_issues
+FN:343,345,ProjectModel.serialize_dates
+FNDA:0,ProjectModel.serialize_dates
+FN:348,352,ProjectModel.end_date_after_start_date
+FNDA:0,ProjectModel.end_date_after_start_date
+FN:355,362,ProjectModel.target_completion_validation
+FNDA:0,ProjectModel.target_completion_validation
+FN:366,372,ProjectModel.epics_are_epic_ids
+FNDA:0,ProjectModel.epics_are_epic_ids
+FN:383,392,get_model_for_type
+FNDA:0,get_model_for_type
+FN:395,404,get_id_pattern_for_type
+FNDA:0,get_id_pattern_for_type
+FNF:23
+FNH:0
+BRDA:125,0,jump to line 126,-
+BRDA:125,0,jump to line 127,-
+BRDA:132,0,jump to line 133,-
+BRDA:132,0,jump to line 134,-
+BRDA:157,0,jump to line 158,-
+BRDA:157,0,jump to line 159,-
+BRDA:164,0,jump to line 165,-
+BRDA:164,0,jump to line 166,-
+BRDA:171,0,jump to line 172,-
+BRDA:171,0,jump to line 174,-
+BRDA:172,0,jump to line 173,-
+BRDA:172,0,jump to line 174,-
+BRDA:200,0,jump to line 201,-
+BRDA:200,0,jump to line 202,-
+BRDA:208,0,jump to line 209,-
+BRDA:208,0,jump to line 210,-
+BRDA:243,0,jump to line 244,-
+BRDA:243,0,jump to line 245,-
+BRDA:251,0,jump to line 252,-
+BRDA:251,0,jump to line 255,-
+BRDA:252,0,jump to line 253,-
+BRDA:252,0,jump to line 255,-
+BRDA:253,0,jump to line 252,-
+BRDA:253,0,jump to line 254,-
+BRDA:302,0,jump to line 303,-
+BRDA:302,0,jump to line 307,-
+BRDA:303,0,jump to line 304,-
+BRDA:303,0,jump to line 305,-
+BRDA:305,0,jump to line 306,-
+BRDA:305,0,jump to line 307,-
+BRDA:313,0,jump to line 314,-
+BRDA:313,0,jump to line 317,-
+BRDA:314,0,jump to line 315,-
+BRDA:314,0,jump to line 317,-
+BRDA:315,0,jump to line 314,-
+BRDA:315,0,jump to line 316,-
+BRDA:350,0,jump to line 351,-
+BRDA:350,0,jump to line 352,-
+BRDA:357,0,jump to line 358,-
+BRDA:357,0,jump to line 362,-
+BRDA:358,0,jump to line 359,-
+BRDA:358,0,jump to line 360,-
+BRDA:360,0,jump to line 361,-
+BRDA:360,0,jump to line 362,-
+BRDA:368,0,jump to line 369,-
+BRDA:368,0,jump to line 372,-
+BRDA:369,0,jump to line 370,-
+BRDA:369,0,jump to line 372,-
+BRDA:370,0,jump to line 369,-
+BRDA:370,0,jump to line 371,-
+BRF:50
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/core/project.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:6,1
+DA:8,1
+DA:9,1
+DA:11,1
+DA:14,1
+DA:19,1
+DA:22,1
+DA:23,1
+DA:24,1
+DA:25,1
+DA:26,1
+DA:27,1
+DA:28,1
+DA:29,1
+DA:31,1
+DA:33,1
+DA:34,1
+DA:36,0
+DA:39,1
+DA:42,1
+DA:44,0
+DA:45,0
+DA:47,1
+DA:48,1
+DA:50,0
+DA:53,0
+DA:54,0
+DA:57,0
+DA:60,0
+DA:61,0
+DA:73,0
+DA:74,0
+DA:75,0
+DA:77,0
+DA:78,0
+DA:79,0
+DA:80,0
+DA:81,0
+DA:82,0
+DA:85,0
+DA:86,0
+DA:87,0
+DA:88,0
+DA:89,0
+DA:91,0
+DA:93,1
+DA:94,1
+DA:96,0
+DA:97,0
+DA:99,0
+DA:100,0
+DA:102,0
+DA:103,0
+DA:106,0
+DA:107,0
+DA:108,0
+DA:110,0
+DA:111,0
+DA:112,0
+DA:115,0
+DA:117,1
+DA:118,1
+DA:120,0
+DA:121,0
+DA:123,1
+DA:124,1
+DA:126,0
+DA:127,0
+DA:129,0
+DA:131,0
+DA:132,0
+DA:133,0
+DA:135,0
+DA:137,1
+DA:138,1
+DA:140,0
+DA:143,0
+DA:151,0
+DA:152,0
+DA:155,0
+DA:179,0
+DA:180,0
+DA:181,0
+DA:182,0
+DA:185,0
+DA:186,0
+DA:187,0
+DA:212,0
+DA:213,0
+DA:215,1
+DA:217,0
+DA:219,0
+DA:220,0
+DA:222,0
+DA:223,0
+DA:224,0
+DA:225,0
+DA:227,1
+DA:229,0
+DA:230,0
+DA:231,0
+DA:233,0
+DA:235,1
+DA:236,1
+DA:238,0
+DA:240,1
+DA:241,1
+DA:243,0
+DA:245,1
+DA:246,1
+DA:248,0
+DA:250,1
+DA:251,1
+DA:253,0
+DA:255,1
+DA:256,1
+DA:258,0
+DA:260,1
+DA:262,0
+LF:122
+LH:45
+FN:34,36,ProjectModel.serialize_datetime
+FNDA:0,ProjectModel.serialize_datetime
+FN:42,45,Project.__init__
+FNDA:0,Project.__init__
+FN:48,91,Project.create
+FNDA:0,Project.create
+FN:94,115,Project.load
+FNDA:0,Project.load
+FN:118,121,Project.exists
+FNDA:0,Project.exists
+FN:124,135,Project.find_project_root
+FNDA:0,Project.find_project_root
+FN:138,213,Project._create_structure
+FNDA:0,Project._create_structure
+FN:215,225,Project.save
+FNDA:0,Project.save
+FN:227,233,Project.update
+FNDA:0,Project.update
+FN:236,238,Project.name
+FNDA:0,Project.name
+FN:241,243,Project.description
+FNDA:0,Project.description
+FN:246,248,Project.version
+FNDA:0,Project.version
+FN:251,253,Project.created_at
+FNDA:0,Project.created_at
+FN:256,258,Project.updated_at
+FNDA:0,Project.updated_at
+FN:260,262,Project.to_dict
+FNDA:0,Project.to_dict
+FNF:15
+FNH:0
+BRDA:53,0,jump to line 54,-
+BRDA:53,0,jump to line 57,-
+BRDA:99,0,jump to line 100,-
+BRDA:99,0,jump to line 102,-
+BRDA:106,0,jump to line 107,-
+BRDA:106,0,jump to line 110,-
+BRDA:107,0,jump to line 108,-
+BRDA:107,0,jump to line 110,-
+BRDA:110,0,jump to line 111,-
+BRDA:110,0,jump to line 115,-
+BRDA:111,0,jump to line 112,-
+BRDA:111,0,jump to line 115,-
+BRDA:126,0,jump to line 127,-
+BRDA:126,0,jump to line 129,-
+BRDA:131,0,jump to line 132,-
+BRDA:131,0,jump to line 135,-
+BRDA:132,0,jump to line 131,-
+BRDA:132,0,jump to line 133,-
+BRDA:151,0,jump to line 152,-
+BRDA:151,0,jump to line 155,-
+BRDA:180,0,jump to line 181,-
+BRDA:180,0,jump to line 185,-
+BRDA:186,0,jump to line 187,-
+BRDA:186,0,return from function '_create_structure',-
+BRDA:229,0,jump to line 230,-
+BRDA:229,0,jump to line 233,-
+BRDA:230,0,jump to line 229,-
+BRDA:230,0,jump to line 231,-
+BRF:28
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/core/task.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:6,1
+DA:7,1
+DA:9,1
+DA:10,1
+DA:12,1
+DA:17,1
+DA:22,1
+DA:25,1
+DA:26,1
+DA:27,1
+DA:28,1
+DA:29,1
+DA:30,1
+DA:31,1
+DA:32,1
+DA:33,1
+DA:34,1
+DA:35,1
+DA:36,1
+DA:37,1
+DA:38,1
+DA:39,1
+DA:40,1
+DA:42,1
+DA:44,1
+DA:45,1
+DA:47,0
+DA:50,1
+DA:53,1
+DA:55,0
+DA:56,0
+DA:58,1
+DA:59,1
+DA:61,0
+DA:62,0
+DA:63,0
+DA:66,0
+DA:67,0
+DA:68,0
+DA:71,0
+DA:72,0
+DA:73,0
+DA:74,0
+DA:75,0
+DA:76,0
+DA:77,0
+DA:78,0
+DA:79,0
+DA:81,0
+DA:82,0
+DA:84,0
+DA:85,0
+DA:87,1
+DA:88,1
+DA:90,0
+DA:92,0
+DA:93,0
+DA:95,0
+DA:96,0
+DA:98,0
+DA:99,0
+DA:100,0
+DA:101,0
+DA:103,1
+DA:104,1
+DA:106,0
+DA:108,1
+DA:109,1
+DA:111,0
+DA:113,1
+DA:114,1
+DA:116,0
+DA:118,1
+DA:119,1
+DA:121,0
+DA:123,1
+DA:124,1
+DA:126,0
+DA:128,1
+DA:129,1
+DA:131,0
+DA:133,1
+DA:134,1
+DA:136,0
+DA:138,1
+DA:139,1
+DA:141,0
+DA:143,1
+DA:144,1
+DA:146,0
+DA:148,1
+DA:150,0
+DA:151,0
+DA:152,0
+DA:154,0
+DA:156,1
+DA:158,0
+DA:161,1
+DA:164,1
+DA:166,0
+DA:167,0
+DA:168,0
+DA:171,0
+DA:173,1
+DA:175,0
+DA:178,0
+DA:181,0
+DA:201,0
+DA:202,0
+DA:204,0
+DA:206,1
+DA:208,0
+DA:209,0
+DA:210,0
+DA:212,0
+DA:213,0
+DA:214,0
+DA:216,0
+DA:218,1
+DA:220,0
+DA:222,0
+DA:223,0
+DA:224,0
+DA:226,0
+DA:227,0
+DA:228,0
+DA:229,0
+DA:231,0
+DA:234,0
+DA:235,0
+DA:237,1
+DA:239,0
+DA:240,0
+DA:241,0
+DA:243,1
+DA:245,0
+DA:246,0
+DA:247,0
+DA:249,0
+DA:250,0
+DA:251,0
+DA:253,1
+DA:255,0
+DA:256,0
+DA:257,0
+DA:259,0
+DA:260,0
+DA:262,1
+DA:264,0
+DA:267,0
+DA:270,0
+DA:271,0
+DA:272,0
+DA:273,0
+DA:274,0
+DA:277,0
+DA:278,0
+DA:280,0
+DA:282,1
+DA:285,0
+DA:286,0
+DA:287,0
+DA:289,0
+DA:291,1
+DA:293,0
+DA:294,0
+DA:295,0
+DA:296,0
+DA:298,1
+DA:300,0
+DA:301,0
+DA:302,0
+DA:305,0
+DA:306,0
+DA:307,0
+DA:310,0
+DA:311,0
+DA:312,0
+DA:313,0
+DA:314,0
+DA:315,0
+DA:316,0
+DA:317,0
+DA:318,0
+DA:320,0
+DA:322,0
+DA:323,0
+DA:325,1
+DA:328,0
+DA:331,0
+DA:332,0
+DA:333,0
+DA:334,0
+DA:335,0
+DA:338,0
+DA:361,0
+DA:362,0
+DA:364,1
+DA:367,0
+DA:368,0
+DA:370,0
+DA:371,0
+DA:373,0
+DA:374,0
+DA:375,0
+DA:376,0
+LF:209
+LH:69
+FN:45,47,TaskModel.serialize_datetime
+FNDA:0,TaskModel.serialize_datetime
+FN:53,56,Task.__init__
+FNDA:0,Task.__init__
+FN:59,85,Task.load
+FNDA:0,Task.load
+FN:88,101,Task._extract_frontmatter
+FNDA:0,Task._extract_frontmatter
+FN:104,106,Task.id
+FNDA:0,Task.id
+FN:109,111,Task.title
+FNDA:0,Task.title
+FN:114,116,Task.description
+FNDA:0,Task.description
+FN:119,121,Task.status
+FNDA:0,Task.status
+FN:124,126,Task.priority
+FNDA:0,Task.priority
+FN:129,131,Task.assignees
+FNDA:0,Task.assignees
+FN:134,136,Task.tags
+FNDA:0,Task.tags
+FN:139,141,Task.created_at
+FNDA:0,Task.created_at
+FN:144,146,Task.updated_at
+FNDA:0,Task.updated_at
+FN:148,154,Task.update
+FNDA:0,Task.update
+FN:156,158,Task.to_dict
+FNDA:0,Task.to_dict
+FN:164,171,TaskManager.__init__
+FNDA:0,TaskManager.__init__
+FN:173,204,TaskManager.create_task
+FNDA:0,TaskManager.create_task
+FN:206,216,TaskManager.load_task
+FNDA:0,TaskManager.load_task
+FN:218,235,TaskManager.list_tasks
+FNDA:0,TaskManager.list_tasks
+FN:237,241,TaskManager.get_recent_tasks
+FNDA:0,TaskManager.get_recent_tasks
+FN:243,251,TaskManager.update_task
+FNDA:0,TaskManager.update_task
+FN:253,260,TaskManager.delete_task
+FNDA:0,TaskManager.delete_task
+FN:262,280,TaskManager._generate_task_id
+FNDA:0,TaskManager._generate_task_id
+FN:282,289,TaskManager._get_task_file_path
+FNDA:0,TaskManager._get_task_file_path
+FN:291,296,TaskManager._find_task_file
+FNDA:0,TaskManager._find_task_file
+FN:298,323,TaskManager._load_task_file
+FNDA:0,TaskManager._load_task_file
+FN:325,362,TaskManager._save_task_file
+FNDA:0,TaskManager._save_task_file
+FN:364,376,TaskManager._extract_frontmatter
+FNDA:0,TaskManager._extract_frontmatter
+FNF:28
+FNH:0
+BRDA:67,0,jump to line 68,-
+BRDA:67,0,jump to line 71,-
+BRDA:71,0,jump to line 72,-
+BRDA:71,0,jump to line 74,-
+BRDA:72,0,jump to line 73,-
+BRDA:72,0,jump to line 74,-
+BRDA:74,0,jump to line 75,-
+BRDA:74,0,jump to line 77,-
+BRDA:75,0,jump to line 76,-
+BRDA:75,0,jump to line 77,-
+BRDA:77,0,jump to line 78,-
+BRDA:77,0,jump to line 81,-
+BRDA:78,0,jump to line 79,-
+BRDA:78,0,jump to line 81,-
+BRDA:95,0,jump to line 96,-
+BRDA:95,0,jump to line 98,-
+BRDA:150,0,jump to line 151,-
+BRDA:150,0,jump to line 154,-
+BRDA:151,0,jump to line 150,-
+BRDA:151,0,jump to line 152,-
+BRDA:209,0,jump to line 210,-
+BRDA:209,0,jump to line 212,-
+BRDA:213,0,jump to line 214,-
+BRDA:213,0,jump to line 216,-
+BRDA:222,0,jump to line 223,-
+BRDA:222,0,jump to line 234,-
+BRDA:224,0,jump to line 222,-
+BRDA:224,0,jump to line 226,-
+BRDA:226,0,jump to line 227,-
+BRDA:226,0,jump to line 228,-
+BRDA:228,0,jump to line 229,-
+BRDA:228,0,jump to line 231,-
+BRDA:246,0,jump to line 247,-
+BRDA:246,0,jump to line 249,-
+BRDA:256,0,jump to line 257,-
+BRDA:256,0,jump to line 259,-
+BRDA:272,0,jump to line 273,-
+BRDA:272,0,jump to line 274,-
+BRDA:293,0,jump to line 294,-
+BRDA:293,0,jump to line 296,-
+BRDA:294,0,jump to line 293,-
+BRDA:294,0,jump to line 295,-
+BRDA:306,0,jump to line 307,-
+BRDA:306,0,jump to line 310,-
+BRDA:310,0,jump to line 311,-
+BRDA:310,0,jump to line 313,-
+BRDA:311,0,jump to line 312,-
+BRDA:311,0,jump to line 313,-
+BRDA:313,0,jump to line 314,-
+BRDA:313,0,jump to line 316,-
+BRDA:314,0,jump to line 315,-
+BRDA:314,0,jump to line 316,-
+BRDA:316,0,jump to line 317,-
+BRDA:316,0,jump to line 320,-
+BRDA:317,0,jump to line 318,-
+BRDA:317,0,jump to line 320,-
+BRDA:334,0,jump to line 335,-
+BRDA:334,0,jump to line 338,-
+BRDA:370,0,jump to line 371,-
+BRDA:370,0,jump to line 373,-
+BRF:60
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/utils/__init__.py
+DA:3,1
+LF:1
+LH:1
+end_of_record
+SF:src/ai_trackdown_pytools/utils/editor.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:6,1
+DA:8,1
+DA:11,1
+DA:14,1
+DA:15,1
+DA:17,0
+DA:20,0
+DA:21,0
+DA:22,0
+DA:25,0
+DA:26,0
+DA:27,0
+DA:28,0
+DA:31,0
+DA:32,0
+DA:34,0
+DA:35,0
+DA:36,0
+DA:37,0
+DA:39,0
+DA:41,1
+DA:42,1
+DA:44,0
+DA:45,0
+DA:47,0
+DA:48,0
+DA:50,0
+DA:52,0
+DA:53,0
+DA:54,0
+DA:55,0
+DA:57,0
+DA:59,0
+DA:60,0
+DA:61,0
+DA:63,1
+DA:64,1
+DA:66,0
+DA:67,0
+DA:71,0
+DA:72,0
+DA:75,0
+LF:45
+LH:12
+FN:15,39,EditorUtils.get_default_editor
+FNDA:0,EditorUtils.get_default_editor
+FN:42,61,EditorUtils.open_file
+FNDA:0,EditorUtils.open_file
+FN:64,75,EditorUtils.is_editor_available
+FNDA:0,EditorUtils.is_editor_available
+FNF:3
+FNH:0
+BRDA:21,0,jump to line 22,-
+BRDA:21,0,jump to line 25,-
+BRDA:25,0,jump to line 26,-
+BRDA:25,0,jump to line 31,-
+BRDA:27,0,jump to line 25,-
+BRDA:27,0,jump to line 28,-
+BRDA:34,0,jump to line 35,-
+BRDA:34,0,jump to line 36,-
+BRDA:36,0,jump to line 37,-
+BRDA:36,0,jump to line 39,-
+BRDA:44,0,jump to line 45,-
+BRDA:44,0,jump to line 47,-
+BRDA:47,0,jump to line 48,-
+BRDA:47,0,jump to line 50,-
+BRDA:52,0,jump to line 53,-
+BRDA:52,0,jump to line 54,-
+BRDA:54,0,jump to line 55,-
+BRDA:54,0,jump to line 57,-
+BRF:18
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/utils/frontmatter.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:7,1
+DA:8,1
+DA:9,1
+DA:11,1
+DA:14,1
+DA:19,1
+DA:22,1
+DA:28,0
+DA:29,0
+DA:31,1
+DA:43,0
+DA:44,0
+DA:45,0
+DA:46,0
+DA:47,0
+DA:49,0
+DA:51,1
+DA:63,0
+DA:66,0
+DA:68,0
+DA:69,0
+DA:70,0
+DA:73,0
+DA:74,0
+DA:75,0
+DA:76,0
+DA:77,0
+DA:78,0
+DA:79,0
+DA:80,0
+DA:83,0
+DA:84,0
+DA:85,0
+DA:86,0
+DA:87,0
+DA:89,0
+DA:91,0
+DA:93,1
+DA:109,0
+DA:112,0
+DA:113,0
+DA:114,0
+DA:115,0
+DA:116,0
+DA:117,0
+DA:118,0
+DA:119,0
+DA:122,0
+DA:125,0
+DA:126,0
+DA:127,0
+DA:128,0
+DA:129,0
+DA:130,0
+DA:132,0
+DA:134,1
+DA:147,0
+DA:148,0
+DA:149,0
+DA:150,0
+DA:151,0
+DA:152,0
+DA:153,0
+DA:154,0
+DA:157,0
+DA:160,0
+DA:162,1
+DA:172,0
+DA:173,0
+DA:175,0
+DA:176,0
+DA:178,0
+DA:179,0
+DA:181,0
+DA:183,1
+DA:194,0
+DA:204,0
+DA:206,0
+DA:208,1
+DA:218,0
+DA:219,0
+DA:222,0
+DA:223,0
+DA:224,0
+DA:225,0
+DA:226,0
+DA:227,0
+DA:228,0
+DA:229,0
+DA:230,0
+DA:231,0
+DA:232,0
+DA:233,0
+DA:236,0
+DA:237,0
+DA:238,0
+DA:239,0
+DA:240,0
+DA:241,0
+DA:242,0
+DA:243,0
+DA:246,0
+DA:248,1
+DA:259,0
+DA:260,0
+DA:261,0
+DA:262,0
+DA:264,0
+DA:265,0
+DA:267,0
+DA:268,0
+DA:269,0
+DA:270,0
+DA:272,0
+DA:275,1
+DA:279,1
+DA:321,1
+DA:333,0
+DA:335,0
+DA:336,0
+DA:337,0
+DA:339,0
+DA:341,0
+DA:342,0
+DA:343,0
+DA:345,0
+DA:346,0
+DA:347,0
+DA:349,0
+DA:350,0
+DA:351,0
+DA:356,0
+DA:358,1
+DA:368,0
+DA:369,0
+DA:371,0
+DA:372,0
+DA:374,1
+DA:384,0
+DA:385,0
+DA:388,1
+DA:398,0
+DA:399,0
+DA:402,1
+DA:412,0
+DA:414,0
+DA:415,0
+DA:416,0
+DA:418,0
+DA:419,0
+DA:420,0
+DA:421,0
+DA:423,0
+DA:426,1
+DA:439,0
+DA:440,0
+LF:159
+LH:26
+FN:22,29,FrontmatterParser.__init__
+FNDA:0,FrontmatterParser.__init__
+FN:31,49,FrontmatterParser.parse_file
+FNDA:0,FrontmatterParser.parse_file
+FN:51,91,FrontmatterParser.parse_string
+FNDA:0,FrontmatterParser.parse_string
+FN:93,132,FrontmatterParser.write_file
+FNDA:0,FrontmatterParser.write_file
+FN:134,160,FrontmatterParser.update_frontmatter
+FNDA:0,FrontmatterParser.update_frontmatter
+FN:162,181,FrontmatterParser._extract_frontmatter
+FNDA:0,FrontmatterParser._extract_frontmatter
+FN:183,206,FrontmatterParser._generate_content
+FNDA:0,FrontmatterParser._generate_content
+FN:208,246,FrontmatterParser._detect_ticket_type
+FNDA:0,FrontmatterParser._detect_ticket_type
+FN:248,272,FrontmatterParser.validate_frontmatter
+FNDA:0,FrontmatterParser.validate_frontmatter
+FN:321,356,StatusWorkflowValidator.validate_status_transition
+FNDA:0,StatusWorkflowValidator.validate_status_transition
+FN:358,372,StatusWorkflowValidator.get_valid_transitions
+FNDA:0,StatusWorkflowValidator.get_valid_transitions
+FN:374,385,StatusWorkflowValidator.is_terminal_status
+FNDA:0,StatusWorkflowValidator.is_terminal_status
+FN:388,399,parse_ticket_file
+FNDA:0,parse_ticket_file
+FN:402,423,validate_ticket_data
+FNDA:0,validate_ticket_data
+FN:426,440,write_ticket_file
+FNDA:0,write_ticket_file
+FNF:15
+FNH:0
+BRDA:68,0,jump to line 69,-
+BRDA:68,0,jump to line 73,-
+BRDA:75,0,jump to line 76,-
+BRDA:75,0,jump to line 83,-
+BRDA:83,0,jump to line 84,-
+BRDA:83,0,jump to line 91,-
+BRDA:85,0,jump to line 86,-
+BRDA:85,0,jump to line 89,-
+BRDA:112,0,jump to line 113,-
+BRDA:112,0,jump to line 122,-
+BRDA:114,0,jump to line 115,-
+BRDA:114,0,jump to line 122,-
+BRDA:117,0,jump to line 118,-
+BRDA:117,0,jump to line 122,-
+BRDA:149,0,jump to line 150,-
+BRDA:149,0,jump to line 157,-
+BRDA:175,0,jump to line 176,-
+BRDA:175,0,jump to line 178,-
+BRDA:218,0,jump to line 219,-
+BRDA:218,0,jump to line 222,-
+BRDA:222,0,jump to line 223,-
+BRDA:222,0,jump to line 236,-
+BRDA:224,0,jump to line 225,-
+BRDA:224,0,jump to line 226,-
+BRDA:226,0,jump to line 227,-
+BRDA:226,0,jump to line 228,-
+BRDA:228,0,jump to line 229,-
+BRDA:228,0,jump to line 230,-
+BRDA:230,0,jump to line 231,-
+BRDA:230,0,jump to line 232,-
+BRDA:232,0,jump to line 233,-
+BRDA:232,0,jump to line 236,-
+BRDA:236,0,jump to line 237,-
+BRDA:236,0,jump to line 238,-
+BRDA:238,0,jump to line 239,-
+BRDA:238,0,jump to line 240,-
+BRDA:240,0,jump to line 241,-
+BRDA:240,0,jump to line 242,-
+BRDA:242,0,jump to line 243,-
+BRDA:242,0,jump to line 246,-
+BRDA:259,0,jump to line 260,-
+BRDA:259,0,jump to line 264,-
+BRDA:264,0,jump to line 265,-
+BRDA:264,0,jump to line 267,-
+BRDA:267,0,jump to line 268,-
+BRDA:267,0,jump to line 272,-
+BRDA:335,0,jump to line 336,-
+BRDA:335,0,jump to line 339,-
+BRDA:341,0,jump to line 342,-
+BRDA:341,0,jump to line 345,-
+BRDA:345,0,jump to line 346,-
+BRDA:345,0,jump to line 349,-
+BRDA:350,0,jump to line 351,-
+BRDA:350,0,jump to line 356,-
+BRDA:368,0,jump to line 369,-
+BRDA:368,0,jump to line 371,-
+BRDA:414,0,jump to line 415,-
+BRDA:414,0,jump to line 418,-
+BRDA:418,0,jump to line 419,-
+BRDA:418,0,jump to line 423,-
+BRF:60
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/utils/git.py
+DA:3,1
+DA:4,1
+DA:6,1
+DA:7,1
+DA:8,1
+DA:13,1
+DA:18,1
+DA:21,1
+DA:23,0
+DA:25,0
+DA:26,0
+DA:28,0
+DA:29,0
+DA:30,0
+DA:31,0
+DA:33,1
+DA:35,0
+DA:36,0
+DA:37,0
+DA:38,0
+DA:40,1
+DA:42,0
+DA:43,0
+DA:50,0
+DA:51,0
+DA:53,1
+DA:55,0
+DA:56,0
+DA:57,0
+DA:59,0
+DA:61,0
+DA:62,0
+DA:63,0
+DA:65,1
+DA:67,0
+DA:68,0
+DA:69,0
+DA:70,0
+DA:72,1
+DA:74,0
+DA:75,0
+DA:76,0
+DA:77,0
+DA:79,1
+DA:81,0
+DA:82,0
+DA:87,0
+DA:88,0
+DA:91,1
+DA:94,1
+DA:96,0
+DA:97,0
+DA:99,0
+DA:100,0
+DA:101,0
+DA:102,0
+DA:103,0
+DA:105,1
+DA:107,0
+DA:108,0
+DA:110,0
+DA:112,0
+DA:113,0
+DA:114,0
+DA:115,0
+DA:116,0
+DA:118,1
+DA:119,1
+DA:121,0
+DA:122,0
+DA:124,0
+DA:125,0
+DA:126,0
+DA:127,0
+DA:128,0
+DA:130,1
+DA:132,0
+DA:133,0
+DA:135,0
+DA:136,0
+DA:137,0
+DA:138,0
+DA:140,1
+DA:142,0
+DA:143,0
+DA:145,0
+DA:146,0
+DA:153,0
+DA:154,0
+DA:156,1
+DA:158,0
+DA:159,0
+DA:161,0
+DA:162,0
+DA:163,0
+DA:165,0
+DA:167,0
+DA:168,0
+DA:169,0
+DA:170,0
+DA:172,1
+DA:174,0
+DA:175,0
+DA:177,0
+DA:178,0
+DA:179,0
+DA:180,0
+DA:181,0
+DA:183,1
+DA:185,0
+DA:186,0
+DA:188,0
+DA:189,0
+DA:190,0
+DA:191,0
+DA:192,0
+DA:194,1
+DA:196,0
+DA:197,0
+DA:199,0
+DA:200,0
+DA:201,0
+DA:202,0
+DA:203,0
+DA:205,1
+DA:207,0
+DA:208,0
+DA:210,0
+DA:212,0
+DA:214,0
+DA:215,0
+DA:217,0
+DA:218,0
+DA:219,0
+DA:220,0
+DA:222,0
+DA:223,0
+DA:224,0
+DA:225,0
+DA:226,0
+DA:227,0
+DA:228,0
+DA:229,0
+DA:231,0
+DA:236,0
+DA:237,0
+DA:239,1
+DA:241,0
+DA:242,0
+DA:244,0
+DA:245,0
+DA:246,0
+DA:247,0
+DA:253,0
+DA:254,0
+DA:255,0
+DA:259,1
+DA:261,0
+DA:262,0
+DA:265,1
+DA:267,0
+DA:268,0
+DA:271,1
+DA:273,0
+DA:274,0
+DA:277,1
+DA:279,0
+DA:280,0
+DA:283,1
+DA:285,0
+DA:286,0
+DA:289,1
+DA:291,0
+DA:292,0
+LF:174
+LH:33
+FN:21,31,GitRepo.__init__
+FNDA:0,GitRepo.__init__
+FN:33,38,GitRepo.get_current_branch
+FNDA:0,GitRepo.get_current_branch
+FN:40,51,GitRepo.get_status
+FNDA:0,GitRepo.get_status
+FN:53,63,GitRepo.commit_changes
+FNDA:0,GitRepo.commit_changes
+FN:65,70,GitRepo.create_branch
+FNDA:0,GitRepo.create_branch
+FN:72,77,GitRepo.switch_branch
+FNDA:0,GitRepo.switch_branch
+FN:79,88,GitRepo.get_file_status
+FNDA:0,GitRepo.get_file_status
+FN:94,103,GitUtils.__init__
+FNDA:0,GitUtils.__init__
+FN:105,116,GitUtils.is_git_repo
+FNDA:0,GitUtils.is_git_repo
+FN:119,128,GitUtils.init_repo
+FNDA:0,GitUtils.init_repo
+FN:130,138,GitUtils.get_current_branch
+FNDA:0,GitUtils.get_current_branch
+FN:140,154,GitUtils.get_status
+FNDA:0,GitUtils.get_status
+FN:156,170,GitUtils.commit_changes
+FNDA:0,GitUtils.commit_changes
+FN:172,181,GitUtils.create_branch
+FNDA:0,GitUtils.create_branch
+FN:183,192,GitUtils.switch_branch
+FNDA:0,GitUtils.switch_branch
+FN:194,203,GitUtils.get_remote_url
+FNDA:0,GitUtils.get_remote_url
+FN:205,237,GitUtils.get_diff_stats
+FNDA:0,GitUtils.get_diff_stats
+FN:239,255,GitUtils.get_commit_history
+FNDA:0,GitUtils.get_commit_history
+FN:259,262,get_current_branch
+FNDA:0,get_current_branch
+FN:265,268,get_repository_status
+FNDA:0,get_repository_status
+FN:271,274,create_branch
+FNDA:0,create_branch
+FN:277,280,switch_branch
+FNDA:0,switch_branch
+FN:283,286,commit_changes
+FNDA:0,commit_changes
+FN:289,292,get_file_status
+FNDA:0,get_file_status
+FNF:24
+FNH:0
+BRDA:25,0,jump to line 26,-
+BRDA:25,0,jump to line 28,-
+BRDA:56,0,jump to line 57,-
+BRDA:56,0,jump to line 59,-
+BRDA:99,0,jump to line 100,-
+BRDA:99,0,return from function '__init__',-
+BRDA:107,0,jump to line 108,-
+BRDA:107,0,jump to line 110,-
+BRDA:121,0,jump to line 122,-
+BRDA:121,0,jump to line 124,-
+BRDA:132,0,jump to line 133,-
+BRDA:132,0,jump to line 135,-
+BRDA:142,0,jump to line 143,-
+BRDA:142,0,jump to line 145,-
+BRDA:158,0,jump to line 159,-
+BRDA:158,0,jump to line 161,-
+BRDA:162,0,jump to line 163,-
+BRDA:162,0,jump to line 165,-
+BRDA:174,0,jump to line 175,-
+BRDA:174,0,jump to line 177,-
+BRDA:185,0,jump to line 186,-
+BRDA:185,0,jump to line 188,-
+BRDA:196,0,jump to line 197,-
+BRDA:196,0,jump to line 199,-
+BRDA:207,0,jump to line 208,-
+BRDA:207,0,jump to line 210,-
+BRDA:214,0,jump to line 215,-
+BRDA:214,0,jump to line 217,-
+BRDA:222,0,jump to line 223,-
+BRDA:222,0,jump to line 231,-
+BRDA:224,0,jump to line 222,-
+BRDA:224,0,jump to line 225,-
+BRDA:241,0,jump to line 242,-
+BRDA:241,0,jump to line 244,-
+BRDA:246,0,jump to line 247,-
+BRDA:246,0,jump to line 253,-
+BRF:36
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/utils/health.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:6,1
+DA:8,1
+DA:9,1
+DA:12,1
+DA:14,0
+DA:15,0
+DA:18,0
+DA:19,0
+DA:20,0
+DA:23,0
+DA:24,0
+DA:25,0
+DA:28,0
+DA:29,0
+DA:30,0
+DA:33,0
+DA:36,0
+DA:42,1
+DA:44,0
+DA:45,0
+DA:48,0
+DA:49,0
+DA:50,0
+DA:53,0
+DA:54,0
+DA:55,0
+DA:58,0
+DA:59,0
+DA:60,0
+DA:63,0
+DA:64,0
+DA:65,0
+DA:67,0
+DA:73,1
+DA:75,0
+DA:76,0
+DA:78,0
+DA:79,0
+DA:84,0
+DA:90,1
+DA:92,0
+DA:104,0
+DA:106,0
+DA:107,0
+DA:108,0
+DA:112,0
+DA:113,0
+DA:118,0
+DA:124,1
+DA:126,0
+DA:127,0
+DA:128,0
+DA:132,0
+DA:133,0
+DA:139,1
+DA:141,0
+DA:142,0
+DA:144,0
+DA:145,0
+DA:150,0
+DA:151,0
+DA:152,0
+DA:157,0
+DA:161,0
+DA:162,0
+DA:168,1
+DA:170,0
+DA:171,0
+DA:176,0
+DA:182,1
+DA:184,0
+DA:189,0
+DA:190,0
+DA:191,0
+DA:192,0
+DA:194,0
+DA:195,0
+DA:200,0
+DA:206,1
+DA:208,0
+DA:210,0
+DA:211,0
+DA:216,0
+DA:217,0
+DA:218,0
+DA:222,0
+DA:223,0
+DA:229,1
+DA:231,0
+DA:233,0
+DA:234,0
+DA:239,0
+DA:240,0
+DA:245,0
+LF:97
+LH:16
+FN:12,39,check_health
+FNDA:0,check_health
+FN:42,70,check_project_health
+FNDA:0,check_project_health
+FN:73,87,_check_python_version
+FNDA:0,_check_python_version
+FN:90,121,_check_dependencies
+FNDA:0,_check_dependencies
+FN:124,136,_check_configuration
+FNDA:0,_check_configuration
+FN:139,165,_check_git
+FNDA:0,_check_git
+FN:168,179,_check_project_exists
+FNDA:0,_check_project_exists
+FN:182,203,_check_project_structure
+FNDA:0,_check_project_structure
+FN:206,226,_check_config_validity
+FNDA:0,_check_config_validity
+FN:229,248,_check_tasks_directory
+FNDA:0,_check_tasks_directory
+FNF:10
+FNH:0
+BRDA:19,0,jump to line 20,-
+BRDA:19,0,jump to line 23,-
+BRDA:24,0,jump to line 25,-
+BRDA:24,0,jump to line 28,-
+BRDA:29,0,jump to line 30,-
+BRDA:29,0,jump to line 33,-
+BRDA:49,0,jump to line 50,-
+BRDA:49,0,jump to line 53,-
+BRDA:54,0,jump to line 55,-
+BRDA:54,0,jump to line 58,-
+BRDA:59,0,jump to line 60,-
+BRDA:59,0,jump to line 63,-
+BRDA:64,0,jump to line 65,-
+BRDA:64,0,jump to line 67,-
+BRDA:78,0,jump to line 79,-
+BRDA:78,0,jump to line 84,-
+BRDA:106,0,jump to line 107,-
+BRDA:106,0,jump to line 112,-
+BRDA:112,0,jump to line 113,-
+BRDA:112,0,jump to line 118,-
+BRDA:144,0,jump to line 145,-
+BRDA:144,0,jump to line 150,-
+BRDA:151,0,jump to line 152,-
+BRDA:151,0,jump to line 157,-
+BRDA:170,0,jump to line 171,-
+BRDA:170,0,jump to line 176,-
+BRDA:190,0,jump to line 191,-
+BRDA:190,0,jump to line 194,-
+BRDA:191,0,jump to line 190,-
+BRDA:191,0,jump to line 192,-
+BRDA:194,0,jump to line 195,-
+BRDA:194,0,jump to line 200,-
+BRDA:210,0,jump to line 211,-
+BRDA:210,0,jump to line 216,-
+BRDA:233,0,jump to line 234,-
+BRDA:233,0,jump to line 239,-
+BRDA:239,0,jump to line 240,-
+BRDA:239,0,jump to line 245,-
+BRF:38
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/utils/logging.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:8,1
+DA:10,0
+DA:13,0
+DA:18,0
+DA:19,0
+DA:20,0
+DA:23,0
+DA:24,0
+DA:25,0
+DA:28,0
+DA:29,0
+DA:30,0
+DA:31,0
+DA:32,0
+DA:35,0
+DA:36,0
+DA:37,0
+LF:20
+LH:4
+FN:8,37,setup_logging
+FNDA:0,setup_logging
+FNF:1
+FNH:0
+BRDA:28,0,jump to line 29,-
+BRDA:28,0,jump to line 35,-
+BRDA:35,0,jump to line 36,-
+BRDA:35,0,return from function 'setup_logging',-
+BRF:4
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/utils/system.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:6,1
+DA:8,1
+DA:9,1
+DA:12,1
+DA:14,0
+DA:15,0
+DA:17,0
+DA:30,1
+DA:32,0
+DA:34,0
+DA:35,0
+DA:36,0
+DA:37,0
+DA:40,1
+DA:42,0
+DA:43,0
+DA:45,0
+DA:46,0
+DA:49,0
+DA:52,1
+DA:54,0
+DA:55,0
+DA:57,0
+DA:58,0
+DA:61,0
+LF:28
+LH:10
+FN:12,27,get_system_info
+FNDA:0,get_system_info
+FN:30,37,_check_git_repo
+FNDA:0,_check_git_repo
+FN:40,49,_get_templates_dir
+FNDA:0,_get_templates_dir
+FN:52,61,_get_schema_dir
+FNDA:0,_get_schema_dir
+FNF:4
+FNH:0
+BRDA:35,0,jump to line 36,-
+BRDA:35,0,jump to line 37,-
+BRDA:45,0,jump to line 46,-
+BRDA:45,0,jump to line 49,-
+BRDA:57,0,jump to line 58,-
+BRDA:57,0,jump to line 61,-
+BRF:6
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/utils/templates.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:6,1
+DA:7,1
+DA:9,1
+DA:10,1
+DA:12,1
+DA:15,1
+DA:20,1
+DA:23,1
+DA:25,0
+DA:28,0
+DA:29,0
+DA:31,0
+DA:33,0
+DA:35,1
+DA:37,0
+DA:38,0
+DA:39,0
+DA:40,0
+DA:41,0
+DA:43,1
+DA:45,0
+DA:46,0
+DA:47,0
+DA:48,0
+DA:49,0
+DA:51,1
+DA:53,0
+DA:54,0
+DA:55,0
+DA:56,0
+DA:57,0
+DA:59,1
+DA:61,0
+DA:62,0
+DA:63,0
+DA:64,0
+DA:65,0
+DA:66,0
+DA:67,0
+DA:70,1
+DA:73,1
+DA:75,0
+DA:76,0
+DA:78,1
+DA:80,0
+DA:83,0
+DA:84,0
+DA:85,0
+DA:86,0
+DA:89,0
+DA:90,0
+DA:91,0
+DA:94,0
+DA:95,0
+DA:96,0
+DA:98,0
+DA:100,1
+DA:102,0
+DA:103,0
+DA:105,0
+DA:106,0
+DA:107,0
+DA:108,0
+DA:109,0
+DA:110,0
+DA:112,0
+DA:114,0
+DA:115,0
+DA:116,0
+DA:119,0
+DA:120,0
+DA:122,0
+DA:124,0
+DA:125,0
+DA:126,0
+DA:128,0
+DA:137,0
+DA:138,0
+DA:140,0
+DA:142,1
+DA:144,0
+DA:145,0
+DA:146,0
+DA:147,0
+DA:148,0
+DA:149,0
+DA:150,0
+DA:151,0
+DA:153,0
+DA:155,1
+DA:157,0
+DA:159,1
+DA:163,0
+DA:164,0
+DA:166,0
+DA:168,0
+DA:169,0
+DA:171,0
+DA:174,0
+DA:193,0
+DA:194,0
+DA:196,0
+DA:198,1
+DA:202,0
+DA:203,0
+DA:204,0
+DA:207,0
+DA:210,0
+DA:216,0
+DA:217,0
+DA:218,0
+DA:221,0
+DA:222,0
+DA:223,0
+DA:226,0
+DA:227,0
+DA:228,0
+DA:229,0
+DA:232,0
+DA:233,0
+DA:235,0
+DA:237,0
+DA:238,0
+DA:239,0
+DA:240,0
+DA:241,0
+DA:243,1
+DA:245,0
+DA:246,0
+DA:247,0
+DA:252,0
+DA:253,0
+DA:256,0
+DA:257,0
+DA:258,0
+DA:259,0
+DA:262,0
+DA:263,0
+DA:264,0
+DA:265,0
+DA:268,0
+DA:269,0
+DA:270,0
+DA:271,0
+DA:273,0
+DA:279,1
+DA:285,0
+DA:286,0
+DA:287,0
+DA:290,0
+DA:291,0
+DA:293,0
+DA:295,0
+DA:297,0
+DA:299,0
+DA:301,0
+DA:302,0
+DA:304,0
+DA:306,0
+DA:308,0
+DA:309,0
+DA:311,0
+DA:312,0
+DA:314,0
+DA:316,0
+DA:317,0
+DA:318,0
+DA:320,0
+DA:321,0
+DA:323,0
+DA:324,0
+DA:325,0
+DA:327,0
+DA:329,1
+DA:332,0
+DA:334,0
+DA:335,0
+DA:336,0
+DA:339,0
+DA:340,0
+DA:341,0
+DA:350,1
+DA:352,0
+DA:353,0
+DA:356,1
+DA:358,0
+DA:359,0
+DA:360,0
+DA:362,0
+DA:363,0
+DA:364,0
+DA:365,0
+DA:366,0
+DA:369,1
+DA:371,0
+DA:372,0
+DA:375,1
+DA:377,0
+DA:378,0
+DA:381,1
+DA:383,0
+DA:384,0
+DA:385,0
+DA:387,0
+LF:207
+LH:31
+FN:23,33,TemplateEngine.__init__
+FNDA:0,TemplateEngine.__init__
+FN:35,41,TemplateEngine.render_template
+FNDA:0,TemplateEngine.render_template
+FN:43,49,TemplateEngine.render_string
+FNDA:0,TemplateEngine.render_string
+FN:51,57,TemplateEngine.validate_template
+FNDA:0,TemplateEngine.validate_template
+FN:59,67,TemplateEngine.list_templates
+FNDA:0,TemplateEngine.list_templates
+FN:73,76,TemplateManager.__init__
+FNDA:0,TemplateManager.__init__
+FN:78,98,TemplateManager._get_template_directories
+FNDA:0,TemplateManager._get_template_directories
+FN:100,140,TemplateManager.list_templates
+FNDA:0,TemplateManager.list_templates
+FN:142,153,TemplateManager.load_template
+FNDA:0,TemplateManager.load_template
+FN:155,157,TemplateManager.template_exists
+FNDA:0,TemplateManager.template_exists
+FN:159,196,TemplateManager.create_template
+FNDA:0,TemplateManager.create_template
+FN:198,241,TemplateManager.apply_template
+FNDA:0,TemplateManager.apply_template
+FN:243,277,TemplateManager.validate_template
+FNDA:0,TemplateManager.validate_template
+FN:279,327,TemplateManager.install_templates
+FNDA:0,TemplateManager.install_templates
+FN:329,346,TemplateManager.init_templates
+FNDA:0,TemplateManager.init_templates
+FN:350,353,load_template
+FNDA:0,load_template
+FN:356,366,render_template
+FNDA:0,render_template
+FN:369,372,list_templates
+FNDA:0,list_templates
+FN:375,378,validate_template
+FNDA:0,validate_template
+FN:381,387,get_template_variables
+FNDA:0,get_template_variables
+FNF:20
+FNH:0
+BRDA:28,0,jump to line 29,-
+BRDA:28,0,jump to line 31,-
+BRDA:62,0,jump to line 63,-
+BRDA:62,0,jump to line 67,-
+BRDA:63,0,jump to line 62,-
+BRDA:63,0,jump to line 64,-
+BRDA:64,0,jump to line 62,-
+BRDA:64,0,jump to line 65,-
+BRDA:83,0,jump to line 84,-
+BRDA:83,0,jump to line 89,-
+BRDA:85,0,jump to line 86,-
+BRDA:85,0,jump to line 89,-
+BRDA:90,0,jump to line 91,-
+BRDA:90,0,jump to line 94,-
+BRDA:95,0,jump to line 96,-
+BRDA:95,0,jump to line 98,-
+BRDA:105,0,jump to line 106,-
+BRDA:105,0,jump to line 140,-
+BRDA:106,0,jump to line 107,-
+BRDA:106,0,jump to line 112,-
+BRDA:108,0,jump to line 109,-
+BRDA:108,0,jump to line 110,-
+BRDA:114,0,jump to line 105,-
+BRDA:114,0,jump to line 115,-
+BRDA:115,0,jump to line 114,-
+BRDA:115,0,jump to line 116,-
+BRDA:119,0,jump to line 120,-
+BRDA:119,0,jump to line 122,-
+BRDA:144,0,jump to line 145,-
+BRDA:144,0,jump to line 153,-
+BRDA:146,0,jump to line 144,-
+BRDA:146,0,jump to line 147,-
+BRDA:163,0,jump to line 164,-
+BRDA:163,0,jump to line 166,-
+BRDA:203,0,jump to line 204,-
+BRDA:203,0,jump to line 207,-
+BRDA:221,0,jump to line 222,-
+BRDA:221,0,jump to line 232,-
+BRDA:222,0,jump to line 223,-
+BRDA:222,0,jump to line 226,-
+BRDA:246,0,jump to line 247,-
+BRDA:246,0,jump to line 252,-
+BRDA:257,0,jump to line 258,-
+BRDA:257,0,jump to line 262,-
+BRDA:258,0,jump to line 257,-
+BRDA:258,0,jump to line 259,-
+BRDA:269,0,jump to line 270,-
+BRDA:269,0,jump to line 273,-
+BRDA:270,0,jump to line 269,-
+BRDA:270,0,jump to line 271,-
+BRDA:286,0,jump to line 287,-
+BRDA:286,0,jump to line 290,-
+BRDA:290,0,jump to line 291,-
+BRDA:290,0,jump to line 293,-
+BRDA:299,0,jump to line 301,-
+BRDA:299,0,jump to line 314,-
+BRDA:301,0,jump to line 302,-
+BRDA:301,0,jump to line 304,-
+BRDA:308,0,jump to line 309,-
+BRDA:308,0,jump to line 311,-
+BRDA:314,0,jump to line 316,-
+BRDA:314,0,jump to line 327,-
+BRDA:316,0,jump to line 317,-
+BRDA:316,0,jump to line 327,-
+BRDA:320,0,jump to line 321,-
+BRDA:320,0,jump to line 323,-
+BRDA:334,0,jump to line 335,-
+BRDA:334,0,return from function 'init_templates',-
+BRDA:340,0,jump to line 334,-
+BRDA:340,0,jump to line 341,-
+BRDA:359,0,jump to line 360,-
+BRDA:359,0,jump to line 362,-
+BRDA:384,0,jump to line 385,-
+BRDA:384,0,jump to line 387,-
+BRF:74
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/utils/validation.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:6,1
+DA:7,1
+DA:9,1
+DA:10,1
+DA:11,1
+DA:12,1
+DA:19,1
+DA:21,0
+DA:28,0
+DA:31,1
+DA:34,1
+DA:36,0
+DA:37,0
+DA:38,0
+DA:40,1
+DA:42,0
+DA:43,0
+DA:45,1
+DA:47,0
+DA:49,1
+DA:51,0
+DA:52,0
+DA:53,0
+DA:54,0
+DA:56,1
+DA:58,0
+DA:65,1
+DA:68,1
+DA:70,0
+DA:71,0
+DA:72,0
+DA:73,0
+DA:74,0
+DA:76,1
+DA:78,0
+DA:79,0
+DA:80,0
+DA:81,0
+DA:82,0
+DA:83,0
+DA:84,0
+DA:86,1
+DA:89,0
+DA:91,1
+DA:93,0
+DA:96,0
+DA:97,0
+DA:104,0
+DA:105,0
+DA:107,0
+DA:109,1
+DA:111,0
+DA:112,0
+DA:114,1
+DA:116,0
+DA:118,1
+DA:120,0
+DA:122,1
+DA:124,0
+DA:126,1
+DA:128,0
+DA:130,1
+DA:132,0
+DA:134,0
+DA:135,0
+DA:136,0
+DA:138,0
+DA:140,0
+DA:141,0
+DA:142,0
+DA:143,0
+DA:146,0
+DA:147,0
+DA:148,0
+DA:151,0
+DA:152,0
+DA:154,0
+DA:155,0
+DA:157,0
+DA:159,1
+DA:161,0
+DA:163,0
+DA:164,0
+DA:165,0
+DA:167,0
+DA:169,0
+DA:171,0
+DA:174,0
+DA:177,0
+DA:179,0
+DA:180,0
+DA:181,0
+DA:182,0
+DA:183,0
+DA:184,0
+DA:185,0
+DA:186,0
+DA:188,0
+DA:190,1
+DA:192,0
+DA:195,0
+DA:196,0
+DA:197,0
+DA:198,0
+DA:201,0
+DA:202,0
+DA:203,0
+DA:204,0
+DA:205,0
+DA:206,0
+DA:207,0
+DA:208,0
+DA:209,0
+DA:210,0
+DA:213,0
+DA:215,0
+DA:217,1
+DA:220,0
+DA:221,0
+DA:222,0
+DA:223,0
+DA:226,0
+DA:227,0
+DA:228,0
+DA:230,1
+DA:233,0
+DA:234,0
+DA:237,0
+DA:238,0
+DA:240,1
+DA:243,0
+DA:244,0
+DA:245,0
+DA:246,0
+DA:247,0
+DA:250,0
+DA:251,0
+DA:253,1
+DA:256,0
+DA:257,0
+DA:260,0
+DA:261,0
+DA:264,0
+DA:265,0
+DA:266,0
+DA:267,0
+DA:268,0
+DA:270,1
+DA:273,0
+DA:274,0
+DA:277,0
+DA:278,0
+DA:280,1
+DA:283,0
+DA:284,0
+DA:287,0
+DA:288,0
+DA:289,0
+DA:290,0
+DA:292,1
+DA:294,0
+DA:295,0
+DA:297,1
+DA:299,0
+DA:307,0
+DA:308,0
+DA:309,0
+DA:311,1
+DA:314,0
+DA:315,0
+DA:317,0
+DA:320,0
+DA:321,0
+DA:322,0
+DA:324,1
+DA:326,0
+DA:327,0
+DA:329,0
+DA:330,0
+DA:331,0
+DA:332,0
+DA:333,0
+DA:336,0
+DA:337,0
+DA:338,0
+DA:339,0
+DA:340,0
+DA:343,0
+DA:345,1
+DA:348,0
+DA:349,0
+DA:352,0
+DA:353,0
+DA:356,0
+DA:357,0
+DA:358,0
+DA:359,0
+DA:360,0
+DA:361,0
+DA:364,0
+DA:365,0
+DA:366,0
+DA:367,0
+DA:369,0
+DA:370,0
+DA:371,0
+DA:372,0
+DA:374,0
+DA:380,1
+DA:382,0
+DA:383,0
+DA:386,0
+DA:387,0
+DA:388,0
+DA:389,0
+DA:392,0
+DA:393,0
+DA:394,0
+DA:395,0
+DA:398,0
+DA:399,0
+DA:400,0
+DA:401,0
+DA:403,0
+DA:404,0
+DA:405,0
+DA:406,0
+DA:407,0
+DA:410,0
+DA:411,0
+DA:412,0
+DA:413,0
+DA:414,0
+DA:415,0
+DA:417,0
+DA:423,1
+DA:425,0
+DA:426,0
+DA:432,0
+DA:433,0
+DA:434,0
+DA:436,0
+DA:437,0
+DA:438,0
+DA:439,0
+DA:442,0
+DA:443,0
+DA:444,0
+DA:445,0
+DA:446,0
+DA:449,0
+DA:451,0
+DA:452,0
+DA:453,0
+DA:454,0
+DA:456,0
+DA:457,0
+DA:459,0
+DA:465,1
+DA:467,0
+DA:469,1
+DA:471,0
+DA:474,1
+DA:476,0
+DA:477,0
+DA:480,0
+DA:485,0
+DA:486,0
+DA:487,0
+DA:488,0
+DA:489,0
+DA:490,0
+DA:493,0
+DA:498,0
+DA:499,0
+DA:500,0
+DA:501,0
+DA:502,0
+DA:503,0
+DA:506,0
+DA:511,0
+DA:512,0
+DA:513,0
+DA:514,0
+DA:517,0
+DA:518,0
+DA:519,0
+DA:520,0
+DA:521,0
+DA:522,0
+DA:523,0
+DA:525,0
+DA:526,0
+DA:527,0
+DA:529,0
+DA:536,1
+DA:538,0
+DA:539,0
+DA:541,0
+DA:542,0
+DA:548,0
+DA:549,0
+DA:551,0
+DA:552,0
+DA:553,0
+DA:554,0
+DA:555,0
+DA:562,0
+DA:563,0
+DA:564,0
+DA:571,0
+DA:572,0
+DA:573,0
+DA:575,0
+DA:576,0
+DA:578,0
+DA:579,0
+DA:580,0
+DA:586,0
+DA:589,0
+DA:590,0
+DA:592,0
+DA:593,0
+DA:595,0
+DA:596,0
+DA:597,0
+DA:598,0
+DA:600,0
+DA:607,1
+DA:617,0
+DA:619,0
+DA:621,0
+DA:622,0
+DA:623,0
+DA:625,0
+DA:626,0
+DA:628,0
+DA:629,0
+DA:630,0
+DA:633,0
+DA:634,0
+DA:637,0
+DA:638,0
+DA:639,0
+DA:640,0
+DA:642,0
+DA:643,0
+DA:645,0
+DA:648,1
+DA:658,0
+DA:660,0
+DA:661,0
+DA:662,0
+DA:664,0
+DA:667,1
+DA:676,0
+DA:679,0
+DA:681,0
+DA:682,0
+DA:683,0
+DA:684,0
+DA:687,0
+DA:688,0
+DA:689,0
+DA:690,0
+DA:693,0
+DA:694,0
+DA:695,0
+DA:698,0
+DA:699,0
+DA:700,0
+DA:701,0
+DA:702,0
+DA:703,0
+DA:706,0
+DA:708,0
+DA:711,1
+DA:714,0
+DA:715,0
+DA:716,0
+DA:717,0
+DA:718,0
+DA:721,0
+DA:722,0
+DA:724,0
+DA:725,0
+DA:726,0
+DA:727,0
+DA:728,0
+DA:730,0
+DA:731,0
+DA:733,0
+DA:734,0
+DA:735,0
+DA:737,0
+DA:738,0
+DA:740,0
+DA:741,0
+DA:742,0
+DA:743,0
+DA:747,1
+DA:749,0
+DA:750,0
+DA:753,1
+DA:755,0
+DA:756,0
+DA:759,1
+DA:761,0
+DA:762,0
+DA:765,1
+DA:767,0
+DA:768,0
+DA:771,1
+DA:773,0
+DA:774,0
+LF:418
+LH:55
+FN:19,28,get_id_pattern_for_type
+FNDA:0,get_id_pattern_for_type
+FN:34,38,ValidationResult.__init__
+FNDA:0,ValidationResult.__init__
+FN:40,43,ValidationResult.add_error
+FNDA:0,ValidationResult.add_error
+FN:45,47,ValidationResult.add_warning
+FNDA:0,ValidationResult.add_warning
+FN:49,54,ValidationResult.merge
+FNDA:0,ValidationResult.merge
+FN:56,62,ValidationResult.to_dict
+FNDA:0,ValidationResult.to_dict
+FN:68,74,SchemaValidator.__init__
+FNDA:0,SchemaValidator.__init__
+FN:76,84,SchemaValidator._load_schemas
+FNDA:0,SchemaValidator._load_schemas
+FN:86,89,SchemaValidator._setup_model_validators
+FNDA:0,SchemaValidator._setup_model_validators
+FN:91,107,SchemaValidator.validate_ticket
+FNDA:0,SchemaValidator.validate_ticket
+FN:109,112,SchemaValidator.validate_task
+FNDA:0,SchemaValidator.validate_task
+FN:114,116,SchemaValidator.validate_epic
+FNDA:0,SchemaValidator.validate_epic
+FN:118,120,SchemaValidator.validate_issue
+FNDA:0,SchemaValidator.validate_issue
+FN:122,124,SchemaValidator.validate_pr
+FNDA:0,SchemaValidator.validate_pr
+FN:126,128,SchemaValidator.validate_project
+FNDA:0,SchemaValidator.validate_project
+FN:130,157,SchemaValidator._validate_against_json_schema
+FNDA:0,SchemaValidator._validate_against_json_schema
+FN:159,188,SchemaValidator._validate_against_pydantic_model
+FNDA:0,SchemaValidator._validate_against_pydantic_model
+FN:190,215,SchemaValidator._validate_custom_rules
+FNDA:0,SchemaValidator._validate_custom_rules
+FN:217,228,SchemaValidator._validate_task_specific_rules
+FNDA:0,SchemaValidator._validate_task_specific_rules
+FN:230,238,SchemaValidator._validate_epic_specific_rules
+FNDA:0,SchemaValidator._validate_epic_specific_rules
+FN:240,251,SchemaValidator._validate_issue_specific_rules
+FNDA:0,SchemaValidator._validate_issue_specific_rules
+FN:253,268,SchemaValidator._validate_pr_specific_rules
+FNDA:0,SchemaValidator._validate_pr_specific_rules
+FN:270,278,SchemaValidator._validate_project_specific_rules
+FNDA:0,SchemaValidator._validate_project_specific_rules
+FN:280,290,SchemaValidator._validate_relationships
+FNDA:0,SchemaValidator._validate_relationships
+FN:292,295,SchemaValidator._check_circular_dependencies
+FNDA:0,SchemaValidator._check_circular_dependencies
+FN:297,309,SchemaValidator._validate_reference_ids
+FNDA:0,SchemaValidator._validate_reference_ids
+FN:311,322,SchemaValidator._validate_model_instance
+FNDA:0,SchemaValidator._validate_model_instance
+FN:324,343,SchemaValidator._preprocess_datetime_fields
+FNDA:0,SchemaValidator._preprocess_datetime_fields
+FN:345,378,SchemaValidator.validate_config
+FNDA:0,SchemaValidator.validate_config
+FN:380,421,SchemaValidator.validate_template
+FNDA:0,SchemaValidator.validate_template
+FN:423,463,SchemaValidator._validate_data
+FNDA:0,SchemaValidator._validate_data
+FN:465,467,SchemaValidator.list_schemas
+FNDA:0,SchemaValidator.list_schemas
+FN:469,471,SchemaValidator.get_schema
+FNDA:0,SchemaValidator.get_schema
+FN:474,533,validate_project_structure
+FNDA:0,validate_project_structure
+FN:536,604,validate_task_file
+FNDA:0,validate_task_file
+FN:607,645,validate_ticket_file
+FNDA:0,validate_ticket_file
+FN:648,664,validate_id_format
+FNDA:0,validate_id_format
+FN:667,708,validate_relationships
+FNDA:0,validate_relationships
+FN:711,743,_check_circular_dependencies_deep
+FNDA:0,_check_circular_dependencies_deep
+FN:724,738,_check_circular_dependencies_deep.has_cycle
+FNDA:0,_check_circular_dependencies_deep.has_cycle
+FN:747,750,validate_task_data
+FNDA:0,validate_task_data
+FN:753,756,validate_epic_data
+FNDA:0,validate_epic_data
+FN:759,762,validate_issue_data
+FNDA:0,validate_issue_data
+FN:765,768,validate_pr_data
+FNDA:0,validate_pr_data
+FN:771,774,validate_project_data
+FNDA:0,validate_project_data
+FNF:45
+FNH:0
+BRDA:53,0,jump to line 54,-
+BRDA:53,0,return from function 'merge',-
+BRDA:78,0,jump to line 79,-
+BRDA:78,0,return from function '_load_schemas',-
+BRDA:134,0,jump to line 135,-
+BRDA:134,0,jump to line 138,-
+BRDA:146,0,jump to line 147,-
+BRDA:146,0,jump to line 151,-
+BRDA:151,0,jump to line 152,-
+BRDA:151,0,jump to line 157,-
+BRDA:163,0,jump to line 164,-
+BRDA:163,0,jump to line 167,-
+BRDA:180,0,jump to line 181,-
+BRDA:180,0,jump to line 188,-
+BRDA:195,0,jump to line 196,-
+BRDA:195,0,jump to line 201,-
+BRDA:197,0,jump to line 198,-
+BRDA:197,0,jump to line 201,-
+BRDA:201,0,jump to line 202,-
+BRDA:201,0,jump to line 203,-
+BRDA:203,0,jump to line 204,-
+BRDA:203,0,jump to line 205,-
+BRDA:205,0,jump to line 206,-
+BRDA:205,0,jump to line 207,-
+BRDA:207,0,jump to line 208,-
+BRDA:207,0,jump to line 209,-
+BRDA:209,0,jump to line 210,-
+BRDA:209,0,jump to line 213,-
+BRDA:220,0,jump to line 221,-
+BRDA:220,0,jump to line 226,-
+BRDA:222,0,jump to line 223,-
+BRDA:222,0,jump to line 226,-
+BRDA:226,0,jump to line 227,-
+BRDA:226,0,return from function '_validate_task_specific_rules',-
+BRDA:227,0,jump to line 228,-
+BRDA:227,0,return from function '_validate_task_specific_rules',-
+BRDA:233,0,jump to line 234,-
+BRDA:233,0,jump to line 237,-
+BRDA:237,0,jump to line 238,-
+BRDA:237,0,return from function '_validate_epic_specific_rules',-
+BRDA:243,0,jump to line 244,-
+BRDA:243,0,jump to line 250,-
+BRDA:245,0,jump to line 246,-
+BRDA:245,0,jump to line 250,-
+BRDA:246,0,jump to line 245,-
+BRDA:246,0,jump to line 247,-
+BRDA:250,0,jump to line 251,-
+BRDA:250,0,return from function '_validate_issue_specific_rules',-
+BRDA:256,0,jump to line 257,-
+BRDA:256,0,jump to line 260,-
+BRDA:260,0,jump to line 261,-
+BRDA:260,0,jump to line 264,-
+BRDA:267,0,jump to line 268,-
+BRDA:267,0,return from function '_validate_pr_specific_rules',-
+BRDA:273,0,jump to line 274,-
+BRDA:273,0,jump to line 277,-
+BRDA:277,0,jump to line 278,-
+BRDA:277,0,return from function '_validate_project_specific_rules',-
+BRDA:283,0,jump to line 284,-
+BRDA:283,0,jump to line 287,-
+BRDA:288,0,jump to line 289,-
+BRDA:288,0,return from function '_validate_relationships',-
+BRDA:289,0,jump to line 288,-
+BRDA:289,0,jump to line 290,-
+BRDA:294,0,jump to line 295,-
+BRDA:294,0,return from function '_check_circular_dependencies',-
+BRDA:307,0,jump to line 308,-
+BRDA:307,0,return from function '_validate_reference_ids',-
+BRDA:308,0,jump to line 307,-
+BRDA:308,0,jump to line 309,-
+BRDA:314,0,jump to line 315,-
+BRDA:314,0,jump to line 320,-
+BRDA:315,0,jump to line 317,-
+BRDA:315,0,jump to line 320,-
+BRDA:320,0,jump to line 321,-
+BRDA:320,0,return from function '_validate_model_instance',-
+BRDA:321,0,jump to line 322,-
+BRDA:321,0,return from function '_validate_model_instance',-
+BRDA:329,0,jump to line 330,-
+BRDA:329,0,jump to line 336,-
+BRDA:330,0,jump to line 329,-
+BRDA:330,0,jump to line 331,-
+BRDA:336,0,jump to line 337,-
+BRDA:336,0,jump to line 343,-
+BRDA:337,0,jump to line 336,-
+BRDA:337,0,jump to line 338,-
+BRDA:352,0,jump to line 353,-
+BRDA:352,0,jump to line 356,-
+BRDA:356,0,jump to line 357,-
+BRDA:356,0,jump to line 364,-
+BRDA:358,0,jump to line 359,-
+BRDA:358,0,jump to line 360,-
+BRDA:360,0,jump to line 361,-
+BRDA:360,0,jump to line 364,-
+BRDA:364,0,jump to line 365,-
+BRDA:364,0,jump to line 374,-
+BRDA:366,0,jump to line 367,-
+BRDA:366,0,jump to line 369,-
+BRDA:369,0,jump to line 370,-
+BRDA:369,0,jump to line 374,-
+BRDA:371,0,jump to line 372,-
+BRDA:371,0,jump to line 374,-
+BRDA:387,0,jump to line 388,-
+BRDA:387,0,jump to line 392,-
+BRDA:388,0,jump to line 387,-
+BRDA:388,0,jump to line 389,-
+BRDA:392,0,jump to line 393,-
+BRDA:392,0,jump to line 398,-
+BRDA:394,0,jump to line 395,-
+BRDA:394,0,jump to line 398,-
+BRDA:398,0,jump to line 399,-
+BRDA:398,0,jump to line 410,-
+BRDA:400,0,jump to line 401,-
+BRDA:400,0,jump to line 403,-
+BRDA:403,0,jump to line 404,-
+BRDA:403,0,jump to line 410,-
+BRDA:404,0,jump to line 405,-
+BRDA:404,0,jump to line 406,-
+BRDA:406,0,jump to line 403,-
+BRDA:406,0,jump to line 407,-
+BRDA:410,0,jump to line 411,-
+BRDA:410,0,jump to line 417,-
+BRDA:412,0,jump to line 413,-
+BRDA:412,0,jump to line 414,-
+BRDA:414,0,jump to line 415,-
+BRDA:414,0,jump to line 417,-
+BRDA:425,0,jump to line 426,-
+BRDA:425,0,jump to line 432,-
+BRDA:442,0,jump to line 443,-
+BRDA:442,0,jump to line 449,-
+BRDA:449,0,jump to line 451,-
+BRDA:449,0,jump to line 459,-
+BRDA:451,0,jump to line 452,-
+BRDA:451,0,jump to line 456,-
+BRDA:453,0,jump to line 454,-
+BRDA:453,0,jump to line 456,-
+BRDA:456,0,jump to line 457,-
+BRDA:456,0,jump to line 459,-
+BRDA:485,0,jump to line 486,-
+BRDA:485,0,jump to line 493,-
+BRDA:487,0,jump to line 488,-
+BRDA:487,0,jump to line 489,-
+BRDA:489,0,jump to line 485,-
+BRDA:489,0,jump to line 490,-
+BRDA:498,0,jump to line 499,-
+BRDA:498,0,jump to line 506,-
+BRDA:500,0,jump to line 501,-
+BRDA:500,0,jump to line 502,-
+BRDA:502,0,jump to line 498,-
+BRDA:502,0,jump to line 503,-
+BRDA:511,0,jump to line 512,-
+BRDA:511,0,jump to line 517,-
+BRDA:513,0,jump to line 511,-
+BRDA:513,0,jump to line 514,-
+BRDA:518,0,jump to line 519,-
+BRDA:518,0,jump to line 529,-
+BRDA:520,0,jump to line 521,-
+BRDA:520,0,jump to line 529,-
+BRDA:522,0,jump to line 523,-
+BRDA:522,0,jump to line 525,-
+BRDA:526,0,jump to line 520,-
+BRDA:526,0,jump to line 527,-
+BRDA:541,0,jump to line 542,-
+BRDA:541,0,jump to line 548,-
+BRDA:548,0,jump to line 549,-
+BRDA:548,0,jump to line 551,-
+BRDA:562,0,jump to line 563,-
+BRDA:562,0,jump to line 571,-
+BRDA:578,0,jump to line 579,-
+BRDA:578,0,jump to line 586,-
+BRDA:621,0,jump to line 622,-
+BRDA:621,0,jump to line 625,-
+BRDA:625,0,jump to line 626,-
+BRDA:625,0,jump to line 628,-
+BRDA:633,0,jump to line 634,-
+BRDA:633,0,jump to line 637,-
+BRDA:637,0,jump to line 638,-
+BRDA:637,0,jump to line 645,-
+BRDA:639,0,jump to line 640,-
+BRDA:639,0,jump to line 645,-
+BRDA:661,0,jump to line 662,-
+BRDA:661,0,jump to line 664,-
+BRDA:681,0,jump to line 682,-
+BRDA:681,0,jump to line 706,-
+BRDA:683,0,jump to line 684,-
+BRDA:683,0,jump to line 687,-
+BRDA:688,0,jump to line 689,-
+BRDA:688,0,jump to line 693,-
+BRDA:689,0,jump to line 688,-
+BRDA:689,0,jump to line 690,-
+BRDA:694,0,jump to line 695,-
+BRDA:694,0,jump to line 698,-
+BRDA:699,0,jump to line 681,-
+BRDA:699,0,jump to line 700,-
+BRDA:701,0,jump to line 699,-
+BRDA:701,0,jump to line 702,-
+BRDA:702,0,jump to line 701,-
+BRDA:702,0,jump to line 703,-
+BRDA:715,0,jump to line 716,-
+BRDA:715,0,jump to line 721,-
+BRDA:717,0,jump to line 715,-
+BRDA:717,0,jump to line 718,-
+BRDA:725,0,jump to line 726,-
+BRDA:725,0,jump to line 727,-
+BRDA:727,0,jump to line 728,-
+BRDA:727,0,jump to line 730,-
+BRDA:733,0,jump to line 734,-
+BRDA:733,0,jump to line 737,-
+BRDA:734,0,jump to line 733,-
+BRDA:734,0,jump to line 735,-
+BRDA:740,0,jump to line 741,-
+BRDA:740,0,return from function '_check_circular_dependencies_deep',-
+BRDA:741,0,jump to line 740,-
+BRDA:741,0,jump to line 742,-
+BRDA:742,0,jump to line 740,-
+BRDA:742,0,jump to line 743,-
+BRF:216
+BRH:0
+end_of_record
+SF:src/ai_trackdown_pytools/version.py
+DA:3,1
+DA:4,1
+DA:5,1
+DA:8,1
+DA:11,1
+DA:14,1
+DA:15,1
+DA:16,1
+DA:17,1
+DA:18,1
+DA:20,1
+DA:21,1
+DA:24,1
+DA:26,1
+DA:27,1
+DA:28,0
+DA:30,1
+DA:31,1
+DA:51,1
+DA:53,0
+DA:55,1
+DA:57,0
+DA:59,1
+DA:61,0
+DA:63,1
+DA:65,0
+DA:67,1
+DA:69,0
+DA:71,1
+DA:73,0
+DA:77,1
+DA:80,1
+DA:82,0
+DA:85,1
+DA:87,0
+DA:90,1
+DA:92,0
+DA:95,1
+DA:97,0
+DA:100,1
+DA:102,0
+DA:104,0
+DA:105,0
+DA:106,0
+DA:107,0
+DA:109,0
+DA:112,1
+DA:114,0
+DA:115,0
+DA:116,0
+DA:119,0
+DA:120,0
+DA:125,0
+DA:128,0
+DA:129,0
+DA:132,1
+DA:134,0
+DA:135,0
+DA:136,0
+DA:137,0
+DA:138,0
+DA:142,1
+DA:147,1
+DA:149,0
+DA:152,1
+DA:154,0
+DA:158,1
+DA:168,1
+DA:170,0
+DA:171,0
+DA:173,0
+DA:174,0
+DA:177,1
+DA:179,0
+DA:182,1
+DA:184,0
+DA:185,0
+DA:186,0
+DA:187,0
+DA:188,0
+LF:80
+LH:38
+FN:21,37,Version.parse
+FNDA:1,Version.parse
+FN:39,49,Version.__str__
+FNDA:0,Version.__str__
+FN:51,53,Version.is_pre_release
+FNDA:0,Version.is_pre_release
+FN:55,57,Version.is_stable
+FNDA:0,Version.is_stable
+FN:59,61,Version.bump_major
+FNDA:0,Version.bump_major
+FN:63,65,Version.bump_minor
+FNDA:0,Version.bump_minor
+FN:67,69,Version.bump_patch
+FNDA:0,Version.bump_patch
+FN:71,73,Version.to_release
+FNDA:0,Version.to_release
+FN:80,82,get_version
+FNDA:0,get_version
+FN:85,87,get_version_info
+FNDA:0,get_version_info
+FN:90,92,is_development_version
+FNDA:0,is_development_version
+FN:95,97,is_stable_version
+FNDA:0,is_stable_version
+FN:100,109,format_version_info
+FNDA:0,format_version_info
+FN:112,129,check_version_compatibility
+FNDA:0,check_version_compatibility
+FN:132,138,validate_version_string
+FNDA:0,validate_version_string
+FN:147,149,get_version_history
+FNDA:0,get_version_history
+FN:152,154,get_latest_version
+FNDA:0,get_latest_version
+FN:168,174,has_feature
+FNDA:0,has_feature
+FN:177,179,get_feature_version
+FNDA:0,get_feature_version
+FN:182,188,list_available_features
+FNDA:0,list_available_features
+FNF:20
+FNH:1
+BRDA:27,0,jump to line 28,0
+BRDA:27,0,jump to line 30,1
+BRDA:104,0,jump to line 105,-
+BRDA:104,0,jump to line 106,-
+BRDA:106,0,jump to line 107,-
+BRDA:106,0,jump to line 109,-
+BRDA:119,0,jump to line 120,-
+BRDA:119,0,jump to line 125,-
+BRDA:170,0,jump to line 171,-
+BRDA:170,0,jump to line 173,-
+BRDA:185,0,jump to line 186,-
+BRDA:185,0,jump to line 188,-
+BRDA:186,0,jump to line 185,-
+BRDA:186,0,jump to line 187,-
+BRF:14
+BRH:1
+end_of_record
