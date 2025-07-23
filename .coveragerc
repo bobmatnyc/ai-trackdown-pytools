@@ -112,7 +112,7 @@ show_contexts = True
 extra_css = coverage-extra.css
 
 # Static file extensions to include in HTML report
-static_file_extensions = css, js, png, gif, jpg, svg
+# static_file_extensions = css, js, png, gif, jpg, svg
 
 # Title for HTML report
 title = AI Trackdown PyTools Coverage Report

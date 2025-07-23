@@ -21,6 +21,11 @@ AI Trackdown PyTools brings powerful project management capabilities to your ter
 - **🔍 Smart Filtering**: Powerful search and filter capabilities across all your tasks and projects
 - **📊 Progress Tracking**: Visual progress indicators and comprehensive status reporting
 
+## Documentation
+
+- 📖 **[User Documentation](docs/user/index.md)** - Installation, usage guides, and command reference
+- 🔧 **[Development Documentation](docs/development/index.md)** - Contributing, testing, and release procedures
+
 ## Key Features
 
 - 🚀 **Modern CLI Experience** - Built with Typer and Rich for an exceptional terminal experience
@@ -30,6 +35,7 @@ AI Trackdown PyTools brings powerful project management capabilities to your ter
 - 🔍 **Advanced Search** - Filter by status, assignee, tags, priority, and custom fields
 - 🎯 **Schema Validation** - Ensure data integrity with JSON schema validation
 - 🔧 **Deep Git Integration** - Automatic commit tracking, branch management, and PR linking
+- 🔄 **GitHub Sync** - Sync tasks with GitHub issues and pull requests bidirectionally
 - 🎨 **Rich Terminal Output** - Tables, progress bars, syntax highlighting, and more
 - 🌐 **Multi-Project Support** - Manage multiple projects from a single installation
 - 📈 **Analytics and Reporting** - Built-in project analytics and customizable reports
@@ -117,6 +123,31 @@ aitrackdown status project --detailed
 
 ## Core Commands
 
+### AI-Friendly Mode
+
+AI Trackdown PyTools supports a plain output mode optimized for AI tools and automated scripts:
+
+```bash
+# Use --plain flag for simplified output
+aitrackdown --plain version
+aitrackdown --plain info
+aitrackdown --plain status
+
+# Or set environment variable
+export AITRACKDOWN_PLAIN=1
+aitrackdown version
+
+# Also respects NO_COLOR standard
+export NO_COLOR=1
+aitrackdown status
+```
+
+The plain mode:
+- Removes all color codes and rich formatting
+- Simplifies output structure for easier parsing
+- Ideal for piping to other tools or AI systems
+- Automatically enabled in CI environments
+
 ### Task Management
 
 ```bash
@@ -181,6 +212,24 @@ aitrackdown template export feature-template --output feature.yaml
 aitrackdown template import feature.yaml
 ```
 
+### GitHub Sync
+
+```bash
+# Check sync status
+aitrackdown sync github status
+
+# Push local issues to GitHub (dry-run first)
+aitrackdown sync github push --dry-run
+aitrackdown sync github push
+
+# Pull GitHub issues to local tasks
+aitrackdown sync github pull --dry-run
+aitrackdown sync github pull
+
+# Specify repository explicitly
+aitrackdown sync github push --repo owner/repo
+```
+
 ## Complete Command Reference
 
 ### Core Commands
@@ -202,7 +251,7 @@ aitrackdown template import feature.yaml
 | `epic` | Manage epic tasks | `aitrackdown epic create "Q3 Features"` |
 | `pr` | Create and link pull requests | `aitrackdown pr create --branch feature/auth` |
 | `migrate` | Migrate from other tools | `aitrackdown migrate --from jira` |
-| `sync` | Sync with remote services | `aitrackdown sync github` |
+| `sync` | Sync with GitHub issues/PRs | `aitrackdown sync github push` |
 | `report` | Generate reports | `aitrackdown report weekly --format html` |
 
 ### Utility Commands

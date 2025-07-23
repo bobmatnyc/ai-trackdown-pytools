@@ -23,8 +23,6 @@ After installation, the following commands are available:
 - `aitrackdown-create` - Create new tickets
 - `aitrackdown-template` - Manage templates
 
-**Note**: The `aitrackdown-py` command will be available in the next release (1.0.1).
-
 ## Package Details
 
 - **Size**: 110 KB (wheel), 120 KB (source)
@@ -35,7 +33,6 @@ After installation, the following commands are available:
 ## Next Steps
 
 1. **For version 1.0.1**:
-   - Add `aitrackdown-py` CLI endpoint
    - Fix minor schema issues identified
    - Improve test coverage
 

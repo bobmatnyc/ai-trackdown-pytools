@@ -7,8 +7,14 @@ import pytest
 from pydantic import ValidationError
 
 from ai_trackdown_pytools.core.models import (
-    TaskModel, EpicModel, IssueModel, PRModel, ProjectModel,
-    TicketModel, get_model_for_type, get_id_pattern_for_type
+    TaskModel,
+    EpicModel,
+    IssueModel,
+    PRModel,
+    ProjectModel,
+    TicketModel,
+    get_model_for_type,
+    get_id_pattern_for_type,
 )
 
 
@@ -17,11 +23,8 @@ class TestTaskModel:
 
     def test_task_model_minimal(self):
         """Test creating TaskModel with minimal data."""
-        task = TaskModel(
-            id="TSK-001",
-            title="Test Task"
-        )
-        
+        task = TaskModel(id="TSK-001", title="Test Task")
+
         assert task.id == "TSK-001"
         assert task.title == "Test Task"
         assert task.status == "open"
@@ -47,9 +50,9 @@ class TestTaskModel:
             updated_at=now,
             due_date=date.today(),
             estimated_hours=8.5,
-            actual_hours=5.0
+            actual_hours=5.0,
         )
-        
+
         assert task.id == "TSK-001"
         assert task.title == "Full Task"
         assert task.description == "Detailed description"
@@ -68,40 +71,32 @@ class TestTaskModel:
         """Test TaskModel validation."""
         # Invalid status
         with pytest.raises(ValidationError) as exc_info:
-            TaskModel(
-                id="TSK-001",
-                title="Test",
-                status="invalid-status"
-            )
+            TaskModel(id="TSK-001", title="Test", status="invalid-status")
         assert "status" in str(exc_info.value)
-        
+
         # Invalid priority
         with pytest.raises(ValidationError) as exc_info:
-            TaskModel(
-                id="TSK-001", 
-                title="Test",
-                priority="super-high"
-            )
+            TaskModel(id="TSK-001", title="Test", priority="super-high")
         assert "priority" in str(exc_info.value)
 
     def test_task_model_methods(self):
         """Test TaskModel methods."""
         task = TaskModel(id="TSK-001", title="Test Task")
-        
+
         # Test get_type
         assert task.get_type() == "task"
-        
+
         # Test to_markdown
         markdown = task.to_markdown()
         assert "# Test Task" in markdown
         assert "TSK-001" in markdown
         assert "Status: open" in markdown
-        
+
         # Test dict conversion
         task_dict = task.model_dump()
         assert task_dict["id"] == "TSK-001"
         assert task_dict["title"] == "Test Task"
-        
+
         # Exclude None values
         task_dict_clean = task.model_dump(exclude_none=True)
         assert "assignee" not in task_dict_clean
@@ -119,9 +114,9 @@ class TestEpicModel:
             business_value="High value feature",
             success_criteria="All child tasks completed",
             child_issues=["ISS-001", "ISS-002"],
-            child_tasks=["TSK-001", "TSK-002", "TSK-003"]
+            child_tasks=["TSK-001", "TSK-002", "TSK-003"],
         )
-        
+
         assert epic.id == "EP-001"
         assert epic.title == "Test Epic"
         assert epic.business_value == "High value feature"
@@ -132,13 +127,11 @@ class TestEpicModel:
     def test_epic_model_methods(self):
         """Test EpicModel methods."""
         epic = EpicModel(
-            id="EP-001",
-            title="Test Epic",
-            child_tasks=["TSK-001", "TSK-002"]
+            id="EP-001", title="Test Epic", child_tasks=["TSK-001", "TSK-002"]
         )
-        
+
         assert epic.get_type() == "epic"
-        
+
         markdown = epic.to_markdown()
         assert "# Test Epic" in markdown
         assert "## Child Tasks" in markdown
@@ -158,9 +151,9 @@ class TestIssueModel:
             steps_to_reproduce="1. Do this\n2. Do that",
             expected_behavior="Should work",
             actual_behavior="Doesn't work",
-            environment="Production"
+            environment="Production",
         )
-        
+
         assert issue.id == "ISS-001"
         assert issue.issue_type == "bug"
         assert issue.severity == "high"
@@ -172,9 +165,9 @@ class TestIssueModel:
             id="ISS-002",
             title="Feature Request",
             issue_type="feature",
-            acceptance_criteria="Must have X, Y, Z"
+            acceptance_criteria="Must have X, Y, Z",
         )
-        
+
         assert issue.issue_type == "feature"
         assert issue.acceptance_criteria == "Must have X, Y, Z"
 
@@ -182,32 +175,22 @@ class TestIssueModel:
         """Test IssueModel validation."""
         # Invalid issue type
         with pytest.raises(ValidationError):
-            IssueModel(
-                id="ISS-001",
-                title="Test",
-                issue_type="invalid-type"
-            )
-        
+            IssueModel(id="ISS-001", title="Test", issue_type="invalid-type")
+
         # Invalid severity
         with pytest.raises(ValidationError):
             IssueModel(
-                id="ISS-001",
-                title="Test",
-                issue_type="bug",
-                severity="super-critical"
+                id="ISS-001", title="Test", issue_type="bug", severity="super-critical"
             )
 
     def test_issue_model_methods(self):
         """Test IssueModel methods."""
         issue = IssueModel(
-            id="ISS-001",
-            title="Test Issue",
-            issue_type="bug",
-            severity="high"
+            id="ISS-001", title="Test Issue", issue_type="bug", severity="high"
         )
-        
+
         assert issue.get_type() == "issue"
-        
+
         markdown = issue.to_markdown()
         assert "Type: bug" in markdown
         assert "Severity: high" in markdown
@@ -228,9 +211,9 @@ class TestPRModel:
             lines_deleted=20,
             files_changed=3,
             commits=5,
-            closes_issues=["ISS-001", "ISS-002"]
+            closes_issues=["ISS-001", "ISS-002"],
         )
-        
+
         assert pr.id == "PR-001"
         assert pr.branch == "fix/auth-bug"
         assert pr.base_branch == "main"
@@ -246,9 +229,9 @@ class TestPRModel:
             title="Merged PR",
             status="merged",
             merged_at=merged_at,
-            merge_commit="abc123"
+            merge_commit="abc123",
         )
-        
+
         assert pr.status == "merged"
         assert pr.merged_at == merged_at
         assert pr.merge_commit == "abc123"
@@ -260,11 +243,11 @@ class TestPRModel:
             title="Test PR",
             branch="feature/test",
             lines_added=100,
-            lines_deleted=50
+            lines_deleted=50,
         )
-        
+
         assert pr.get_type() == "pr"
-        
+
         markdown = pr.to_markdown()
         assert "Branch: feature/test" in markdown
         assert "Lines: +100 -50" in markdown
@@ -284,9 +267,9 @@ class TestProjectModel:
             repository_url="https://github.com/org/repo",
             documentation_url="https://docs.example.com",
             epics=["EP-001", "EP-002"],
-            milestones=["v1.0", "v2.0"]
+            milestones=["v1.0", "v2.0"],
         )
-        
+
         assert project.id == "PROJ-001"
         assert project.name == "Test Project"
         assert project.code == "TP"
@@ -297,7 +280,7 @@ class TestProjectModel:
         """Test project with budget information."""
         start = date.today()
         end = date(2024, 12, 31)
-        
+
         project = ProjectModel(
             id="PROJ-001",
             name="Budget Project",
@@ -306,9 +289,9 @@ class TestProjectModel:
             start_date=start,
             end_date=end,
             estimated_hours=1000,
-            actual_hours=250
+            actual_hours=250,
         )
-        
+
         assert project.budget == 100000.0
         assert project.budget_spent == 25000.0
         assert project.start_date == start
@@ -316,14 +299,10 @@ class TestProjectModel:
 
     def test_project_model_methods(self):
         """Test ProjectModel methods."""
-        project = ProjectModel(
-            id="PROJ-001",
-            name="Test Project",
-            status="active"
-        )
-        
+        project = ProjectModel(id="PROJ-001", name="Test Project", status="active")
+
         assert project.get_type() == "project"
-        
+
         markdown = project.to_markdown()
         assert "# Test Project" in markdown
         assert "Status: active" in markdown
@@ -358,7 +337,7 @@ class TestHelperFunctions:
         assert get_model_for_type("issue") == IssueModel
         assert get_model_for_type("pr") == PRModel
         assert get_model_for_type("project") == ProjectModel
-        
+
         # Unknown type
         with pytest.raises(ValueError) as exc_info:
             get_model_for_type("unknown")
@@ -371,7 +350,7 @@ class TestHelperFunctions:
         assert get_id_pattern_for_type("issue") == r"^ISS-\d+$"
         assert get_id_pattern_for_type("pr") == r"^PR-\d+$"
         assert get_id_pattern_for_type("project") == r"^PROJ-\d+$"
-        
+
         # Unknown type returns generic pattern
         assert get_id_pattern_for_type("unknown") == r"^[A-Z]+-\d+$"
 
@@ -382,17 +361,11 @@ class TestModelIntegration:
     def test_task_epic_relationship(self):
         """Test task-epic parent-child relationship."""
         epic = EpicModel(
-            id="EP-001",
-            title="Parent Epic",
-            child_tasks=["TSK-001", "TSK-002"]
+            id="EP-001", title="Parent Epic", child_tasks=["TSK-001", "TSK-002"]
         )
-        
-        task = TaskModel(
-            id="TSK-001",
-            title="Child Task",
-            parent="EP-001"
-        )
-        
+
+        task = TaskModel(id="TSK-001", title="Child Task", parent="EP-001")
+
         assert task.parent == epic.id
         assert task.id in epic.child_tasks
 
@@ -400,13 +373,11 @@ class TestModelIntegration:
         """Test PR closing issues."""
         issue1 = IssueModel(id="ISS-001", title="Bug 1", issue_type="bug")
         issue2 = IssueModel(id="ISS-002", title="Bug 2", issue_type="bug")
-        
+
         pr = PRModel(
-            id="PR-001",
-            title="Fix bugs",
-            closes_issues=["ISS-001", "ISS-002"]
+            id="PR-001", title="Fix bugs", closes_issues=["ISS-001", "ISS-002"]
         )
-        
+
         assert issue1.id in pr.closes_issues
         assert issue2.id in pr.closes_issues
 
@@ -416,15 +387,15 @@ class TestModelIntegration:
             id="TSK-001",
             title="Test Task",
             tags=["test", "serialization"],
-            metadata={"key": "value"}
+            metadata={"key": "value"},
         )
-        
+
         # Serialize to dict
         task_dict = task.model_dump()
-        
+
         # Deserialize back
         task2 = TaskModel(**task_dict)
-        
+
         assert task2.id == task.id
         assert task2.title == task.title
         assert task2.tags == task.tags
@@ -435,14 +406,14 @@ class TestModelIntegration:
         # Empty strings
         with pytest.raises(ValidationError):
             TaskModel(id="", title="Test")
-        
+
         with pytest.raises(ValidationError):
             TaskModel(id="TSK-001", title="")
-        
+
         # Invalid date formats handled by Pydantic
         task = TaskModel(
             id="TSK-001",
             title="Test",
-            due_date="2024-12-31"  # String should be converted to date
+            due_date="2024-12-31",  # String should be converted to date
         )
         assert isinstance(task.due_date, date)

@@ -10,65 +10,65 @@ from . import __version__
 
 class Version(NamedTuple):
     """Semantic version representation."""
-    
+
     major: int
     minor: int
     patch: int
     pre_release: Optional[str] = None
     build_metadata: Optional[str] = None
-    
+
     @classmethod
-    def parse(cls, version_string: str) -> 'Version':
+    def parse(cls, version_string: str) -> "Version":
         """Parse a semantic version string."""
         # Regex pattern for semantic versioning
-        pattern = r'^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
-        
+        pattern = r"^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
+
         match = re.match(pattern, version_string)
         if not match:
             raise ValueError(f"Invalid semantic version: {version_string}")
-        
+
         groups = match.groupdict()
         return cls(
-            major=int(groups['major']),
-            minor=int(groups['minor']),
-            patch=int(groups['patch']),
-            pre_release=groups.get('prerelease'),
-            build_metadata=groups.get('buildmetadata')
+            major=int(groups["major"]),
+            minor=int(groups["minor"]),
+            patch=int(groups["patch"]),
+            pre_release=groups.get("prerelease"),
+            build_metadata=groups.get("buildmetadata"),
         )
-    
+
     def __str__(self) -> str:
         """Convert version to string."""
         version_str = f"{self.major}.{self.minor}.{self.patch}"
-        
+
         if self.pre_release:
             version_str += f"-{self.pre_release}"
-        
+
         if self.build_metadata:
             version_str += f"+{self.build_metadata}"
-        
+
         return version_str
-    
+
     def is_pre_release(self) -> bool:
         """Check if this is a pre-release version."""
         return self.pre_release is not None
-    
+
     def is_stable(self) -> bool:
         """Check if this is a stable release version."""
         return not self.is_pre_release() and self.major > 0
-    
-    def bump_major(self) -> 'Version':
+
+    def bump_major(self) -> "Version":
         """Bump major version and reset minor/patch."""
         return Version(self.major + 1, 0, 0)
-    
-    def bump_minor(self) -> 'Version':
+
+    def bump_minor(self) -> "Version":
         """Bump minor version and reset patch."""
         return Version(self.major, self.minor + 1, 0)
-    
-    def bump_patch(self) -> 'Version':
+
+    def bump_patch(self) -> "Version":
         """Bump patch version."""
         return Version(self.major, self.minor, self.patch + 1)
-    
-    def to_release(self) -> 'Version':
+
+    def to_release(self) -> "Version":
         """Convert to release version (remove pre-release)."""
         return Version(self.major, self.minor, self.patch)
 
@@ -100,12 +100,12 @@ def is_stable_version() -> bool:
 def format_version_info() -> str:
     """Format version information for display."""
     version_info = f"AI Trackdown PyTools v{get_version()}"
-    
+
     if is_development_version():
         version_info += " (Beta)"
     elif CURRENT_VERSION.is_pre_release():
         version_info += " (Pre-release)"
-    
+
     return version_info
 
 
@@ -114,17 +114,18 @@ def check_version_compatibility(required_version: str) -> bool:
     try:
         required = Version.parse(required_version)
         current = CURRENT_VERSION
-        
+
         # For 0.x versions, only same minor version is compatible (patch can be higher)
         if current.major == 0:
-            return (current.major == required.major and 
-                   current.minor == required.minor and
-                   current.patch >= required.patch)
-        
+            return (
+                current.major == required.major
+                and current.minor == required.minor
+                and current.patch >= required.patch
+            )
+
         # For 1.x+ versions, follow semantic versioning compatibility
-        return (current.major == required.major and 
-               current.minor >= required.minor)
-    
+        return current.major == required.major and current.minor >= required.minor
+
     except ValueError:
         return False
 
@@ -175,7 +176,7 @@ def has_feature(feature_name: str) -> bool:
     """Check if a feature is available in the current version."""
     if feature_name not in FEATURES:
         return False
-    
+
     feature_version = Version.parse(FEATURES[feature_name])
     return CURRENT_VERSION >= feature_version
 

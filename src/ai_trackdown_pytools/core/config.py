@@ -10,7 +10,7 @@ from pydantic import BaseModel, ConfigDict
 
 class ConfigModel(BaseModel):
     """Configuration data model."""
-    
+
     version: str = "1.0.0"
     project: Dict[str, Any] = {}
     editor: Dict[str, Any] = {"default": "code"}
@@ -18,156 +18,173 @@ class ConfigModel(BaseModel):
     tasks: Dict[str, Any] = {"directory": "tasks"}
     git: Dict[str, Any] = {"auto_commit": False}
     plugins: Dict[str, Any] = {}
-    
-    model_config = ConfigDict(extra='allow')
+
+    model_config = ConfigDict(extra="allow")
 
 
 class Config:
     """Configuration manager for AI Trackdown PyTools."""
-    
-    _instance: Optional['Config'] = None
+
+    _instances: Dict[Path, "Config"] = {}
     _config: ConfigModel
     _config_path: Optional[Path] = None
-    
-    def __new__(cls) -> 'Config':
-        """Singleton pattern for configuration."""
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-            cls._instance._config = ConfigModel()
-        return cls._instance
-    
+
+    def __new__(cls, project_path: Optional[Path] = None) -> "Config":
+        """Project-specific configuration instances."""
+        # Get the project root for this config
+        if project_path is None:
+            project_path = Path.cwd()
+
+        # Look for project root from the given path
+        from ai_trackdown_pytools.core.project import Project
+
+        actual_project_root = Project.find_project_root(project_path)
+        if actual_project_root:
+            project_path = actual_project_root
+
+        # Use project-specific instance
+        if project_path not in cls._instances:
+            instance = super().__new__(cls)
+            instance._config = ConfigModel()
+            instance._config_path = None
+            cls._instances[project_path] = instance
+
+        return cls._instances[project_path]
+
     @classmethod
-    def load(cls, config_path: Optional[Path] = None) -> 'Config':
+    def load(
+        cls, config_path: Optional[Path] = None, project_path: Optional[Path] = None
+    ) -> "Config":
         """Load configuration from file."""
-        instance = cls()
-        
+        instance = cls(project_path)
+
         if config_path is None:
             # Try to find config file
             config_path = cls.find_config_file()
-        
+
         if config_path and config_path.exists():
-            with open(config_path, 'r', encoding='utf-8') as f:
+            with open(config_path, "r", encoding="utf-8") as f:
                 config_data = yaml.safe_load(f) or {}
-            
+
             instance._config = ConfigModel(**config_data)
             instance._config_path = config_path
-        
+
         return instance
-    
+
     @classmethod
-    def create_default(cls, config_path: Path) -> 'Config':
+    def create_default(cls, config_path: Path) -> "Config":
         """Create default configuration file."""
-        instance = cls()
-        
+        # Get project path from config path
+        project_path = (
+            config_path.parent.parent
+            if config_path.parent.name == ".ai-trackdown"
+            else None
+        )
+        instance = cls(project_path)
+
         # Ensure directory exists
         config_path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         # Create default configuration
+        # Get project name from path
+        project_name = "my-project"
+        if config_path.parent.parent.exists():
+            project_name = config_path.parent.parent.name
+
         default_config = {
             "version": "0.9.0",
-            "project": {
-                "name": config_path.parent.parent.name,
-                "description": "",
-                "version": "0.9.0"
-            },
-            "editor": {
-                "default": os.getenv("EDITOR", "code")
-            },
-            "templates": {
-                "directory": "templates"
-            },
+            "project": {"name": project_name, "description": "", "version": "0.9.0"},
+            "editor": {"default": os.getenv("EDITOR", "code")},
+            "templates": {"directory": "templates"},
             "tasks": {
                 "directory": "tasks",
                 "auto_id": True,
-                "id_format": "TSK-{counter:04d}"
+                "id_format": "TSK-{counter:04d}",
             },
-            "git": {
-                "auto_commit": False,
-                "commit_prefix": "[ai-trackdown]"
-            },
-            "plugins": {}
+            "git": {"auto_commit": False, "commit_prefix": "[ai-trackdown]"},
+            "plugins": {},
         }
-        
-        with open(config_path, 'w', encoding='utf-8') as f:
+
+        with open(config_path, "w", encoding="utf-8") as f:
             yaml.dump(default_config, f, default_flow_style=False, sort_keys=False)
-        
+
         instance._config = ConfigModel(**default_config)
         instance._config_path = config_path
-        
+
         return instance
-    
+
     @staticmethod
     def find_config_file() -> Optional[Path]:
         """Find configuration file in project hierarchy."""
         current_path = Path.cwd()
-        
+
         # Look for .ai-trackdown/config.yaml
         for path in [current_path] + list(current_path.parents):
             config_file = path / ".ai-trackdown" / "config.yaml"
             if config_file.exists():
                 return config_file
-        
+
         # Look for global config
         global_config = Config.get_global_config_path()
         if global_config.exists():
             return global_config
-        
+
         return None
-    
+
     @staticmethod
     def get_global_config_path() -> Path:
         """Get global configuration file path."""
         return Path.home() / ".ai-trackdown" / "config.yaml"
-    
+
     def get(self, key: str, default: Any = None) -> Any:
         """Get configuration value using dot notation."""
-        keys = key.split('.')
+        keys = key.split(".")
         value = self._config.model_dump()
-        
+
         for k in keys:
             if isinstance(value, dict) and k in value:
                 value = value[k]
             else:
                 return default
-        
+
         return value
-    
+
     def set(self, key: str, value: Any) -> None:
         """Set configuration value using dot notation."""
-        keys = key.split('.')
+        keys = key.split(".")
         config_dict = self._config.model_dump()
         target = config_dict
-        
+
         for k in keys[:-1]:
             if k not in target:
                 target[k] = {}
             target = target[k]
-        
+
         target[keys[-1]] = value
         self._config = ConfigModel(**config_dict)
-    
+
     def save(self) -> None:
         """Save configuration to file."""
         if self._config_path:
             self._config_path.parent.mkdir(parents=True, exist_ok=True)
-            
-            with open(self._config_path, 'w', encoding='utf-8') as f:
+
+            with open(self._config_path, "w", encoding="utf-8") as f:
                 yaml.dump(
                     self._config.model_dump(),
                     f,
                     default_flow_style=False,
-                    sort_keys=False
+                    sort_keys=False,
                 )
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert configuration to dictionary."""
         return self._config.model_dump()
-    
+
     @property
     def config_path(self) -> Optional[Path]:
         """Get configuration file path."""
         return self._config_path
-    
+
     @property
     def project_root(self) -> Optional[Path]:
         """Get project root directory."""

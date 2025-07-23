@@ -16,8 +16,8 @@ Your primary role is developing and maintaining the Python implementation of AI-
 ### Project Context
 - **Project Name**: ai-trackdown-pytools
 - **Primary Language**: Python
-- **Package Name**: aitrackdown-py
-- **CLI Command**: aitrackdown-py
+- **Package Name**: ai-trackdown-pytools
+- **CLI Command**: aitrackdown
 - **Purpose**: Python implementation of AI-powered project tracking and issue management
 - **Distribution**: PyPI (Python Package Index)
 
@@ -43,12 +43,31 @@ Your primary role is developing and maintaining the Python implementation of AI-
 **Documentation Organization:**
 ```
 docs/
-├── api/                    # API documentation
-├── guides/                 # User and developer guides
-├── architecture/           # Technical architecture docs
-├── deployment/             # Deployment procedures
-└── troubleshooting/        # Common issues and solutions
+├── user/                   # User documentation
+│   ├── index.md           # User docs index with links
+│   ├── installation/      # Installation guides
+│   ├── usage/             # Usage guides and tutorials
+│   └── cli/               # CLI command reference
+├── development/            # Development documentation
+│   ├── index.md           # Dev docs index with links
+│   ├── contributing/      # Contributing guidelines
+│   ├── testing/           # Testing procedures
+│   ├── release/           # Release procedures
+│   └── api/               # API documentation
+├── design/                 # Design documentation
+│   ├── architecture/      # Technical architecture
+│   ├── schemas/           # Schema definitions
+│   └── decisions/         # Design decisions
+└── misc/                   # Miscellaneous docs
+    ├── archive/           # Archived documentation
+    └── legacy/            # Legacy documentation
 ```
+
+**Documentation Rules:**
+1. User and development docs MUST have `index.md` files
+2. Each `index.md` must provide comprehensive section navigation
+3. Documentation should be concise but comprehensive
+4. README.md must link to both user and development documentation sections
 
 **Source Code Organization:**
 ```
@@ -181,7 +200,7 @@ python -m build
 
 # Verify build contents
 ls -la dist/
-tar -tzf dist/aitrackdown-py-*.tar.gz | head -20
+tar -tzf dist/ai-trackdown-pytools-*.tar.gz | head -20
 ```
 
 **Publishing to PyPI:**
@@ -190,7 +209,7 @@ tar -tzf dist/aitrackdown-py-*.tar.gz | head -20
 python -m twine upload --repository testpypi dist/*
 
 # Install from TestPyPI to verify
-pip install --index-url https://test.pypi.org/simple/ aitrackdown-py
+pip install --index-url https://test.pypi.org/simple/ ai-trackdown-pytools
 
 # Publish to PyPI
 python -m twine upload dist/*
@@ -202,32 +221,32 @@ python -m twine upload dist/*
 sleep 180
 
 # Verify installation
-pip install aitrackdown-py
-aitrackdown-py --version
+pip install ai-trackdown-pytools
+aitrackdown --version
 ```
 
 ---
 
 ## E) CLI USAGE AND TICKETING
 
-### 🚨 MANDATORY: Use aitrackdown-py for This Project
+### 🚨 MANDATORY: Use aitrackdown for This Project
 
-**All ticket operations for this project use aitrackdown-py:**
+**All ticket operations for this project use aitrackdown:**
 ```bash
 # Initialize tracking
-aitrackdown-py init
+aitrackdown init
 
 # Create new ticket
-aitrackdown-py create "Add feature X"
+aitrackdown create "Add feature X"
 
 # List tickets
-aitrackdown-py list
+aitrackdown list
 
 # Update ticket
-aitrackdown-py update TICKET-001 --status in-progress
+aitrackdown update TICKET-001 --status in-progress
 
 # Close ticket
-aitrackdown-py close TICKET-001
+aitrackdown close TICKET-001
 ```
 
 **DO NOT use other ticketing tools for this project**
@@ -236,22 +255,73 @@ aitrackdown-py close TICKET-001
 
 ## F) DEVELOPMENT WORKFLOW
 
+### 🚨 MANDATORY: Development Environment Setup
+
+**Initial Setup and After Code Changes:**
+```bash
+# Option 1: Activate virtual environment for the session (RECOMMENDED)
+source venv/bin/activate
+pip install -e .
+# Now aitrackdown is available without prefixing for entire session
+
+# Option 2: Install with pipx for global access (for CLI tools)
+pipx install -e .
+# Now aitrackdown is available system-wide
+
+# Option 3: Use the venv Python directly (without activation)
+./venv/bin/pip install -e .
+# Then use: ./venv/bin/aitrackdown
+```
+
+**Development Environment Optimization:**
+1. **Best Practice**: Activate venv once at session start
+   ```bash
+   source venv/bin/activate  # Run once per terminal session
+   aitrackdown --version  # Works directly
+   ```
+
+2. **Alternative for System-Wide Access**: Use pipx
+   ```bash
+   brew install pipx  # or: python3 -m pip install --user pipx
+   pipx install -e .
+   ```
+
+3. **Shell Alias** (add to ~/.bashrc or ~/.zshrc):
+   ```bash
+   alias atd-dev='source /path/to/project/venv/bin/activate'
+   ```
+
+**Why Development Mode:**
+- Enables `aitrackdown` CLI commands immediately
+- Reflects code changes without reinstalling
+- Required for ticket creation and management
+- Essential for testing CLI functionality
+
+**Note on Wheels:**
+- This project uses setuptools with pyproject.toml (PEP 517)
+- Wheels are automatically built during `pip install`
+- For distribution, use `python -m build` to create wheels
+
 ### 🚨 MANDATORY: Development Procedures
 
 **Feature Development:**
-1. Create ticket using `aitrackdown-py create`
-2. Create feature branch: `git checkout -b feature/TICKET-XXX-description`
-3. Implement feature with tests
-4. Ensure 80%+ test coverage
-5. Update documentation
-6. Create pull request
+1. Ensure development environment: `pip install -e .`
+2. Create ticket using `aitrackdown create`
+3. Create feature branch: `git checkout -b feature/TICKET-XXX-description`
+4. Implement feature with tests
+5. Ensure 80%+ test coverage
+6. Update documentation
+7. Reinstall if CLI changes made: `pip install -e .`
+8. Create pull request
 
 **Bug Fixes:**
-1. Create bug ticket using `aitrackdown-py create --type bug`
-2. Create bugfix branch: `git checkout -b bugfix/TICKET-XXX-description`
-3. Fix bug with regression test
-4. Verify all tests pass
-5. Create pull request
+1. Ensure development environment: `pip install -e .`
+2. Create bug ticket using `aitrackdown create --type bug`
+3. Create bugfix branch: `git checkout -b bugfix/TICKET-XXX-description`
+4. Fix bug with regression test
+5. Verify all tests pass
+6. Reinstall if CLI changes made: `pip install -e .`
+7. Create pull request
 
 **Documentation Updates:**
 1. Documentation goes in `docs/` directory
@@ -360,7 +430,7 @@ mypy aitrackdown
 pip cache purge
 
 # Install with verbose output
-pip install -v aitrackdown-py
+pip install -v ai-trackdown-pytools
 
 # Install from source
 git clone https://github.com/yourusername/ai-trackdown-pytools.git
@@ -380,10 +450,10 @@ python -c "import sys; print(sys.path)"
 **CLI Not Found:**
 ```bash
 # Check if script is in PATH
-which aitrackdown-py
+which aitrackdown
 
 # Find installed location
-pip show -f aitrackdown-py | grep bin/
+pip show -f ai-trackdown-pytools | grep bin/
 
 # Add to PATH if needed
 export PATH="$PATH:$(python -m site --user-base)/bin"
@@ -459,7 +529,7 @@ twine>=4.0
 - **Version in VERSION file** - always update before release
 - **Tests must pass** - no exceptions
 - **80% coverage minimum** - maintain quality
-- **Use aitrackdown-py** - for all project tickets
+- **Use aitrackdown** - for all project tickets
 - **Docs in docs/** - keep root clean
 - **PyPI publishing** - test on TestPyPI first
 

@@ -19,7 +19,7 @@ def _get_version():
             return version_path.read_text().strip()
 
     # Fallback version if VERSION file not found
-    return "1.1.1"
+    return "1.1.2"
 
 
 __version__ = _get_version()

@@ -187,7 +187,6 @@ docs = [
 
 [project.scripts]
 aitrackdown = "ai_trackdown_pytools.cli:main"
-aitrackdown-py = "ai_trackdown_pytools.cli:main"
 atd = "ai_trackdown_pytools.cli:main"
 aitrackdown-init = "ai_trackdown_pytools.commands.init:main"
 aitrackdown-status = "ai_trackdown_pytools.commands.status:main"
@@ -210,11 +209,22 @@ include = [
     "src/ai_trackdown_pytools/**/*.py",
     "src/ai_trackdown_pytools/templates/**/*",
     "src/ai_trackdown_pytools/schemas/**/*.json",
-    "VERSION",
+    "src/ai_trackdown_pytools/VERSION",
 ]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ai_trackdown_pytools"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/",
+    "tests/",
+    "VERSION",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "pyproject.toml",
+]
 
 [tool.hatch.version]
 path = "VERSION"
@@ -228,15 +238,11 @@ python_functions = "test_*"
 addopts = [
     "--strict-markers",
     "--strict-config",
-    "--cov=ai_trackdown_pytools",
+    "--cov=src/ai_trackdown_pytools",
     "--cov-branch",
     "--cov-report=term-missing:skip-covered",
-    "--cov-report=html:htmlcov",
     "--cov-report=xml:coverage.xml",
-    "--cov-report=json:coverage.json",
-    "--cov-report=lcov:coverage.lcov",
     "--cov-fail-under=85",
-    "--cov-context=test",
     "-ra",
     "--tb=short",
 ]
@@ -246,6 +252,7 @@ markers = [
     "e2e: End-to-end tests",
     "slow: Slow tests",
     "regression: Regression tests",
+    "asyncio: Asynchronous tests",
 ]
 
 [tool.coverage.run]
@@ -311,9 +318,7 @@ exclude_lines = [
 
 [tool.coverage.html]
 directory = "htmlcov"
-extra_css = "coverage-extra.css"
 show_contexts = true
-static_file_extensions = ["css", "js", "png", "gif", "jpg", "svg"]
 
 [tool.coverage.xml]
 output = "coverage.xml"

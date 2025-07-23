@@ -7,9 +7,76 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.2] - 2025-07-23
+
+### Fixed
+- Critical bug in PR and Epic update functionality that prevented closing/updating these items
+- Task update functionality was broken due to missing `save_task` method in TaskManager class
+- Improved error handling and display in task update operations
+
+### Technical Details
+- Added missing `save_task` method to TaskManager class (ISS-0012)
+- Fixed task relationship updates for epic and parent task management
+- Enhanced error messaging for better user experience during task operations
+
+## [1.1.1] - 2025-07-23
+
 ### Added
-- New `aitrackdown-py` CLI endpoint as the preferred command for this project
-- Project-specific CLI command that follows the Python package naming convention
+- GitHub sync functionality for bidirectional synchronization with GitHub issues and PRs
+- GitHub CLI (gh) integration for issue and PR management
+- Sync commands: `aitrackdown sync github pull/push/status`
+- Sync configuration management in `.aitrackdown/sync.json`
+- Support for syncing issue labels, assignees, and milestones
+- Documentation reorganization with clear user/development separation
+- Index files for documentation sections to improve navigation
+
+### Fixed
+- Task update slice indices error - added missing `save_task` method in TaskManager
+- Comment functionality lookup issues - improved file path finding patterns
+- Status project NoneType error - added validation for empty project.yaml files
+- Proper error handling for task updates with epic/parent relationships
+- YAML parsing and double-escaping issues in various commands
+
+### Changed
+- Documentation structure moved to organized subdirectories (user/, development/, design/, misc/)
+- Removed redundant documentation files from root directory
+- Consolidated PyPI publishing guides into development documentation
+- Improved error messages and user feedback throughout CLI
+
+### Development
+- Enhanced test coverage for new sync functionality
+- Added GitHub API mocking for offline testing
+- Improved CI/CD pipeline with security checks
+- Updated dependencies for GitHub integration
+
+## [1.1.0] - 2025-07-21
+
+### Added
+- The `aitrackdown` CLI command is the primary command for this project
+- Standardized command naming for better user experience
+- Full schema compliance with proper ID prefixes (EP-, ISS-, TSK-, PR-)
+- Correct directory structure (tasks/epics/, tasks/issues/, tasks/tasks/, tasks/prs/)
+- Epic/issue linking commands with `--epic` option for updates
+- Plain output mode (`--plain`) for AI-friendly command output
+- Environment variable support (AITRACKDOWN_PLAIN, NO_COLOR, CI)
+- Auto-detection of piped output for simplified formatting
+- Bidirectional relationship management for epic/issue/task linking
+- Comment system for issues (with future support for epics/tasks)
+- Index management system for efficient searching
+- Field validation for required schema fields
+
+### Fixed
+- Cross-project file creation issue - proper project isolation
+- Task update display warning about "limit must be an integer"
+- YAML parsing warnings and double-escaping issues
+- File naming consistency (no more double dashes)
+- Missing required fields in legacy file formats
+
+### Changed
+- Migrated from single TSK- prefix to proper schema prefixes
+- Reorganized file structure to match ai-trackdown schema
+- Improved help command descriptions for better AI usability
+- Enhanced error messages and user feedback
 
 ## [1.0.0] - 2025-07-21
 

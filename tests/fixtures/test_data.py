@@ -9,17 +9,21 @@ import shutil
 from unittest.mock import Mock
 
 from ai_trackdown_pytools.core.project import Project
-from ai_trackdown_pytools.core.models import TaskModel, EpicModel, IssueModel, PRModel, ProjectModel
+from ai_trackdown_pytools.core.models import (
+    TaskModel,
+    EpicModel,
+    IssueModel,
+    PRModel,
+    ProjectModel,
+)
 
 
 class TestDataGenerator:
     """Generate test data for various scenarios."""
-    
+
     @staticmethod
     def generate_task_data(
-        task_id: Optional[str] = None,
-        title: Optional[str] = None,
-        **overrides
+        task_id: Optional[str] = None, title: Optional[str] = None, **overrides
     ) -> Dict[str, Any]:
         """Generate realistic task data."""
         base_data = {
@@ -35,12 +39,10 @@ class TestDataGenerator:
         }
         base_data.update(overrides)
         return base_data
-    
+
     @staticmethod
     def generate_epic_data(
-        epic_id: Optional[str] = None,
-        title: Optional[str] = None,
-        **overrides
+        epic_id: Optional[str] = None, title: Optional[str] = None, **overrides
     ) -> Dict[str, Any]:
         """Generate realistic epic data."""
         base_data = {
@@ -60,12 +62,10 @@ class TestDataGenerator:
         }
         base_data.update(overrides)
         return base_data
-    
+
     @staticmethod
     def generate_issue_data(
-        issue_id: Optional[str] = None,
-        title: Optional[str] = None,
-        **overrides
+        issue_id: Optional[str] = None, title: Optional[str] = None, **overrides
     ) -> Dict[str, Any]:
         """Generate realistic issue data."""
         base_data = {
@@ -87,12 +87,10 @@ class TestDataGenerator:
         }
         base_data.update(overrides)
         return base_data
-    
+
     @staticmethod
     def generate_pr_data(
-        pr_id: Optional[str] = None,
-        title: Optional[str] = None,
-        **overrides
+        pr_id: Optional[str] = None, title: Optional[str] = None, **overrides
     ) -> Dict[str, Any]:
         """Generate realistic PR data."""
         base_data = {
@@ -115,12 +113,10 @@ class TestDataGenerator:
         }
         base_data.update(overrides)
         return base_data
-    
+
     @staticmethod
     def generate_project_data(
-        project_id: Optional[str] = None,
-        name: Optional[str] = None,
-        **overrides
+        project_id: Optional[str] = None, name: Optional[str] = None, **overrides
     ) -> Dict[str, Any]:
         """Generate realistic project data."""
         base_data = {
@@ -138,7 +134,7 @@ class TestDataGenerator:
         }
         base_data.update(overrides)
         return base_data
-    
+
     @classmethod
     def generate_task_collection(cls, count: int = 5) -> List[Dict[str, Any]]:
         """Generate a collection of diverse tasks."""
@@ -154,9 +150,9 @@ class TestDataGenerator:
             ["documentation", "api"],
             ["testing", "automation"],
             ["refactor", "performance"],
-            ["migration", "database"]
+            ["migration", "database"],
         ]
-        
+
         for i in range(count):
             task_data = cls.generate_task_data(
                 task_id=f"TSK-{i+1:04d}",
@@ -166,30 +162,30 @@ class TestDataGenerator:
                 assignees=[assignees[i % len(assignees)]],
                 tags=tag_groups[i % len(tag_groups)],
                 created_at=datetime.now() - timedelta(days=i),
-                updated_at=datetime.now() - timedelta(hours=i)
+                updated_at=datetime.now() - timedelta(hours=i),
             )
             tasks.append(task_data)
-        
+
         return tasks
-    
+
     @classmethod
     def generate_epic_collection(cls, count: int = 3) -> List[Dict[str, Any]]:
         """Generate a collection of diverse epics."""
         epics = []
         statuses = ["planning", "in_progress", "on_hold", "completed"]
-        
+
         for i in range(count):
             epic_data = cls.generate_epic_data(
                 epic_id=f"EP-{i+1:04d}",
                 title=f"Epic {i+1}: {['User Management', 'Payment System', 'Reporting Dashboard'][i % 3]}",
                 status=statuses[i % len(statuses)],
                 target_date=date.today() + timedelta(days=30 * (i + 1)),
-                created_at=datetime.now() - timedelta(days=i * 7)
+                created_at=datetime.now() - timedelta(days=i * 7),
             )
             epics.append(epic_data)
-        
+
         return epics
-    
+
     @classmethod
     def generate_full_project_data(cls) -> Dict[str, List[Dict[str, Any]]]:
         """Generate a complete project with all ticket types."""
@@ -200,69 +196,64 @@ class TestDataGenerator:
                 cls.generate_issue_data(
                     issue_id=f"ISS-{i+1:04d}",
                     title=f"Issue {i+1}: {['Login Bug', 'UI Problem', 'Performance Issue'][i % 3]}",
-                    issue_type=["bug", "enhancement", "feature_request"][i % 3]
-                ) for i in range(5)
+                    issue_type=["bug", "enhancement", "feature_request"][i % 3],
+                )
+                for i in range(5)
             ],
             "prs": [
                 cls.generate_pr_data(
                     pr_id=f"PR-{i+1:04d}",
                     title=f"PR {i+1}: {['Fix Bug', 'Add Feature', 'Update Docs'][i % 3]}",
                     source_branch=f"{'feature' if i % 2 == 0 else 'bugfix'}/branch-{i}",
-                    pr_type=["feature", "bugfix", "enhancement"][i % 3]
-                ) for i in range(4)
-            ]
+                    pr_type=["feature", "bugfix", "enhancement"][i % 3],
+                )
+                for i in range(4)
+            ],
         }
 
 
 class MockFactory:
     """Factory for creating mock objects."""
-    
+
     @staticmethod
     def create_mock_project(temp_dir: Optional[Path] = None) -> Mock:
         """Create a mock project object."""
         if temp_dir is None:
             temp_dir = Path(tempfile.mkdtemp())
-        
+
         mock_project = Mock(spec=Project)
         mock_project.path = temp_dir
         mock_project.config_path = temp_dir / ".ai-trackdown" / "config.yaml"
         mock_project.name = "Mock Project"
-        
+
         # Mock methods
         mock_project.get_tasks_directory.return_value = temp_dir / "tasks"
         mock_project.get_templates_directory.return_value = temp_dir / "templates"
         mock_project.is_initialized.return_value = True
         mock_project.is_git_repository.return_value = False
         mock_project.validate_structure.return_value = []
-        
+
         return mock_project
-    
+
     @staticmethod
     def create_mock_config() -> Mock:
         """Create a mock configuration object."""
         mock_config = Mock()
-        
+
         # Default configuration values
         config_data = {
             "version": "1.0.0",
             "project": {
                 "name": "Mock Project",
-                "description": "A mock project for testing"
+                "description": "A mock project for testing",
             },
-            "editor": {
-                "default": "code"
-            },
-            "tasks": {
-                "directory": "tasks",
-                "default_assignee": None
-            },
-            "templates": {
-                "directory": "templates"
-            }
+            "editor": {"default": "code"},
+            "tasks": {"directory": "tasks", "default_assignee": None},
+            "templates": {"directory": "templates"},
         }
-        
+
         def mock_get(key, default=None):
-            keys = key.split('.')
+            keys = key.split(".")
             value = config_data
             try:
                 for k in keys:
@@ -270,53 +261,58 @@ class MockFactory:
                 return value
             except (KeyError, TypeError):
                 return default
-        
+
         def mock_set(key, value):
-            keys = key.split('.')
+            keys = key.split(".")
             target = config_data
             for k in keys[:-1]:
                 if k not in target:
                     target[k] = {}
                 target = target[k]
             target[keys[-1]] = value
-        
+
         mock_config.get.side_effect = mock_get
         mock_config.set.side_effect = mock_set
         mock_config.save.return_value = None
         mock_config.to_dict.return_value = config_data
-        
+
         return mock_config
-    
+
     @staticmethod
     def create_mock_task_manager() -> Mock:
         """Create a mock task manager."""
         mock_manager = Mock()
-        
+
         # Generate sample tasks
         sample_tasks = TestDataGenerator.generate_task_collection(5)
-        
+
         mock_manager.list_tasks.return_value = [
-            Mock(model=TaskModel(**task_data), file_path=Path(f"/mock/path/{task_data['id']}.md"))
+            Mock(
+                model=TaskModel(**task_data),
+                file_path=Path(f"/mock/path/{task_data['id']}.md"),
+            )
             for task_data in sample_tasks
         ]
-        
+
         mock_manager.create_task.return_value = Mock(
             model=TaskModel(**TestDataGenerator.generate_task_data()),
-            file_path=Path("/mock/path/new_task.md")
+            file_path=Path("/mock/path/new_task.md"),
         )
-        
+
         mock_manager.get_statistics.return_value = {
             "total": 5,
             "open": 2,
             "in_progress": 1,
             "completed": 2,
-            "cancelled": 0
+            "cancelled": 0,
         }
-        
+
         return mock_manager
-    
+
     @staticmethod
-    def create_mock_validation_result(valid: bool = True, errors: List[str] = None, warnings: List[str] = None):
+    def create_mock_validation_result(
+        valid: bool = True, errors: List[str] = None, warnings: List[str] = None
+    ):
         """Create a mock validation result."""
         mock_result = Mock()
         mock_result.valid = valid
@@ -389,7 +385,7 @@ def mock_task_manager():
 def temporary_project_structure():
     """Fixture providing a temporary project structure."""
     temp_dir = Path(tempfile.mkdtemp())
-    
+
     # Create project structure
     (temp_dir / ".ai-trackdown").mkdir()
     (temp_dir / "tasks").mkdir()
@@ -397,7 +393,7 @@ def temporary_project_structure():
     (temp_dir / "tasks" / "in_progress").mkdir()
     (temp_dir / "tasks" / "completed").mkdir()
     (temp_dir / "templates").mkdir()
-    
+
     # Create config file
     config_content = """version: 1.0.0
 project:
@@ -411,7 +407,7 @@ templates:
   directory: templates
 """
     (temp_dir / ".ai-trackdown" / "config.yaml").write_text(config_content)
-    
+
     # Create sample templates
     task_template = """---
 id: {{ id or 'TSK-' + '%04d'|format(sequence_number) }}
@@ -425,9 +421,9 @@ priority: {{ priority or 'medium' }}
 {{ description or 'Task description here.' }}
 """
     (temp_dir / "templates" / "task.yaml").write_text(task_template)
-    
+
     yield temp_dir
-    
+
     # Cleanup
     shutil.rmtree(temp_dir, ignore_errors=True)
 
@@ -437,16 +433,19 @@ def populated_project_structure(temporary_project_structure):
     """Fixture providing a project structure with sample data."""
     project_dir = temporary_project_structure
     tasks_dir = project_dir / "tasks"
-    
+
     # Create sample tasks
     sample_tasks = TestDataGenerator.generate_task_collection(5)
-    
+
     for i, task_data in enumerate(sample_tasks):
         status_dir = tasks_dir / task_data["status"]
         status_dir.mkdir(exist_ok=True)
-        
-        task_file = status_dir / f"{task_data['id']}-{task_data['title'].lower().replace(' ', '-')}.md"
-        
+
+        task_file = (
+            status_dir
+            / f"{task_data['id']}-{task_data['title'].lower().replace(' ', '-')}.md"
+        )
+
         # Create frontmatter
         frontmatter_lines = []
         for key, value in task_data.items():
@@ -458,18 +457,18 @@ def populated_project_structure(temporary_project_structure):
                     frontmatter_lines.append(f"  - {item}")
             else:
                 frontmatter_lines.append(f"{key}: {value}")
-        
+
         frontmatter = "---\n" + "\n".join(frontmatter_lines) + "\n---\n"
         content = f"\n# {task_data['title']}\n\n{task_data.get('description', 'Task content.')}\n"
-        
+
         task_file.write_text(frontmatter + content)
-    
+
     yield project_dir
 
 
 class TestScenarios:
     """Pre-defined test scenarios for complex testing."""
-    
+
     @staticmethod
     def agile_sprint_scenario():
         """Generate data for agile sprint scenario."""
@@ -484,7 +483,7 @@ class TestScenarios:
                     priority="high",
                     tags=["user-story", "authentication", "oauth"],
                     assignees=["frontend_dev"],
-                    status="in_progress"
+                    status="in_progress",
                 ),
                 TestDataGenerator.generate_task_data(
                     task_id="TSK-0102",
@@ -492,7 +491,7 @@ class TestScenarios:
                     priority="medium",
                     tags=["bug", "ui", "responsive"],
                     assignees=["frontend_dev"],
-                    status="open"
+                    status="open",
                 ),
                 TestDataGenerator.generate_task_data(
                     task_id="TSK-0103",
@@ -500,16 +499,16 @@ class TestScenarios:
                     priority="high",
                     tags=["technical", "backend", "oauth"],
                     assignees=["backend_dev"],
-                    status="completed"
-                )
+                    status="completed",
+                ),
             ],
             "goals": [
                 "Complete user authentication epic",
                 "Fix critical UI bugs",
-                "Improve user experience"
-            ]
+                "Improve user experience",
+            ],
         }
-    
+
     @staticmethod
     def release_preparation_scenario():
         """Generate data for release preparation scenario."""
@@ -523,7 +522,7 @@ class TestScenarios:
                     priority="high",
                     tags=["release", "documentation"],
                     assignees=["tech_writer"],
-                    status="open"
+                    status="open",
                 ),
                 TestDataGenerator.generate_task_data(
                     task_id="TSK-0202",
@@ -531,7 +530,7 @@ class TestScenarios:
                     priority="critical",
                     tags=["release", "testing", "qa"],
                     assignees=["qa_engineer"],
-                    status="in_progress"
+                    status="in_progress",
                 ),
                 TestDataGenerator.generate_task_data(
                     task_id="TSK-0203",
@@ -539,13 +538,13 @@ class TestScenarios:
                     priority="high",
                     tags=["release", "deployment", "devops"],
                     assignees=["devops_engineer"],
-                    status="completed"
-                )
+                    status="completed",
+                ),
             ],
             "blockers": [],
-            "critical_issues": []
+            "critical_issues": [],
         }
-    
+
     @staticmethod
     def bug_triage_scenario():
         """Generate data for bug triage scenario."""
@@ -558,7 +557,7 @@ class TestScenarios:
                     issue_type="bug",
                     severity="critical",
                     priority="critical",
-                    status="open"
+                    status="open",
                 ),
                 TestDataGenerator.generate_issue_data(
                     issue_id="ISS-0302",
@@ -566,7 +565,7 @@ class TestScenarios:
                     issue_type="bug",
                     severity="high",
                     priority="high",
-                    status="open"
+                    status="open",
                 ),
                 TestDataGenerator.generate_issue_data(
                     issue_id="ISS-0303",
@@ -574,14 +573,14 @@ class TestScenarios:
                     issue_type="bug",
                     severity="medium",
                     priority="medium",
-                    status="open"
-                )
+                    status="open",
+                ),
             ],
             "assignment_matrix": {
                 "critical": ["senior_dev", "team_lead"],
                 "high": ["senior_dev"],
-                "medium": ["junior_dev"]
-            }
+                "medium": ["junior_dev"],
+            },
         }
 
 
