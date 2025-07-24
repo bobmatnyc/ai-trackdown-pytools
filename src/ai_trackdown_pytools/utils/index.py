@@ -141,7 +141,9 @@ class IndexManager:
         stats = {"indexed": 0, "errors": 0}
 
         # Index all markdown files in tasks directory
-        tasks_dir = self.project_path / "tasks"
+        from ai_trackdown_pytools.core.config import Config
+        config = Config.load(project_path=self.project_path)
+        tasks_dir = self.project_path / config.get("tasks.directory", "tasks")
         if tasks_dir.exists():
             for md_file in tasks_dir.rglob("*.md"):
                 if self.update_file(md_file):
@@ -203,7 +205,9 @@ class IndexManager:
 
         # Check existing files
         existing_files = set()
-        tasks_dir = self.project_path / "tasks"
+        from ai_trackdown_pytools.core.config import Config
+        config = Config.load(project_path=self.project_path)
+        tasks_dir = self.project_path / config.get("tasks.directory", "tasks")
 
         if tasks_dir.exists():
             for md_file in tasks_dir.rglob("*.md"):

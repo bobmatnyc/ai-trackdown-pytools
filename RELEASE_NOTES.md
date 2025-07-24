@@ -1,74 +1,83 @@
-# AI Trackdown PyTools v1.0.0 Release Notes
+# Release Notes - v1.2.0
 
-**Release Date**: 2025-07-21  
+## AI Trackdown PyTools v1.2.0 - Enhanced Unified Commands and Relationship Management
+
+**Release Date**: 2025-07-24  
 **Status**: Production/Stable
 
-We are excited to announce the first stable release of AI Trackdown PyTools! This release marks our transition from beta to production-ready status.
+We are excited to announce version 1.2.0 of AI Trackdown PyTools! This release brings significant improvements with unified ticket management commands, enhanced epic-issue-task relationship management, and improved configuration handling.
 
 ## 🎉 Highlights
 
-### Production Ready
-- **Stable API**: All core functionality is now stable and production-ready
-- **Comprehensive Testing**: Extensive test suite ensuring reliability
-- **Security Validated**: Passed multiple security scanning tools
-- **Performance Optimized**: Benchmarked and optimized for real-world usage
+### Major New Features
 
-### Key Features
-- **Modern CLI**: Beautiful terminal interface with rich output formatting
-- **Git Integration**: Seamless version control workflow integration
-- **Template System**: Customizable YAML-based workflow templates
-- **Task Management**: Complete project and task tracking capabilities
-- **Schema Validation**: JSON schema validation for all ticket types
+#### 1. Unified Ticket Management Commands
+We've introduced a set of unified commands that work across all ticket types (epics, issues, tasks, PRs) with automatic type inference:
+
+- **`aitrackdown show <ticket-id>`** - Display any ticket type
+- **`aitrackdown close <ticket-id>`** - Close any ticket type  
+- **`aitrackdown transition <ticket-id> <status>`** - Change ticket status
+- **`aitrackdown archive <ticket-id>`** - Archive tickets to `archive/` subdirectories
+- **`aitrackdown delete <ticket-id>`** - Delete tickets (with confirmation)
+
+No more remembering different commands for different ticket types!
+
+#### 2. Enhanced Relationship Management
+Managing relationships between epics, issues, and tasks is now easier:
+
+```bash
+# Link an issue to an epic
+aitrackdown epic link-issue EP-001 ISS-005
+
+# Link a task to an issue  
+aitrackdown issue link-task ISS-005 TSK-010
+
+# Create a task already linked to an issue
+aitrackdown create task "Fix bug" --issue ISS-005
+
+# Unlink relationships
+aitrackdown issue unlink-task ISS-005 TSK-010
+```
+
+#### 3. Dynamic Configuration Reloading
+The configuration system now supports dynamic reloading without restarting:
+- Automatic detection of configuration changes
+- Cache management for optimal performance
+- Proper handling of tasks directory configuration
+
+### Key Improvements
+- **Better Error Messages**: More helpful error messages guide you when something goes wrong
+- **Archive Support**: All ticket types can now be archived to keep your active list clean
+- **Improved Search**: Search now includes archived tickets
+- **Consistent Operations**: Unified utility functions ensure consistent behavior across all commands
 
 ## 📦 Installation
 
-### PyPI
+### Upgrade from Previous Version
+```bash
+pip install --upgrade ai-trackdown-pytools
+```
+
+### Fresh Installation
 ```bash
 pip install ai-trackdown-pytools
 ```
 
-### Homebrew (macOS)
-```bash
-brew tap ai-trackdown/tools
-brew install ai-trackdown-pytools
-```
+## 🚀 What's New Since 1.1.2
 
-### From Source
-```bash
-git clone https://github.com/ai-trackdown/ai-trackdown-pytools.git
-cd ai-trackdown-pytools
-pip install -e .
-```
+### Bug Fixes
+- Fixed tasks directory configuration to properly respect `config.yaml` settings
+- Resolved ticket type inference issues for archived tickets
+- Corrected file path resolution for various operations
+- Fixed validation errors in epic and issue linking
+- Enhanced error messages for better user experience
 
-## 🚀 What's New Since 0.9.0
-
-### Enhanced Test Coverage
-- Unit tests covering all core functionality
-- Integration tests for complete workflows
-- End-to-end tests simulating real usage
-- Performance benchmarks and stress testing
-- Cross-platform compatibility validation
-
-### Security Improvements
-- Comprehensive security scanning with Bandit
-- Dependency vulnerability checks with Safety
-- pip-audit validation for all dependencies
-- Secure configuration handling
-- Input validation across all commands
-
-### Documentation
-- Professional README optimized for PyPI
-- Comprehensive command reference
-- Real-world usage examples
-- Plugin system preview
-- Multiple installation methods
-
-### Distribution
-- PyPI-ready packaging with all metadata
-- Source and wheel distributions
-- Homebrew formula for macOS users
-- py.typed marker for type checking support
-- Extended platform compatibility
+### Technical Enhancements
+- New `tickets.py` utility module for centralized ticket operations
+- Comprehensive test coverage for all new functionality
+- Improved configuration cache management
+- Better handling of ticket state transitions
+- Implemented ticket type inference logic for seamless operations
 
 ## 🔧 Technical Details
 
@@ -95,28 +104,25 @@ pip install -e .
 
 ## 🔜 What's Next
 
-### Planned for v1.1.0
-- Plugin system for custom extensions
-- Enhanced Git workflow automation
+### Planned for v1.3.0
+- Enhanced GitHub integration
+- Bulk operations support
+- Advanced filtering and query capabilities
+- Plugin system for custom workflows
+
+### Planned for v1.4.0
+- Web dashboard interface
+- API for third-party integrations
 - Team collaboration features
 - Advanced reporting capabilities
 
-### Planned for v1.2.0
-- Web dashboard interface
-- API for third-party integrations
-- Mobile companion app
-- Cloud synchronization
-
 ## 🙏 Acknowledgments
 
-Thank you to all contributors and early adopters who helped shape this release. Your feedback and contributions have been invaluable.
+Thank you to all contributors and users who provided feedback and bug reports. Your input helps make AI Trackdown PyTools better with each release!
 
-## 📝 Migration from Beta
+## 📝 Migration Notes
 
-If you're upgrading from 0.9.0:
-1. No breaking changes - all existing workflows continue to work
-2. Update your installation: `pip install --upgrade ai-trackdown-pytools`
-3. Enjoy the enhanced stability and performance!
+This release is fully backward compatible. Your existing tickets and workflows will continue to work without any changes. The new unified commands are optional - all the original type-specific commands still work if you prefer them.
 
 ## 🐛 Bug Reports
 
@@ -124,8 +130,12 @@ Please report any issues at: https://github.com/ai-trackdown/ai-trackdown-pytool
 
 ## 📚 Documentation
 
-Full documentation available at: https://ai-trackdown-pytools.readthedocs.io/
+- [User Guide](docs/user/index.md)
+- [CLI Reference](docs/user/cli/index.md)
+- [Development Guide](docs/development/index.md)
 
 ---
 
-**AI Trackdown PyTools** - Modern Python CLI tools for AI project tracking and task management
+**AI Trackdown PyTools v1.2.0** - Modern Python CLI tools for AI project tracking and task management
+
+For detailed changes, see the [CHANGELOG](CHANGELOG.md).

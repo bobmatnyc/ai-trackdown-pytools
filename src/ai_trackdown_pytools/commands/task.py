@@ -333,8 +333,8 @@ def show(
     if task.metadata.get("epic"):
         info_text += f"\n[dim]Epic:[/dim] {task.metadata.get('epic')}"
 
-    if task.metadata.get("parent"):
-        info_text += f"\n[dim]Parent:[/dim] {task.metadata.get('parent')}"
+    if task.parent:
+        info_text += f"\n[dim]Parent:[/dim] {task.parent}"
 
     subtasks = task.metadata.get("subtasks", [])
     if subtasks:

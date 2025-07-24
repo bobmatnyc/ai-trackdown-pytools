@@ -322,7 +322,9 @@ def repair(
     console.print("[blue]Checking project data integrity...[/blue]")
 
     # Check all task files for various issues
-    tasks_dir = project_path / "tasks"
+    from ai_trackdown_pytools.core.config import Config
+    config = Config.load(project_path=project_path)
+    tasks_dir = project_path / config.get("tasks.directory", "tasks")
     if tasks_dir.exists():
         for task_file in tasks_dir.rglob("*.md"):
             try:

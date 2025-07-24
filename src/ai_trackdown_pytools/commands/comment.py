@@ -9,6 +9,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
+from ai_trackdown_pytools.core.config import Config
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.utils.comments import CommentManager, add_comment_to_item
 
@@ -95,7 +96,8 @@ def list(
         raise typer.Exit(1)
 
     # Find the file
-    tasks_dir = project_path / "tasks"
+    config = Config.load(project_path=project_path)
+    tasks_dir = project_path / config.get("tasks.directory", "tasks")
 
     # Try multiple patterns to find the file
     patterns = [
@@ -170,7 +172,8 @@ def count(
         raise typer.Exit(1)
 
     # Find the file
-    tasks_dir = project_path / "tasks"
+    config = Config.load(project_path=project_path)
+    tasks_dir = project_path / config.get("tasks.directory", "tasks")
 
     # Try multiple patterns to find the file
     patterns = [

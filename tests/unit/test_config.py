@@ -37,12 +37,18 @@ class TestConfigModel:
 class TestConfig:
     """Test Config class."""
 
-    def test_singleton_pattern(self):
-        """Test that Config follows singleton pattern."""
-        config1 = Config()
-        config2 = Config()
-
+    def test_project_specific_singleton_pattern(self, temp_dir: Path):
+        """Test that Config follows project-specific singleton pattern."""
+        # Same project path should return same instance
+        config1 = Config(temp_dir)
+        config2 = Config(temp_dir)
         assert config1 is config2
+        
+        # Different project paths should return different instances
+        other_dir = temp_dir / "other_project"
+        other_dir.mkdir()
+        config3 = Config(other_dir)
+        assert config3 is not config1
 
     def test_create_default_config(self, temp_dir: Path):
         """Test creating default configuration."""
@@ -53,7 +59,7 @@ class TestConfig:
         assert config.config_path == config_path
 
         # Check default values
-        assert config.get("version") == "1.0.0"
+        assert config.get("version") == "0.9.0"
         assert config.get("project.name") == temp_dir.name
         assert config.get("editor.default") is not None
 

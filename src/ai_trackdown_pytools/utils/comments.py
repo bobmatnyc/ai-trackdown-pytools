@@ -167,7 +167,9 @@ def add_comment_to_item(
         True if successful, False otherwise
     """
     # Find the file
-    tasks_dir = project_path / "tasks"
+    from ai_trackdown_pytools.core.config import Config
+    config = Config.load(project_path=project_path)
+    tasks_dir = project_path / config.get("tasks.directory", "tasks")
 
     # Try multiple patterns to find the file
     patterns = [

@@ -280,6 +280,13 @@ def show(
     if issue.metadata.get("resolution"):
         info_text += f"\n[dim]Resolution:[/dim] {issue.metadata.get('resolution')}"
 
+    # Show subtasks if they exist
+    if issue.metadata.get("subtasks"):
+        subtasks_count = len(issue.metadata["subtasks"])
+        info_text += f"\n[dim]Subtasks:[/dim] {subtasks_count} task(s)"
+        if detailed:
+            info_text += f" - {', '.join(issue.metadata['subtasks'])}"
+
     if detailed:
         info_text += f"\n\n[dim]Description:[/dim]\n{issue.description}"
 
@@ -585,6 +592,171 @@ def reopen(
     else:
         console.print(f"[red]Failed to reopen issue {issue_id}[/red]")
         raise typer.Exit(1)
+
+
+@app.command(name="add-task")
+def add_task(
+    issue_id: str = typer.Argument(..., help="Issue ID to add tasks to"),
+    task_ids: List[str] = typer.Argument(..., help="Task IDs to add to the issue"),
+) -> None:
+    """Add tasks to an issue."""
+    project_path = Path.cwd()
+
+    if not Project.exists(project_path):
+        console.print("[red]No AI Trackdown project found[/red]")
+        raise typer.Exit(1)
+
+    task_manager = TaskManager(project_path)
+    
+    # Load and validate issue
+    issue = task_manager.load_task(issue_id)
+    if not issue or "issue" not in issue.tags:
+        console.print(f"[red]Issue '{issue_id}' not found[/red]")
+        raise typer.Exit(1)
+
+    # Initialize subtasks list if not present
+    if "subtasks" not in issue.metadata:
+        issue.metadata["subtasks"] = []
+    
+    # Track successfully added tasks
+    added_tasks = []
+    failed_tasks = []
+    
+    # Process each task
+    for task_id in task_ids:
+        try:
+            task = task_manager.load_task(task_id)
+        except Exception:
+            console.print(f"[yellow]Warning: Task '{task_id}' not found, skipping[/yellow]")
+            failed_tasks.append(task_id)
+            continue
+        
+        # Check if task is already linked to this issue
+        if task_id in issue.metadata["subtasks"]:
+            console.print(f"[yellow]Task '{task_id}' is already linked to issue '{issue_id}'[/yellow]")
+            continue
+        
+        # Update task's parent field
+        task.parent = issue_id
+        if task_manager.update_task(task_id, parent=issue_id):
+            # Add task to issue's subtasks
+            issue.metadata["subtasks"].append(task_id)
+            added_tasks.append(task_id)
+        else:
+            console.print(f"[red]Failed to update task '{task_id}'[/red]")
+            failed_tasks.append(task_id)
+    
+    # Update issue with new subtasks list
+    if added_tasks:
+        success = task_manager.update_task(issue_id, metadata=issue.metadata)
+        
+        if success:
+            console.print(
+                Panel.fit(
+                    f"""[bold green]Tasks added successfully![/bold green]
+    
+[dim]Issue:[/dim] {issue_id}
+[dim]Added tasks:[/dim] {', '.join(added_tasks)}
+[dim]Total subtasks:[/dim] {len(issue.metadata['subtasks'])}""",
+                    title="Tasks Added",
+                    border_style="green",
+                )
+            )
+        else:
+            console.print(f"[red]Failed to update issue {issue_id}[/red]")
+            raise typer.Exit(1)
+    else:
+        console.print("[yellow]No tasks were added[/yellow]")
+    
+    if failed_tasks:
+        console.print(f"[red]Failed tasks: {', '.join(failed_tasks)}[/red]")
+
+
+@app.command(name="remove-task")
+def remove_task(
+    issue_id: str = typer.Argument(..., help="Issue ID to remove tasks from"),
+    task_ids: List[str] = typer.Argument(..., help="Task IDs to remove from the issue"),
+) -> None:
+    """Remove tasks from an issue."""
+    project_path = Path.cwd()
+
+    if not Project.exists(project_path):
+        console.print("[red]No AI Trackdown project found[/red]")
+        raise typer.Exit(1)
+
+    task_manager = TaskManager(project_path)
+    
+    # Load and validate issue
+    issue = task_manager.load_task(issue_id)
+    if not issue or "issue" not in issue.tags:
+        console.print(f"[red]Issue '{issue_id}' not found[/red]")
+        raise typer.Exit(1)
+
+    # Check if issue has subtasks
+    if "subtasks" not in issue.metadata or not issue.metadata["subtasks"]:
+        console.print(f"[yellow]Issue '{issue_id}' has no subtasks[/yellow]")
+        return
+    
+    # Track successfully removed tasks
+    removed_tasks = []
+    failed_tasks = []
+    not_found_tasks = []
+    
+    # Process each task
+    for task_id in task_ids:
+        # Check if task is in issue's subtasks
+        if task_id not in issue.metadata["subtasks"]:
+            console.print(f"[yellow]Task '{task_id}' is not linked to issue '{issue_id}'[/yellow]")
+            not_found_tasks.append(task_id)
+            continue
+        
+        # Load task to update its parent field
+        try:
+            task = task_manager.load_task(task_id)
+        except Exception:
+            console.print(f"[yellow]Warning: Task '{task_id}' not found in database[/yellow]")
+            # Still remove from issue's subtasks list
+            issue.metadata["subtasks"].remove(task_id)
+            removed_tasks.append(task_id)
+            continue
+        
+        # Clear task's parent field
+        task.parent = None
+        if task_manager.update_task(task_id, parent=None):
+            # Remove task from issue's subtasks
+            issue.metadata["subtasks"].remove(task_id)
+            removed_tasks.append(task_id)
+        else:
+            console.print(f"[red]Failed to update task '{task_id}'[/red]")
+            failed_tasks.append(task_id)
+    
+    # Update issue with new subtasks list
+    if removed_tasks:
+        success = task_manager.update_task(issue_id, metadata=issue.metadata)
+        
+        if success:
+            console.print(
+                Panel.fit(
+                    f"""[bold green]Tasks removed successfully![/bold green]
+    
+[dim]Issue:[/dim] {issue_id}
+[dim]Removed tasks:[/dim] {', '.join(removed_tasks)}
+[dim]Remaining subtasks:[/dim] {len(issue.metadata['subtasks'])}""",
+                    title="Tasks Removed",
+                    border_style="green",
+                )
+            )
+        else:
+            console.print(f"[red]Failed to update issue {issue_id}[/red]")
+            raise typer.Exit(1)
+    else:
+        console.print("[yellow]No tasks were removed[/yellow]")
+    
+    if failed_tasks:
+        console.print(f"[red]Failed to update tasks: {', '.join(failed_tasks)}[/red]")
+    
+    if not_found_tasks:
+        console.print(f"[dim]Tasks not linked to issue: {', '.join(not_found_tasks)}[/dim]")
 
 
 if __name__ == "__main__":

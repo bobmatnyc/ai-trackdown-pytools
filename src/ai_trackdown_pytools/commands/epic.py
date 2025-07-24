@@ -253,6 +253,67 @@ def status(
 
 
 @app.command()
+def add_issue(
+    epic_id: str = typer.Argument(..., help="Epic ID to add issues to"),
+    issue_ids: List[str] = typer.Argument(..., help="Issue ID(s) to add to epic"),
+) -> None:
+    """Add one or more issues to an epic."""
+    project_path = Path.cwd()
+
+    if not Project.exists(project_path):
+        console.print("[red]No AI Trackdown project found[/red]")
+        raise typer.Exit(1)
+
+    task_manager = TaskManager(project_path)
+    epic = task_manager.load_task(epic_id)
+
+    if not epic or "epic" not in epic.tags:
+        console.print(f"[red]Epic '{epic_id}' not found[/red]")
+        raise typer.Exit(1)
+
+    # Get current subtasks
+    subtasks = epic.metadata.get("subtasks", [])
+    added_issues = []
+    already_added = []
+    not_found = []
+
+    for issue_id in issue_ids:
+        try:
+            issue = task_manager.load_task(issue_id)
+            if not issue:
+                not_found.append(issue_id)
+                continue
+                
+            if issue_id not in subtasks:
+                subtasks.append(issue_id)
+                # Update issue's parent field to reference the epic
+                updates = {"parent": epic_id}
+                task_manager.update_task(issue_id, **updates)
+                added_issues.append(issue_id)
+            else:
+                already_added.append(issue_id)
+        except Exception:
+            not_found.append(issue_id)
+
+    # Update epic metadata with new subtasks list
+    if added_issues:
+        epic.metadata["subtasks"] = subtasks
+        task_manager.save_task(epic)
+
+    # Report results
+    if added_issues:
+        console.print(
+            f"[green]Added {len(added_issues)} issue(s) to epic {epic_id}:[/green] {', '.join(added_issues)}"
+        )
+    if already_added:
+        console.print(
+            f"[yellow]Already in epic:[/yellow] {', '.join(already_added)}"
+        )
+    if not_found:
+        console.print(f"[red]Issues not found:[/red] {', '.join(not_found)}")
+
+
+@app.command()
 def add_task(
     epic_id: str = typer.Argument(..., help="Epic ID to add task to"),
     task_id: str = typer.Argument(..., help="Task ID to add to epic"),
@@ -294,6 +355,67 @@ def add_task(
         console.print(
             f"[yellow]Task {task_id} is already part of epic {epic_id}[/yellow]"
         )
+
+
+@app.command()
+def remove_issue(
+    epic_id: str = typer.Argument(..., help="Epic ID to remove issues from"),
+    issue_ids: List[str] = typer.Argument(..., help="Issue ID(s) to remove from epic"),
+) -> None:
+    """Remove one or more issues from an epic."""
+    project_path = Path.cwd()
+
+    if not Project.exists(project_path):
+        console.print("[red]No AI Trackdown project found[/red]")
+        raise typer.Exit(1)
+
+    task_manager = TaskManager(project_path)
+    epic = task_manager.load_task(epic_id)
+
+    if not epic or "epic" not in epic.tags:
+        console.print(f"[red]Epic '{epic_id}' not found[/red]")
+        raise typer.Exit(1)
+
+    # Get current subtasks
+    subtasks = epic.metadata.get("subtasks", [])
+    removed_issues = []
+    not_in_epic = []
+    not_found = []
+
+    for issue_id in issue_ids:
+        try:
+            issue = task_manager.load_task(issue_id)
+            if not issue:
+                not_found.append(issue_id)
+                continue
+                
+            if issue_id in subtasks:
+                subtasks.remove(issue_id)
+                # Clear issue's parent field
+                updates = {"parent": None}
+                task_manager.update_task(issue_id, **updates)
+                removed_issues.append(issue_id)
+            else:
+                not_in_epic.append(issue_id)
+        except Exception:
+            not_found.append(issue_id)
+
+    # Update epic metadata with new subtasks list
+    if removed_issues:
+        epic.metadata["subtasks"] = subtasks
+        task_manager.save_task(epic)
+
+    # Report results
+    if removed_issues:
+        console.print(
+            f"[green]Removed {len(removed_issues)} issue(s) from epic {epic_id}:[/green] {', '.join(removed_issues)}"
+        )
+    if not_in_epic:
+        console.print(
+            f"[yellow]Not in epic:[/yellow] {', '.join(not_in_epic)}"
+        )
+    if not_found:
+        console.print(f"[red]Issues not found:[/red] {', '.join(not_found)}")
 
 
 @app.command()

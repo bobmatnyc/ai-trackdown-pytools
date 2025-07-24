@@ -28,6 +28,7 @@ class Config:
     _instances: Dict[Path, "Config"] = {}
     _config: ConfigModel
     _config_path: Optional[Path] = None
+    _loaded_at: Optional[float] = None
 
     def __new__(cls, project_path: Optional[Path] = None) -> "Config":
         """Project-specific configuration instances."""
@@ -47,6 +48,7 @@ class Config:
             instance = super().__new__(cls)
             instance._config = ConfigModel()
             instance._config_path = None
+            instance._loaded_at = None
             cls._instances[project_path] = instance
 
         return cls._instances[project_path]
@@ -68,6 +70,7 @@ class Config:
 
             instance._config = ConfigModel(**config_data)
             instance._config_path = config_path
+            instance._loaded_at = config_path.stat().st_mtime
 
         return instance
 
@@ -110,6 +113,7 @@ class Config:
 
         instance._config = ConfigModel(**default_config)
         instance._config_path = config_path
+        instance._loaded_at = config_path.stat().st_mtime
 
         return instance
 
@@ -192,3 +196,41 @@ class Config:
             # Assume project root is parent of .ai-trackdown directory
             return self._config_path.parent.parent
         return None
+
+    def is_stale(self) -> bool:
+        """Check if the config file has been modified since it was loaded."""
+        if not self._config_path or not self._config_path.exists():
+            return False
+        
+        if self._loaded_at is None:
+            return True
+        
+        current_mtime = self._config_path.stat().st_mtime
+        return current_mtime > self._loaded_at
+
+    @classmethod
+    def reload(cls, project_path: Optional[Path] = None) -> "Config":
+        """Reload configuration by removing cached instance and creating a fresh one."""
+        if project_path is None:
+            project_path = Path.cwd()
+        
+        # Look for project root from the given path
+        from ai_trackdown_pytools.core.project import Project
+        
+        actual_project_root = Project.find_project_root(project_path)
+        if actual_project_root:
+            project_path = actual_project_root
+        
+        # Get the config path from the existing instance if available
+        config_path = None
+        if project_path in cls._instances:
+            config_path = cls._instances[project_path]._config_path
+            del cls._instances[project_path]
+        
+        # Load and return a fresh instance
+        return cls.load(config_path=config_path, project_path=project_path)
+
+    @classmethod
+    def clear_cache(cls) -> None:
+        """Clear all cached configuration instances."""
+        cls._instances.clear()

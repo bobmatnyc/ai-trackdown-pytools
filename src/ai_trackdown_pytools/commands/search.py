@@ -298,7 +298,9 @@ def content(
         query_search = query if case_sensitive else query.lower()
 
     # Search in task files
-    tasks_dir = project_path / ".aitrackdown" / "tasks"
+    from ai_trackdown_pytools.core.config import Config
+    config = Config.load(project_path=project_path)
+    tasks_dir = project_path / config.get("tasks.directory", "tasks")
     if not tasks_dir.exists():
         console.print("[yellow]No tasks directory found[/yellow]")
         return

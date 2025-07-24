@@ -49,6 +49,11 @@ def task(
         "--template",
         help="Task template to use",
     ),
+    issue: Optional[str] = typer.Option(
+        None,
+        "--issue",
+        help="Associate task with an issue (issue ID)",
+    ),
     interactive: bool = typer.Option(
         False,
         "--interactive",
@@ -71,6 +76,19 @@ def task(
         raise typer.Exit(1)
 
     task_manager = TaskManager(project_path)
+
+    # Validate issue if provided
+    issue_task = None
+    if issue:
+        try:
+            issue_task = task_manager.load_task(issue)
+            # Verify it's actually an issue
+            if issue_task.metadata.get("type") != "issue":
+                console.print(f"[red]Error: {issue} is not an issue[/red]")
+                raise typer.Exit(1)
+        except Exception:
+            console.print(f"[red]Error: Issue {issue} not found[/red]")
+            raise typer.Exit(1)
 
     # Interactive mode
     if interactive or not title:
@@ -99,6 +117,10 @@ def task(
         "priority": priority or "medium",
     }
 
+    # Set parent if issue is provided
+    if issue:
+        task_data["parent"] = issue
+
     # Apply template if specified
     if template:
         template_manager = TemplateManager()
@@ -109,15 +131,38 @@ def task(
 
     new_task = task_manager.create_task(**task_data)
 
-    console.print(
-        Panel.fit(
-            f"""[bold green]Task created successfully![/bold green]
+    # Update issue's subtasks list if associated with an issue
+    if issue and issue_task:
+        # Get current subtasks list from issue metadata
+        issue_metadata = issue_task.metadata.copy()
+        subtasks = issue_metadata.get("subtasks", [])
+        
+        # Add new task to subtasks if not already there
+        if new_task.id not in subtasks:
+            subtasks.append(new_task.id)
+            issue_metadata["subtasks"] = subtasks
+            
+            # Update the issue with new metadata
+            task_manager.update_task(issue, metadata=issue_metadata)
+
+    # Build display message
+    display_parts = [
+        f"""[bold green]Task created successfully![/bold green]
 
 [dim]ID:[/dim] {new_task.id}
 [dim]Title:[/dim] {new_task.title}
 [dim]Priority:[/dim] {new_task.priority}
-[dim]Status:[/dim] {new_task.status}
-[dim]File:[/dim] {new_task.file_path}""",
+[dim]Status:[/dim] {new_task.status}"""
+    ]
+    
+    if issue:
+        display_parts.append(f"[dim]Issue:[/dim] {issue}")
+    
+    display_parts.append(f"[dim]File:[/dim] {new_task.file_path}")
+    
+    console.print(
+        Panel.fit(
+            "\n".join(display_parts),
             title="Task Created",
             border_style="green",
         )
@@ -159,6 +204,11 @@ def issue(
         "--template",
         help="Issue template to use",
     ),
+    epic: Optional[str] = typer.Option(
+        None,
+        "--epic",
+        help="Associate issue with an epic (epic ID)",
+    ),
 ) -> None:
     """Create a new issue."""
     project_path = Path.cwd()
@@ -169,6 +219,19 @@ def issue(
 
     # For now, create as a task with issue-specific metadata
     task_manager = TaskManager(project_path)
+
+    # Validate epic if provided
+    epic_task = None
+    if epic:
+        try:
+            epic_task = task_manager.load_task(epic)
+            # Verify it's actually an epic
+            if epic_task.metadata.get("type") != "epic":
+                console.print(f"[red]Error: {epic} is not an epic[/red]")
+                raise typer.Exit(1)
+        except Exception:
+            console.print(f"[red]Error: Epic {epic} not found[/red]")
+            raise typer.Exit(1)
 
     if not title:
         title = Prompt.ask("Issue title")
@@ -181,28 +244,60 @@ def issue(
     if label:
         issue_tags.extend(label)
 
-    new_issue = task_manager.create_task(
-        type="issue",
-        title=title,
-        description=description,
-        tags=issue_tags,
-        priority=severity or "medium",
-        metadata={
-            "type": "issue",
-            "issue_type": issue_type,
-            "severity": severity,
-        },
-    )
+    # Add epic to metadata and set parent if epic is provided
+    issue_metadata = {
+        "type": "issue",
+        "issue_type": issue_type,
+        "severity": severity,
+    }
+    
+    create_kwargs = {
+        "type": "issue",
+        "title": title,
+        "description": description,
+        "tags": issue_tags,
+        "priority": severity or "medium",
+        "metadata": issue_metadata,
+    }
+    
+    # Set parent if epic is provided
+    if epic:
+        create_kwargs["parent"] = epic
 
-    console.print(
-        Panel.fit(
-            f"""[bold green]Issue created successfully![/bold green]
+    new_issue = task_manager.create_task(**create_kwargs)
+
+    # Update epic's subtasks list if associated with an epic
+    if epic and epic_task:
+        # Get current subtasks list from epic metadata
+        epic_metadata = epic_task.metadata.copy()
+        subtasks = epic_metadata.get("subtasks", [])
+        
+        # Add new issue to subtasks if not already there
+        if new_issue.id not in subtasks:
+            subtasks.append(new_issue.id)
+            epic_metadata["subtasks"] = subtasks
+            
+            # Update the epic with new metadata
+            task_manager.update_task(epic, metadata=epic_metadata)
+
+    # Build display message
+    display_parts = [
+        f"""[bold green]Issue created successfully![/bold green]
 
 [dim]ID:[/dim] {new_issue.id}
 [dim]Title:[/dim] {new_issue.title}
 [dim]Type:[/dim] {issue_type}
-[dim]Severity:[/dim] {severity}
-[dim]File:[/dim] {new_issue.file_path}""",
+[dim]Severity:[/dim] {severity}"""
+    ]
+    
+    if epic:
+        display_parts.append(f"[dim]Epic:[/dim] {epic}")
+    
+    display_parts.append(f"[dim]File:[/dim] {new_issue.file_path}")
+    
+    console.print(
+        Panel.fit(
+            "\n".join(display_parts),
             title="Issue Created",
             border_style="red",
         )

@@ -1,0 +1,22 @@
+version: 0.9.0
+project:
+  name: test_show_fix
+  description: ''
+  version: 0.9.0
+editor:
+  default: code
+templates:
+  directory: templates
+tasks:
+  directory: tasks
+  auto_id: true
+  id_format: TSK-{counter:04d}
+  counter: 2
+git:
+  auto_commit: false
+  commit_prefix: '[ai-trackdown]'
+plugins: {}
+issues:
+  counter: 2
+epics:
+  counter: 2

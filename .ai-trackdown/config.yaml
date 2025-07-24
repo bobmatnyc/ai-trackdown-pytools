@@ -15,9 +15,3 @@ git:
   auto_commit: false
   commit_prefix: '[ai-trackdown]'
 plugins: {}
-issues:
-  counter: 13
-prs:
-  counter: 11
-epics:
-  counter: 11

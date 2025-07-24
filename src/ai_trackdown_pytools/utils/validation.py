@@ -533,7 +533,10 @@ def validate_project_structure(project_path: Path) -> Dict[str, Any]:
     warnings = []
 
     # Check required directories
-    required_dirs = [".ai-trackdown", "tasks"]
+    from ai_trackdown_pytools.core.config import Config
+    config = Config.load(project_path=project_path)
+    tasks_directory = config.get("tasks.directory", "tasks")
+    required_dirs = [".ai-trackdown", tasks_directory]
 
     for dir_name in required_dirs:
         dir_path = project_path / dir_name

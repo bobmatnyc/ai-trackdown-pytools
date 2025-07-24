@@ -7,6 +7,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2025-07-24
+
+### Added
+- Unified ticket management commands (`show`, `close`, `transition`, `archive`, `delete`) with automatic ticket type inference
+- Epic-Issue-Task relationship management commands:
+  - `aitrackdown epic link-issue` - Link issues to epics
+  - `aitrackdown issue link-task` - Link tasks to issues
+  - `aitrackdown issue unlink-task` - Unlink tasks from issues
+- Config reload functionality with cache management:
+  - `reload()` - Reload configuration from disk
+  - `clear_cache()` - Clear configuration cache
+  - `is_stale()` - Check if configuration needs reloading
+- Archive functionality for all ticket types with `tasks/*/archive/` directories
+- New utility module `tickets.py` for unified ticket operations
+- Enhanced create command with:
+  - `--issue` flag to link task to an issue during creation
+  - Automatic parent/child relationship handling
+  - Better field validation and error messages
+
+### Fixed
+- Tasks directory configuration now properly respects `config.yaml` settings
+- Fixed ticket type inference to handle archived tickets correctly
+- Improved error handling for missing or invalid ticket IDs
+- Fixed validation issues with epic and issue linking
+- Corrected file path resolution for comments and other operations
+- Enhanced error messages for better user experience
+
+### Changed
+- Reorganized CLI commands for better usability and consistency
+- Improved ticket search to include archive directories
+- Enhanced status display to show epic/issue/task relationships
+- Unified ticket operations to reduce code duplication
+- Better handling of ticket state transitions
+
+### Technical Details
+- Added comprehensive test coverage for new unified commands
+- Implemented ticket type inference logic for seamless operations
+- Created centralized ticket utility functions for consistency
+- Enhanced configuration reload mechanism for dynamic updates
+- Improved file path handling across all operations
+
 ## [1.1.2] - 2025-07-23
 
 ### Fixed

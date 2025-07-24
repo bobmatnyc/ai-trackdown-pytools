@@ -58,6 +58,11 @@ class Task:
         self.data = data
         self.file_path = file_path
 
+    @property
+    def model(self) -> TaskModel:
+        """Get task model - backward compatibility alias for data."""
+        return self.data
+
     # Proxy properties to make Task objects work like they have direct attributes
     @property
     def id(self) -> str:
@@ -100,8 +105,30 @@ class Task:
         return self.data.due_date
 
     @property
+    def parent(self) -> Optional[str]:
+        return self.data.parent
+
+    @property
+    def estimated_hours(self) -> Optional[float]:
+        return self.data.estimated_hours
+
+    @property
+    def actual_hours(self) -> Optional[float]:
+        return self.data.actual_hours
+
+    @property
+    def dependencies(self) -> List[str]:
+        return self.data.dependencies
+
+    @property
     def metadata(self) -> Dict[str, Any]:
         return self.data.metadata
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any], file_path: Path) -> "Task":
+        """Create task from dictionary."""
+        task_model = TaskModel(**data)
+        return cls(task_model, file_path)
 
     @classmethod
     def load(cls, file_path: Path) -> "Task":
@@ -201,6 +228,36 @@ class Task:
         return self.data.updated_at
 
     @property
+    def parent(self) -> Optional[str]:
+        """Get task parent."""
+        return self.data.parent
+
+    @parent.setter
+    def parent(self, value: Optional[str]) -> None:
+        """Set task parent."""
+        self.data.parent = value
+
+    @property
+    def due_date(self) -> Optional[datetime]:
+        """Get task due date."""
+        return self.data.due_date
+
+    @property
+    def estimated_hours(self) -> Optional[float]:
+        """Get task estimated hours."""
+        return self.data.estimated_hours
+
+    @property
+    def actual_hours(self) -> Optional[float]:
+        """Get task actual hours."""
+        return self.data.actual_hours
+
+    @property
+    def dependencies(self) -> List[str]:
+        """Get task dependencies."""
+        return self.data.dependencies
+
+    @property
     def metadata(self) -> Dict[str, Any]:
         """Get task metadata."""
         return self.data.metadata
@@ -224,8 +281,8 @@ class TaskManager:
     def __init__(self, project_path: Path):
         """Initialize task manager."""
         self.project_path = Path(project_path)
-        self.tasks_dir = self.project_path / "tasks"
         self.config = Config.load(project_path=self.project_path)
+        self.tasks_dir = self.project_path / self.config.get("tasks.directory", "tasks")
 
         # Ensure tasks directory exists
         self.tasks_dir.mkdir(exist_ok=True)
