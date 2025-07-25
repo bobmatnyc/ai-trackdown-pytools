@@ -1,7 +1,6 @@
 """Version management for AI Trackdown PyTools."""
 
 import re
-from pathlib import Path
 from typing import NamedTuple, Optional
 
 # Import version from __init__.py to maintain single source of truth
@@ -144,6 +143,10 @@ def validate_version_string(version_string: str) -> bool:
 VERSION_HISTORY = [
     "0.9.0",  # Initial semantic versioning implementation
     "1.0.0",  # First stable release - Production ready
+    "1.1.0",  # Bug fixes and improvements
+    "1.1.1",  # Additional bug fixes
+    "1.1.2",  # Bug fixes and improvements
+    "1.2.0",  # Major Enhancements and Archive Management
 ]
 
 
@@ -169,6 +172,13 @@ FEATURES = {
     "pypi_distribution": "1.0.0",
     "comprehensive_test_suite": "1.0.0",
     "security_validated": "1.0.0",
+    "archive_management": "1.2.0",
+    "issue_close_command": "1.2.0",
+    "batch_close_operations": "1.2.0",
+    "task_to_issue_migration": "1.2.0",
+    "pr_comment_management": "1.2.0",
+    "enhanced_validation": "1.2.0",
+    "improved_performance": "1.2.0",
 }
 
 

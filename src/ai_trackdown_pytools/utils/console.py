@@ -1,7 +1,7 @@
 """Console output utilities for AI-friendly and plain output modes."""
 
 import os
-from typing import Optional, Any, Dict
+from typing import Optional, Any, Dict, List
 from rich.console import Console as RichConsole
 from rich.panel import Panel
 from rich.table import Table
@@ -33,7 +33,7 @@ class Console:
             legacy_windows=False,
         )
 
-    def print(self, *args, **kwargs) -> None:
+    def print(self, *args: Any, **kwargs: Any) -> None:
         """Print to console, stripping markup in plain mode."""
         if self.plain_mode and args:
             # Strip rich markup from first argument if it's a string
@@ -43,7 +43,7 @@ class Console:
 
         self.rich_console.print(*args, **kwargs)
 
-    def print_panel(self, content: str, title: Optional[str] = None, **kwargs) -> None:
+    def print_panel(self, content: str, title: Optional[str] = None, **kwargs: Any) -> None:
         """Print a panel, or plain text with title in plain mode."""
         if self.plain_mode:
             if title:
@@ -79,7 +79,7 @@ class Console:
                         # Fallback: try to get cells through the cells property
                         try:
                             column_cells.append(list(col.cells))
-                        except:
+                        except Exception:
                             column_cells.append([])
 
                 # Transpose to get rows
@@ -172,13 +172,13 @@ def format_option(name: str, help_text: str, default: Any = None) -> Dict[str, s
     return {
         "name": name,
         "help": help_text,
-        "default": str(default) if default is not None else None,
+        "default": str(default) if default is not None else "",
     }
 
 
 def print_options(
-    console: Console, options: list[Dict[str, str]], title: str = "Options"
-):
+    console: Console, options: List[Dict[str, str]], title: str = "Options"
+) -> None:
     """Print options in appropriate format."""
     if console.is_plain:
         print(f"{title}:")

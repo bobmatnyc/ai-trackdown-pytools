@@ -262,7 +262,7 @@ class TestGitIntegrationWorkflows:
                 [
                     "pr",
                     "create",
-                    f"[HOTFIX] Fix API 500 error",
+                    "[HOTFIX] Fix API 500 error",
                     "--source-branch",
                     f"hotfix/{bug_id}-api-500-error",
                     "--target-branch",

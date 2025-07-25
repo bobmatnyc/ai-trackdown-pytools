@@ -448,10 +448,10 @@ def update(
         updated_fields = [k for k in updates.keys()]
         if metadata_updates:
             # Add metadata fields to the list, but avoid duplicating 'metadata'
-            if 'metadata' in updated_fields:
-                updated_fields.remove('metadata')
+            if "metadata" in updated_fields:
+                updated_fields.remove("metadata")
             updated_fields.extend(k for k in metadata_updates.keys())
-        
+
         console.print(
             Panel.fit(
                 f"""[bold green]Pull request updated successfully![/bold green]

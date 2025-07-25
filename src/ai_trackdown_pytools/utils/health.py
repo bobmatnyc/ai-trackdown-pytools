@@ -193,6 +193,7 @@ def _check_config_validity(project_path: Path) -> Dict[str, Any]:
 def _check_tasks_directory(project_path: Path) -> Dict[str, Any]:
     """Check tasks directory."""
     from ai_trackdown_pytools.core.config import Config
+
     config = Config.load(project_path=project_path)
     tasks_dir = project_path / config.get("tasks.directory", "tasks")
 

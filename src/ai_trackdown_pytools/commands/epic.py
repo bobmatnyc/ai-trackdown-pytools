@@ -283,7 +283,7 @@ def add_issue(
             if not issue:
                 not_found.append(issue_id)
                 continue
-                
+
             if issue_id not in subtasks:
                 subtasks.append(issue_id)
                 # Update issue's parent field to reference the epic
@@ -306,9 +306,7 @@ def add_issue(
             f"[green]Added {len(added_issues)} issue(s) to epic {epic_id}:[/green] {', '.join(added_issues)}"
         )
     if already_added:
-        console.print(
-            f"[yellow]Already in epic:[/yellow] {', '.join(already_added)}"
-        )
+        console.print(f"[yellow]Already in epic:[/yellow] {', '.join(already_added)}")
     if not_found:
         console.print(f"[red]Issues not found:[/red] {', '.join(not_found)}")
 
@@ -388,7 +386,7 @@ def remove_issue(
             if not issue:
                 not_found.append(issue_id)
                 continue
-                
+
             if issue_id in subtasks:
                 subtasks.remove(issue_id)
                 # Clear issue's parent field
@@ -411,9 +409,7 @@ def remove_issue(
             f"[green]Removed {len(removed_issues)} issue(s) from epic {epic_id}:[/green] {', '.join(removed_issues)}"
         )
     if not_in_epic:
-        console.print(
-            f"[yellow]Not in epic:[/yellow] {', '.join(not_in_epic)}"
-        )
+        console.print(f"[yellow]Not in epic:[/yellow] {', '.join(not_in_epic)}")
     if not_found:
         console.print(f"[red]Issues not found:[/red] {', '.join(not_found)}")
 
@@ -528,10 +524,10 @@ def update(
         updated_fields = [k for k in updates.keys()]
         if metadata_updates:
             # Add metadata fields to the list, but avoid duplicating 'metadata'
-            if 'metadata' in updated_fields:
-                updated_fields.remove('metadata')
+            if "metadata" in updated_fields:
+                updated_fields.remove("metadata")
             updated_fields.extend(k for k in metadata_updates.keys())
-        
+
         console.print(
             Panel.fit(
                 f"""[bold green]Epic updated successfully![/bold green]

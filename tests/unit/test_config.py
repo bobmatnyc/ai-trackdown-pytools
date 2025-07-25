@@ -43,7 +43,7 @@ class TestConfig:
         config1 = Config(temp_dir)
         config2 = Config(temp_dir)
         assert config1 is config2
-        
+
         # Different project paths should return different instances
         other_dir = temp_dir / "other_project"
         other_dir.mkdir()

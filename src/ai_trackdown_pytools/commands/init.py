@@ -67,7 +67,7 @@ def project(
 
     console.print(
         Panel.fit(
-            f"""[bold green]Project initialized successfully![/bold green]
+            """[bold green]Project initialized successfully![/bold green]
 
 [dim]Created structure:[/dim]
 • Configuration: .ai-trackdown/config.yaml

@@ -56,7 +56,7 @@ def github(
         # Try to extract from git remote
         try:
             remote_url = git_utils.get_remote_url()
-            if "github.com" in remote_url:
+            if remote_url and "github.com" in remote_url:
                 # Parse GitHub URL
                 if remote_url.endswith(".git"):
                     remote_url = remote_url[:-4]
@@ -140,7 +140,7 @@ def github(
                 with open(sync_config_file, "w") as f:
                     json.dump(sync_config, f, indent=2)
 
-                console.print(f"[green]Successfully synced from GitHub:[/green]")
+                console.print("[green]Successfully synced from GitHub:[/green]")
                 console.print(
                     f"• Issues: {created_issues} created, {updated_issues} updated"
                 )
@@ -264,7 +264,7 @@ def github(
                     json.dump(sync_config, f, indent=2)
 
                 # Show results
-                console.print(f"\n[green]Successfully pushed to GitHub:[/green]")
+                console.print("\n[green]Successfully pushed to GitHub:[/green]")
                 console.print(f"• Issues created: {created_issues}")
                 console.print(f"• PRs created: {created_prs}")
 

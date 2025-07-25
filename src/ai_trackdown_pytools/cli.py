@@ -2,6 +2,7 @@
 
 import sys
 from typing import Optional
+from pathlib import Path
 
 import typer
 
@@ -21,13 +22,13 @@ from .commands import (
     migrate,
     portfolio,
     pr,
-    search,
+    search as search_cmd,
     status,
     sync,
     task,
     template,
 )
-from .commands import validate_typer as validate
+from .commands import validate_typer as validate_cmd
 from .core.config import Config
 from .utils.logging import setup_logging
 from .utils.console import get_console, Console
@@ -132,7 +133,7 @@ def main(
 
     # Load configuration
     if config_file:
-        Config.load(config_file)
+        Config.load(Path(config_file))
 
 
 # Add subcommands - Core functionality
@@ -140,7 +141,7 @@ app.add_typer(init.app, name="init", help="Initialize project")
 app.add_typer(status.app, name="status", help="Show status")
 app.add_typer(create.app, name="create", help="Create tasks/issues")
 app.add_typer(template.app, name="template", help="Manage templates")
-app.add_typer(validate.app, name="validate", help="Validate data")
+app.add_typer(validate_cmd.app, name="validate", help="Validate data")
 
 # Add task management commands
 app.add_typer(task.app, name="task", help="Task operations")
@@ -150,7 +151,7 @@ app.add_typer(pr.app, name="pr", help="Pull requests")
 app.add_typer(comment.app, name="comment", help="Comments")
 
 # Add advanced functionality
-app.add_typer(search.app, name="search", help="Search")
+app.add_typer(search_cmd.app, name="search", help="Search")
 app.add_typer(index.app, name="index", help="Search index management")
 app.add_typer(portfolio.app, name="portfolio", help="Portfolio mgmt")
 app.add_typer(sync.app, name="sync", help="Sync platforms")
@@ -478,45 +479,52 @@ def search(
 
 @app.command()
 def show(
-    ticket_id: str = typer.Argument(..., help="Ticket ID to show (any type: EP-001, ISS-002, TSK-003, PR-004)"),
+    ticket_id: str = typer.Argument(
+        ..., help="Ticket ID to show (any type: EP-001, ISS-002, TSK-003, PR-004)"
+    ),
 ) -> None:
     """Show details of any ticket (epic, issue, task, or PR)."""
     from pathlib import Path
     from ai_trackdown_pytools.core.project import Project
     from ai_trackdown_pytools.core.task import TaskManager
-    from ai_trackdown_pytools.utils.tickets import infer_ticket_type, normalize_ticket_id
+    from ai_trackdown_pytools.utils.tickets import (
+        infer_ticket_type,
+        normalize_ticket_id,
+    )
     from rich.panel import Panel
     from rich.table import Table
-    
+
     project_path = Path.cwd()
-    
+
     if not Project.exists(project_path):
         console.print_error("No AI Trackdown project found")
         raise typer.Exit(1)
-    
+
     # Normalize the ticket ID (convert to uppercase prefix)
     normalized_id = normalize_ticket_id(ticket_id)
     if not normalized_id:
         console.print_error(f"Invalid ticket ID format: {ticket_id}")
         console.print_info("Valid formats: EP-001, ISS-002, TSK-003, PR-004, COM-005")
         raise typer.Exit(1)
-    
+
     # Infer the ticket type
     ticket_type = infer_ticket_type(normalized_id)
     if not ticket_type:
         console.print_error(f"Unknown ticket type for ID: {ticket_id}")
-        console.print_info("Valid prefixes: EP (epic), ISS (issue), TSK (task), PR (pull request), COM (comment)")
+        console.print_info(
+            "Valid prefixes: EP (epic), ISS (issue), TSK (task), PR (pull request), COM (comment)"
+        )
         raise typer.Exit(1)
-    
+
     # Load the ticket using TaskManager
     task_manager = TaskManager(project_path)
-    
+
     try:
         ticket = task_manager.load_task(normalized_id)
     except Exception as e:
         console.print_error(f"Failed to load {ticket_type} '{normalized_id}': {e}")
         raise typer.Exit(1)
-    
+
     # Display the ticket details
     if console.is_plain:
         # Plain output for AI tools
@@ -526,7 +534,7 @@ def show(
         print(f"Priority: {ticket.priority}")
         print(f"Created: {ticket.created_at.strftime('%Y-%m-%d %H:%M:%S')}")
         print(f"Updated: {ticket.updated_at.strftime('%Y-%m-%d %H:%M:%S')}")
-        
+
         if ticket.assignees:
             print(f"Assignees: {', '.join(ticket.assignees)}")
         if ticket.tags:
@@ -541,11 +549,11 @@ def show(
             print(f"Actual Hours: {ticket.actual_hours}")
         if ticket.dependencies:
             print(f"Dependencies: {', '.join(ticket.dependencies)}")
-        
+
         print()
         print("Description:")
         print(ticket.description or "No description provided.")
-        
+
         if ticket.metadata:
             print()
             print("Metadata:")
@@ -554,12 +562,12 @@ def show(
     else:
         # Rich output with formatting
         title = f"[bold]{ticket_type.title()} {normalized_id}[/bold]: {ticket.title}"
-        
+
         # Create details table
         details = Table(show_header=False, box=None, padding=(0, 1))
         details.add_column("Field", style="dim")
         details.add_column("Value")
-        
+
         # Status with color
         status_color = {
             "open": "yellow",
@@ -569,7 +577,7 @@ def show(
             "cancelled": "red",
         }.get(ticket.status.lower(), "white")
         details.add_row("Status", f"[{status_color}]{ticket.status}[/{status_color}]")
-        
+
         # Priority with color
         priority_color = {
             "low": "dim",
@@ -577,29 +585,36 @@ def show(
             "high": "red",
             "critical": "bold red",
         }.get(ticket.priority.lower(), "white")
-        details.add_row("Priority", f"[{priority_color}]{ticket.priority}[/{priority_color}]")
-        
-        details.add_row("Created", ticket.created_at.strftime('%Y-%m-%d %H:%M:%S'))
-        details.add_row("Updated", ticket.updated_at.strftime('%Y-%m-%d %H:%M:%S'))
-        
+        details.add_row(
+            "Priority", f"[{priority_color}]{ticket.priority}[/{priority_color}]"
+        )
+
+        details.add_row("Created", ticket.created_at.strftime("%Y-%m-%d %H:%M:%S"))
+        details.add_row("Updated", ticket.updated_at.strftime("%Y-%m-%d %H:%M:%S"))
+
         if ticket.assignees:
             details.add_row("Assignees", ", ".join(ticket.assignees))
         if ticket.tags:
-            details.add_row("Tags", ", ".join(f"[cyan]{tag}[/cyan]" for tag in ticket.tags))
+            details.add_row(
+                "Tags", ", ".join(f"[cyan]{tag}[/cyan]" for tag in ticket.tags)
+            )
         if ticket.parent:
             details.add_row("Parent", f"[cyan]{ticket.parent}[/cyan]")
         if ticket.due_date:
-            details.add_row("Due Date", ticket.due_date.strftime('%Y-%m-%d'))
+            details.add_row("Due Date", ticket.due_date.strftime("%Y-%m-%d"))
         if ticket.estimated_hours is not None:
             details.add_row("Estimated", f"{ticket.estimated_hours} hours")
         if ticket.actual_hours is not None:
             details.add_row("Actual", f"{ticket.actual_hours} hours")
         if ticket.dependencies:
-            details.add_row("Dependencies", ", ".join(f"[cyan]{dep}[/cyan]" for dep in ticket.dependencies))
-        
+            details.add_row(
+                "Dependencies",
+                ", ".join(f"[cyan]{dep}[/cyan]" for dep in ticket.dependencies),
+            )
+
         # Main panel content
         content = details
-        
+
         # Add description if present
         if ticket.description:
             description_panel = Panel(
@@ -613,91 +628,104 @@ def show(
         else:
             console.print_panel(title, title=ticket_type.title())
             console.print(content)
-        
+
         # Add metadata if present
         if ticket.metadata:
             meta_table = Table(title="Metadata", show_header=True)
             meta_table.add_column("Key", style="cyan")
             meta_table.add_column("Value")
-            
+
             for key, value in ticket.metadata.items():
                 meta_table.add_row(key, str(value))
-            
+
             console.print(meta_table)
-        
+
         # Show file location
         console.print(f"\n[dim]File: {ticket.file_path}[/dim]")
 
 
 @app.command()
 def close(
-    ticket_id: str = typer.Argument(..., help="Ticket ID to close (any type: EP-001, ISS-002, TSK-003, PR-004)"),
-    comment: Optional[str] = typer.Option(None, "--comment", "-c", help="Add a closing comment"),
+    ticket_id: str = typer.Argument(
+        ..., help="Ticket ID to close (any type: EP-001, ISS-002, TSK-003, PR-004)"
+    ),
+    comment: Optional[str] = typer.Option(
+        None, "--comment", "-c", help="Add a closing comment"
+    ),
 ) -> None:
     """Close any ticket (epic, issue, task, or PR)."""
     from pathlib import Path
     from datetime import datetime
     from ai_trackdown_pytools.core.project import Project
     from ai_trackdown_pytools.core.task import TaskManager
-    from ai_trackdown_pytools.utils.tickets import infer_ticket_type, normalize_ticket_id
-    
+    from ai_trackdown_pytools.utils.tickets import (
+        infer_ticket_type,
+        normalize_ticket_id,
+    )
+
     project_path = Path.cwd()
-    
+
     if not Project.exists(project_path):
         console.print_error("No AI Trackdown project found")
         raise typer.Exit(1)
-    
+
     # Normalize the ticket ID (convert to uppercase prefix)
     normalized_id = normalize_ticket_id(ticket_id)
     if not normalized_id:
         console.print_error(f"Invalid ticket ID format: {ticket_id}")
         console.print_info("Valid formats: EP-001, ISS-002, TSK-003, PR-004, COM-005")
         raise typer.Exit(1)
-    
+
     # Infer the ticket type
     ticket_type = infer_ticket_type(normalized_id)
     if not ticket_type:
         console.print_error(f"Unknown ticket type for ID: {ticket_id}")
-        console.print_info("Valid prefixes: EP (epic), ISS (issue), TSK (task), PR (pull request), COM (comment)")
+        console.print_info(
+            "Valid prefixes: EP (epic), ISS (issue), TSK (task), PR (pull request), COM (comment)"
+        )
         raise typer.Exit(1)
-    
+
     # Load the ticket using TaskManager
     task_manager = TaskManager(project_path)
-    
+
     try:
         ticket = task_manager.load_task(normalized_id)
     except Exception as e:
         console.print_error(f"Failed to load {ticket_type} '{normalized_id}': {e}")
         raise typer.Exit(1)
-    
+
     # Check if already closed
     if ticket.status.lower() in ["completed", "closed", "done"]:
-        console.print_warning(f"{ticket_type.title()} '{normalized_id}' is already closed (status: {ticket.status})")
+        console.print_warning(
+            f"{ticket_type.title()} '{normalized_id}' is already closed (status: {ticket.status})"
+        )
         raise typer.Exit(0)
-    
+
     # Update the ticket
     update_data = {
         "status": "completed",
-        "metadata": ticket.metadata.copy()  # Copy existing metadata
+        "metadata": ticket.metadata.copy(),  # Copy existing metadata
     }
-    
+
     # Add closed_at timestamp to metadata
     update_data["metadata"]["closed_at"] = datetime.now().isoformat()
-    
+
     # Add closing comment if provided
     if comment:
         update_data["metadata"]["closing_comment"] = comment
-    
+
     # Update the ticket
     success = task_manager.update_task(normalized_id, **update_data)
-    
+
     if success:
         if console.is_plain:
             print(f"Closed {ticket_type} {normalized_id}")
             if comment:
                 print(f"Comment: {comment}")
         else:
-            console.print_success(f"✅ Closed {ticket_type} [cyan]{normalized_id}[/cyan]: {ticket.title}")
+            console.print_success(
+                f"✅ Closed {ticket_type} [cyan]{normalized_id}[/cyan]: {ticket.title}"
+            )
             if comment:
                 console.print(f"  Comment: {comment}")
     else:
@@ -707,102 +735,121 @@ def close(
 
 @app.command()
 def transition(
-    ticket_id: str = typer.Argument(..., help="Ticket ID to transition (any type: EP-001, ISS-002, TSK-003, PR-004)"),
-    state: str = typer.Argument(..., help="New workflow state: waiting, in-progress, ready, tested"),
-    comment: Optional[str] = typer.Option(None, "--comment", "-c", help="Add a transition comment"),
+    ticket_id: str = typer.Argument(
+        ..., help="Ticket ID to transition (any type: EP-001, ISS-002, TSK-003, PR-004)"
+    ),
+    state: str = typer.Argument(
+        ..., help="New workflow state: waiting, in-progress, ready, tested"
+    ),
+    comment: Optional[str] = typer.Option(
+        None, "--comment", "-c", help="Add a transition comment"
+    ),
 ) -> None:
     """Transition any ticket to a new workflow state."""
     from pathlib import Path
     from datetime import datetime
     from ai_trackdown_pytools.core.project import Project
     from ai_trackdown_pytools.core.task import TaskManager
-    from ai_trackdown_pytools.utils.tickets import infer_ticket_type, normalize_ticket_id
-    
+    from ai_trackdown_pytools.utils.tickets import (
+        infer_ticket_type,
+        normalize_ticket_id,
+    )
+
     project_path = Path.cwd()
-    
+
     if not Project.exists(project_path):
         console.print_error("No AI Trackdown project found")
         raise typer.Exit(1)
-    
+
     # Normalize the ticket ID (convert to uppercase prefix)
     normalized_id = normalize_ticket_id(ticket_id)
     if not normalized_id:
         console.print_error(f"Invalid ticket ID format: {ticket_id}")
         console.print_info("Valid formats: EP-001, ISS-002, TSK-003, PR-004, COM-005")
         raise typer.Exit(1)
-    
+
     # Infer the ticket type
     ticket_type = infer_ticket_type(normalized_id)
     if not ticket_type:
         console.print_error(f"Unknown ticket type for ID: {ticket_id}")
-        console.print_info("Valid prefixes: EP (epic), ISS (issue), TSK (task), PR (pull request), COM (comment)")
+        console.print_info(
+            "Valid prefixes: EP (epic), ISS (issue), TSK (task), PR (pull request), COM (comment)"
+        )
         raise typer.Exit(1)
-    
+
     # Check if this is a comment (comments don't have status/workflow)
     if normalized_id.startswith("COM-"):
         console.print_error("Comments do not have status or workflow states")
         console.print_info("Comments are append-only and cannot be transitioned")
         raise typer.Exit(1)
-    
+
     # Validate workflow state
     workflow_states = {
         "waiting": "open",
         "in-progress": "in_progress",
         "ready": "completed",
-        "tested": "completed"
+        "tested": "completed",
     }
-    
+
     state_lower = state.lower()
     if state_lower not in workflow_states:
         console.print_error(f"Invalid workflow state: {state}")
         console.print_info("Valid workflow states: waiting, in-progress, ready, tested")
         raise typer.Exit(1)
-    
+
     # Load the ticket using TaskManager
     task_manager = TaskManager(project_path)
-    
+
     try:
         ticket = task_manager.load_task(normalized_id)
     except Exception as e:
         console.print_error(f"Failed to load {ticket_type} '{normalized_id}': {e}")
         raise typer.Exit(1)
-    
+
     # Get the old status for display
     old_status = ticket.status
-    
+
     # Map workflow state to internal status
     new_status = workflow_states[state_lower]
-    
+
     # Prepare update data
     update_data = {
         "status": new_status,
-        "metadata": ticket.metadata.copy()  # Copy existing metadata
+        "metadata": ticket.metadata.copy(),  # Copy existing metadata
     }
-    
+
     # Add transition timestamp to metadata
-    update_data["metadata"][f"transitioned_to_{state_lower}_at"] = datetime.now().isoformat()
-    
+    update_data["metadata"][
+        f"transitioned_to_{state_lower}_at"
+    ] = datetime.now().isoformat()
+
     # For "tested" state, set a special metadata flag
     if state_lower == "tested":
         update_data["metadata"]["tested"] = True
         update_data["metadata"]["tested_at"] = datetime.now().isoformat()
-    
+
     # Add transition comment if provided
     if comment:
         update_data["metadata"][f"transition_{state_lower}_comment"] = comment
-    
+
     # Update the ticket
     success = task_manager.update_task(normalized_id, **update_data)
-    
+
     if success:
         if console.is_plain:
-            print(f"Transitioned {ticket_type} {normalized_id} from '{old_status}' to '{state}' (internal: {new_status})")
+            print(
+                f"Transitioned {ticket_type} {normalized_id} from '{old_status}' to '{state}' (internal: {new_status})"
+            )
             if comment:
                 print(f"Comment: {comment}")
         else:
-            console.print_success(f"✅ Transitioned {ticket_type} [cyan]{normalized_id}[/cyan]")
+            console.print_success(
+                f"✅ Transitioned {ticket_type} [cyan]{normalized_id}[/cyan]"
+            )
             console.print(f"   {ticket.title}")
-            console.print(f"   [dim]Status:[/dim] {old_status} → [green]{state}[/green] (internal: {new_status})")
+            console.print(
+                f"   [dim]Status:[/dim] {old_status} → [green]{state}[/green] (internal: {new_status})"
+            )
             if comment:
                 console.print(f"   [dim]Comment:[/dim] {comment}")
     else:
@@ -812,43 +859,50 @@ def transition(
 
 @app.command()
 def archive(
-    ticket_id: str = typer.Argument(..., help="Ticket ID to archive (any type: EP-001, ISS-002, TSK-003, PR-004)"),
+    ticket_id: str = typer.Argument(
+        ..., help="Ticket ID to archive (any type: EP-001, ISS-002, TSK-003, PR-004)"
+    ),
 ) -> None:
     """Archive any ticket by moving it to an archive subdirectory."""
     from pathlib import Path
     from ai_trackdown_pytools.core.project import Project
     from ai_trackdown_pytools.core.task import TaskManager
-    from ai_trackdown_pytools.utils.tickets import infer_ticket_type, normalize_ticket_id
-    
+    from ai_trackdown_pytools.utils.tickets import (
+        infer_ticket_type,
+        normalize_ticket_id,
+    )
+
     project_path = Path.cwd()
-    
+
     if not Project.exists(project_path):
         console.print_error("No AI Trackdown project found")
         raise typer.Exit(1)
-    
+
     # Normalize the ticket ID (convert to uppercase prefix)
     normalized_id = normalize_ticket_id(ticket_id)
     if not normalized_id:
         console.print_error(f"Invalid ticket ID format: {ticket_id}")
         console.print_info("Valid formats: EP-001, ISS-002, TSK-003, PR-004, COM-005")
         raise typer.Exit(1)
-    
+
     # Infer the ticket type
     ticket_type = infer_ticket_type(normalized_id)
     if not ticket_type:
         console.print_error(f"Unknown ticket type for ID: {ticket_id}")
-        console.print_info("Valid prefixes: EP (epic), ISS (issue), TSK (task), PR (pull request), COM (comment)")
+        console.print_info(
+            "Valid prefixes: EP (epic), ISS (issue), TSK (task), PR (pull request), COM (comment)"
+        )
         raise typer.Exit(1)
-    
+
     # Load the ticket using TaskManager
     task_manager = TaskManager(project_path)
-    
+
     try:
         ticket = task_manager.load_task(normalized_id)
     except Exception as e:
         console.print_error(f"Failed to load {ticket_type} '{normalized_id}': {e}")
         raise typer.Exit(1)
-    
+
     # Determine archive directory structure
     # Map ticket types to archive subdirectories
     type_dir_map = {
@@ -856,25 +910,27 @@ def archive(
         "issue": "issues",
         "task": "tasks",
         "pr": "prs",
-        "comment": "comments"
+        "comment": "comments",
     }
-    
+
     type_subdir = type_dir_map.get(ticket_type, "misc")
     archive_dir = task_manager.tasks_dir / type_subdir / "archive"
     archive_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # Create new file path in archive
     archive_file_path = archive_dir / ticket.file_path.name
-    
+
     # Check if already archived
     if ticket.file_path.parent.name == "archive":
-        console.print_warning(f"{ticket_type.title()} '{normalized_id}' is already archived")
+        console.print_warning(
+            f"{ticket_type.title()} '{normalized_id}' is already archived"
+        )
         raise typer.Exit(0)
-    
+
     # Move the file
     try:
         ticket.file_path.rename(archive_file_path)
-        
+
         # Update any parent references if this is a child ticket
         if ticket.parent:
             try:
@@ -883,10 +939,10 @@ def archive(
                 if normalized_id in parent_task.dependencies:
                     parent_task.dependencies.remove(normalized_id)
                     task_manager.save_task(parent_task)
-            except:
+            except Exception:
                 # Parent might not exist or be accessible
                 pass
-        
+
         # Update any child references if this ticket has children
         all_tasks = task_manager.list_tasks()
         for task in all_tasks:
@@ -894,14 +950,18 @@ def archive(
                 # Update child to have no parent
                 task.data.parent = None
                 task_manager.save_task(task)
-        
+
         if console.is_plain:
             print(f"Archived {ticket_type} {normalized_id}")
             print(f"Moved to: {archive_file_path.relative_to(project_path)}")
         else:
-            console.print_success(f"✅ Archived {ticket_type} [cyan]{normalized_id}[/cyan]: {ticket.title}")
-            console.print(f"   [dim]Moved to:[/dim] {archive_file_path.relative_to(project_path)}")
-            
+            console.print_success(
+                f"✅ Archived {ticket_type} [cyan]{normalized_id}[/cyan]: {ticket.title}"
+            )
+            console.print(
+                f"   [dim]Moved to:[/dim] {archive_file_path.relative_to(project_path)}"
+            )
+
     except Exception as e:
         console.print_error(f"Failed to archive {ticket_type} '{normalized_id}': {e}")
         raise typer.Exit(1)
@@ -909,44 +969,51 @@ def archive(
 
 @app.command()
 def delete(
-    ticket_id: str = typer.Argument(..., help="Ticket ID to delete (any type: EP-001, ISS-002, TSK-003, PR-004)"),
+    ticket_id: str = typer.Argument(
+        ..., help="Ticket ID to delete (any type: EP-001, ISS-002, TSK-003, PR-004)"
+    ),
     force: bool = typer.Option(False, "--force", "-f", help="Skip confirmation prompt"),
 ) -> None:
     """Permanently delete any ticket (with confirmation)."""
     from pathlib import Path
     from ai_trackdown_pytools.core.project import Project
     from ai_trackdown_pytools.core.task import TaskManager
-    from ai_trackdown_pytools.utils.tickets import infer_ticket_type, normalize_ticket_id
-    
+    from ai_trackdown_pytools.utils.tickets import (
+        infer_ticket_type,
+        normalize_ticket_id,
+    )
+
     project_path = Path.cwd()
-    
+
     if not Project.exists(project_path):
         console.print_error("No AI Trackdown project found")
         raise typer.Exit(1)
-    
+
     # Normalize the ticket ID (convert to uppercase prefix)
     normalized_id = normalize_ticket_id(ticket_id)
     if not normalized_id:
         console.print_error(f"Invalid ticket ID format: {ticket_id}")
         console.print_info("Valid formats: EP-001, ISS-002, TSK-003, PR-004, COM-005")
         raise typer.Exit(1)
-    
+
     # Infer the ticket type
     ticket_type = infer_ticket_type(normalized_id)
     if not ticket_type:
         console.print_error(f"Unknown ticket type for ID: {ticket_id}")
-        console.print_info("Valid prefixes: EP (epic), ISS (issue), TSK (task), PR (pull request), COM (comment)")
+        console.print_info(
+            "Valid prefixes: EP (epic), ISS (issue), TSK (task), PR (pull request), COM (comment)"
+        )
         raise typer.Exit(1)
-    
+
     # Load the ticket using TaskManager
     task_manager = TaskManager(project_path)
-    
+
     try:
         ticket = task_manager.load_task(normalized_id)
     except Exception as e:
         console.print_error(f"Failed to load {ticket_type} '{normalized_id}': {e}")
         raise typer.Exit(1)
-    
+
     # Show ticket details and ask for confirmation
     if not force:
         if console.is_plain:
@@ -964,17 +1031,20 @@ def delete(
                 f"[bold]{ticket_type.title()} {normalized_id}[/bold]: {ticket.title}\n"
                 f"Status: {ticket.status}\n"
                 f"Created: {ticket.created_at.strftime('%Y-%m-%d %H:%M:%S')}\n"
-                + (f"Parent: {ticket.parent}\n" if ticket.parent else "") +
-                f"\n[red]This action cannot be undone![/red]",
+                + (f"Parent: {ticket.parent}\n" if ticket.parent else "")
+                + "\n[red]This action cannot be undone![/red]",
                 title="Delete Confirmation",
-                border_style="red"
+                border_style="red",
             )
-            response = typer.prompt("Are you sure you want to delete this ticket? Type 'yes' to confirm", default="no")
-        
+            response = typer.prompt(
+                "Are you sure you want to delete this ticket? Type 'yes' to confirm",
+                default="no",
+            )
+
         if response.lower() != "yes":
             console.print_info("Deletion cancelled")
             raise typer.Exit(0)
-    
+
     # Update any parent references if this is a child ticket
     if ticket.parent:
         try:
@@ -983,10 +1053,10 @@ def delete(
             if normalized_id in parent_task.dependencies:
                 parent_task.dependencies.remove(normalized_id)
                 task_manager.save_task(parent_task)
-        except:
+        except Exception:
             # Parent might not exist or be accessible
             pass
-    
+
     # Update any child references if this ticket has children
     all_tasks = task_manager.list_tasks()
     children_updated = []
@@ -996,19 +1066,23 @@ def delete(
             task.data.parent = None
             task_manager.save_task(task)
             children_updated.append(task.id)
-    
+
     # Delete the ticket
     success = task_manager.delete_task(normalized_id)
-    
+
     if success:
         if console.is_plain:
             print(f"Deleted {ticket_type} {normalized_id}")
             if children_updated:
                 print(f"Updated children: {', '.join(children_updated)}")
         else:
-            console.print_success(f"✅ Permanently deleted {ticket_type} [cyan]{normalized_id}[/cyan]: {ticket.title}")
+            console.print_success(
+                f"✅ Permanently deleted {ticket_type} [cyan]{normalized_id}[/cyan]: {ticket.title}"
+            )
             if children_updated:
-                console.print(f"   [dim]Updated {len(children_updated)} child tickets[/dim]")
+                console.print(
+                    f"   [dim]Updated {len(children_updated)} child tickets[/dim]"
+                )
     else:
         console.print_error(f"Failed to delete {ticket_type} '{normalized_id}'")
         raise typer.Exit(1)
@@ -1129,7 +1203,7 @@ def validate(
         raise typer.Exit(1)
 
 
-def main() -> None:
+def run_cli() -> None:
     """Main entry point with error handling."""
     try:
         app()
@@ -1150,4 +1224,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    run_cli()

@@ -136,12 +136,12 @@ def task(
         # Get current subtasks list from issue metadata
         issue_metadata = issue_task.metadata.copy()
         subtasks = issue_metadata.get("subtasks", [])
-        
+
         # Add new task to subtasks if not already there
         if new_task.id not in subtasks:
             subtasks.append(new_task.id)
             issue_metadata["subtasks"] = subtasks
-            
+
             # Update the issue with new metadata
             task_manager.update_task(issue, metadata=issue_metadata)
 
@@ -154,12 +154,12 @@ def task(
 [dim]Priority:[/dim] {new_task.priority}
 [dim]Status:[/dim] {new_task.status}"""
     ]
-    
+
     if issue:
         display_parts.append(f"[dim]Issue:[/dim] {issue}")
-    
+
     display_parts.append(f"[dim]File:[/dim] {new_task.file_path}")
-    
+
     console.print(
         Panel.fit(
             "\n".join(display_parts),
@@ -250,7 +250,7 @@ def issue(
         "issue_type": issue_type,
         "severity": severity,
     }
-    
+
     create_kwargs = {
         "type": "issue",
         "title": title,
@@ -259,7 +259,7 @@ def issue(
         "priority": severity or "medium",
         "metadata": issue_metadata,
     }
-    
+
     # Set parent if epic is provided
     if epic:
         create_kwargs["parent"] = epic
@@ -271,12 +271,12 @@ def issue(
         # Get current subtasks list from epic metadata
         epic_metadata = epic_task.metadata.copy()
         subtasks = epic_metadata.get("subtasks", [])
-        
+
         # Add new issue to subtasks if not already there
         if new_issue.id not in subtasks:
             subtasks.append(new_issue.id)
             epic_metadata["subtasks"] = subtasks
-            
+
             # Update the epic with new metadata
             task_manager.update_task(epic, metadata=epic_metadata)
 
@@ -289,12 +289,12 @@ def issue(
 [dim]Type:[/dim] {issue_type}
 [dim]Severity:[/dim] {severity}"""
     ]
-    
+
     if epic:
         display_parts.append(f"[dim]Epic:[/dim] {epic}")
-    
+
     display_parts.append(f"[dim]File:[/dim] {new_issue.file_path}")
-    
+
     console.print(
         Panel.fit(
             "\n".join(display_parts),

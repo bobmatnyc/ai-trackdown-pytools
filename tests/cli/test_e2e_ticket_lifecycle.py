@@ -981,7 +981,7 @@ class TestConcurrentOperations:
             for task_id in created_tasks:
                 try:
                     e2e_runner.invoke(app, ["task", "delete", task_id, "--force"])
-                except:
+                except Exception:
                     pass
 
     def test_large_scale_operations(self, e2e_runner, e2e_project_setup):
@@ -1051,7 +1051,7 @@ class TestConcurrentOperations:
             for item_id in created_items:
                 try:
                     e2e_runner.invoke(app, ["task", "delete", item_id, "--force"])
-                except:
+                except Exception:
                     pass
 
 
@@ -1129,7 +1129,7 @@ class TestErrorRecovery:
             for item_id in created_items:
                 try:
                     e2e_runner.invoke(app, ["task", "delete", item_id, "--force"])
-                except:
+                except Exception:
                     pass
 
 

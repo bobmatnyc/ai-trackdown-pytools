@@ -3,7 +3,7 @@
 import re
 from datetime import datetime
 from pathlib import Path
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
 
 import yaml
 
@@ -168,6 +168,7 @@ def add_comment_to_item(
     """
     # Find the file
     from ai_trackdown_pytools.core.config import Config
+
     config = Config.load(project_path=project_path)
     tasks_dir = project_path / config.get("tasks.directory", "tasks")
 

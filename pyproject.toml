@@ -186,8 +186,8 @@ docs = [
 ]
 
 [project.scripts]
-aitrackdown = "ai_trackdown_pytools.cli:main"
-atd = "ai_trackdown_pytools.cli:main"
+aitrackdown = "ai_trackdown_pytools.cli:run_cli"
+atd = "ai_trackdown_pytools.cli:run_cli"
 aitrackdown-init = "ai_trackdown_pytools.commands.init:main"
 aitrackdown-status = "ai_trackdown_pytools.commands.status:main"
 aitrackdown-create = "ai_trackdown_pytools.commands.create:main"

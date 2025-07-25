@@ -511,7 +511,7 @@ class TestResourceExhaustion:
             for file_handle in files:
                 try:
                     file_handle.close()
-                except:
+                except Exception:
                     pass
 
     @pytest.mark.slow

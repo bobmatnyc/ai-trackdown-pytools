@@ -3,7 +3,6 @@
 from datetime import datetime
 from pathlib import Path
 from typing import Optional
-import json
 
 import typer
 from rich.console import Console
@@ -63,7 +62,6 @@ def backup(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    import shutil
     import zipfile
 
     # Generate backup filename
@@ -323,6 +321,7 @@ def repair(
 
     # Check all task files for various issues
     from ai_trackdown_pytools.core.config import Config
+
     config = Config.load(project_path=project_path)
     tasks_dir = project_path / config.get("tasks.directory", "tasks")
     if tasks_dir.exists():

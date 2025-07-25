@@ -607,7 +607,7 @@ def add_task(
         raise typer.Exit(1)
 
     task_manager = TaskManager(project_path)
-    
+
     # Load and validate issue
     issue = task_manager.load_task(issue_id)
     if not issue or "issue" not in issue.tags:
@@ -617,25 +617,29 @@ def add_task(
     # Initialize subtasks list if not present
     if "subtasks" not in issue.metadata:
         issue.metadata["subtasks"] = []
-    
+
     # Track successfully added tasks
     added_tasks = []
     failed_tasks = []
-    
+
     # Process each task
     for task_id in task_ids:
         try:
             task = task_manager.load_task(task_id)
         except Exception:
-            console.print(f"[yellow]Warning: Task '{task_id}' not found, skipping[/yellow]")
+            console.print(
+                f"[yellow]Warning: Task '{task_id}' not found, skipping[/yellow]"
+            )
             failed_tasks.append(task_id)
             continue
-        
+
         # Check if task is already linked to this issue
         if task_id in issue.metadata["subtasks"]:
-            console.print(f"[yellow]Task '{task_id}' is already linked to issue '{issue_id}'[/yellow]")
+            console.print(
+                f"[yellow]Task '{task_id}' is already linked to issue '{issue_id}'[/yellow]"
+            )
             continue
-        
+
         # Update task's parent field
         task.parent = issue_id
         if task_manager.update_task(task_id, parent=issue_id):
@@ -645,11 +649,11 @@ def add_task(
         else:
             console.print(f"[red]Failed to update task '{task_id}'[/red]")
             failed_tasks.append(task_id)
-    
+
     # Update issue with new subtasks list
     if added_tasks:
         success = task_manager.update_task(issue_id, metadata=issue.metadata)
-        
+
         if success:
             console.print(
                 Panel.fit(
@@ -667,7 +671,7 @@ def add_task(
             raise typer.Exit(1)
     else:
         console.print("[yellow]No tasks were added[/yellow]")
-    
+
     if failed_tasks:
         console.print(f"[red]Failed tasks: {', '.join(failed_tasks)}[/red]")
 
@@ -685,7 +689,7 @@ def remove_task(
         raise typer.Exit(1)
 
     task_manager = TaskManager(project_path)
-    
+
     # Load and validate issue
     issue = task_manager.load_task(issue_id)
     if not issue or "issue" not in issue.tags:
@@ -696,30 +700,34 @@ def remove_task(
     if "subtasks" not in issue.metadata or not issue.metadata["subtasks"]:
         console.print(f"[yellow]Issue '{issue_id}' has no subtasks[/yellow]")
         return
-    
+
     # Track successfully removed tasks
     removed_tasks = []
     failed_tasks = []
     not_found_tasks = []
-    
+
     # Process each task
     for task_id in task_ids:
         # Check if task is in issue's subtasks
         if task_id not in issue.metadata["subtasks"]:
-            console.print(f"[yellow]Task '{task_id}' is not linked to issue '{issue_id}'[/yellow]")
+            console.print(
+                f"[yellow]Task '{task_id}' is not linked to issue '{issue_id}'[/yellow]"
+            )
             not_found_tasks.append(task_id)
             continue
-        
+
         # Load task to update its parent field
         try:
             task = task_manager.load_task(task_id)
         except Exception:
-            console.print(f"[yellow]Warning: Task '{task_id}' not found in database[/yellow]")
+            console.print(
+                f"[yellow]Warning: Task '{task_id}' not found in database[/yellow]"
+            )
             # Still remove from issue's subtasks list
             issue.metadata["subtasks"].remove(task_id)
             removed_tasks.append(task_id)
             continue
-        
+
         # Clear task's parent field
         task.parent = None
         if task_manager.update_task(task_id, parent=None):
@@ -729,11 +737,11 @@ def remove_task(
         else:
             console.print(f"[red]Failed to update task '{task_id}'[/red]")
             failed_tasks.append(task_id)
-    
+
     # Update issue with new subtasks list
     if removed_tasks:
         success = task_manager.update_task(issue_id, metadata=issue.metadata)
-        
+
         if success:
             console.print(
                 Panel.fit(
@@ -751,12 +759,14 @@ def remove_task(
             raise typer.Exit(1)
     else:
         console.print("[yellow]No tasks were removed[/yellow]")
-    
+
     if failed_tasks:
         console.print(f"[red]Failed to update tasks: {', '.join(failed_tasks)}[/red]")
-    
+
     if not_found_tasks:
-        console.print(f"[dim]Tasks not linked to issue: {', '.join(not_found_tasks)}[/dim]")
+        console.print(
+            f"[dim]Tasks not linked to issue: {', '.join(not_found_tasks)}[/dim]"
+        )
 
 
 if __name__ == "__main__":

@@ -9,7 +9,7 @@ PREFIX_TO_TYPE = {
     "ISS": "issue",
     "TSK": "task",
     "PR": "pr",
-    "COM": "comment"
+    "COM": "comment",
 }
 
 # Mapping of ticket types to prefixes
@@ -18,20 +18,20 @@ TYPE_TO_PREFIX = {
     "issue": "ISS",
     "task": "TSK",
     "pr": "PR",
-    "comment": "COM"
+    "comment": "COM",
 }
 
 
 def infer_ticket_type(ticket_id: str) -> Optional[str]:
     """
     Infer ticket type from ticket ID based on prefix.
-    
+
     Args:
         ticket_id: Ticket ID like "EP-001", "ISS-002", "TSK-003", "PR-004", "COM-005"
-        
+
     Returns:
         Ticket type ("epic", "issue", "task", "pr", "comment") or None if invalid
-        
+
     Examples:
         >>> infer_ticket_type("EP-001")
         'epic'
@@ -50,19 +50,19 @@ def infer_ticket_type(ticket_id: str) -> Optional[str]:
     """
     if not ticket_id or not isinstance(ticket_id, str):
         return None
-        
+
     # Split by hyphen
     parts = ticket_id.split("-", 1)
     if len(parts) != 2:
         return None
-        
+
     prefix = parts[0].upper()
     number_part = parts[1]
-    
+
     # Validate number part contains digits
     if not number_part or not any(c.isdigit() for c in number_part):
         return None
-    
+
     # Look up the type
     return PREFIX_TO_TYPE.get(prefix)
 
@@ -70,16 +70,16 @@ def infer_ticket_type(ticket_id: str) -> Optional[str]:
 def get_ticket_prefix(ticket_type: str) -> str:
     """
     Get the ticket prefix for a given ticket type.
-    
+
     Args:
         ticket_type: Ticket type ("epic", "issue", "task", "pr", "comment")
-        
+
     Returns:
         Ticket prefix (e.g., "EP", "ISS", "TSK", "PR", "COM")
-        
+
     Raises:
         ValueError: If ticket_type is not recognized
-        
+
     Examples:
         >>> get_ticket_prefix("epic")
         'EP'
@@ -98,25 +98,25 @@ def get_ticket_prefix(ticket_type: str) -> str:
     """
     if not ticket_type or not isinstance(ticket_type, str):
         raise ValueError(f"Invalid ticket type: {ticket_type}")
-        
+
     ticket_type_lower = ticket_type.lower()
-    
+
     if ticket_type_lower not in TYPE_TO_PREFIX:
         raise ValueError(f"Unknown ticket type: {ticket_type}")
-        
+
     return TYPE_TO_PREFIX[ticket_type_lower]
 
 
 def is_valid_ticket_id(ticket_id: str) -> bool:
     """
     Check if a ticket ID is valid (has a recognized prefix).
-    
+
     Args:
         ticket_id: Ticket ID to validate
-        
+
     Returns:
         True if valid, False otherwise
-        
+
     Examples:
         >>> is_valid_ticket_id("EP-001")
         True
@@ -129,13 +129,13 @@ def is_valid_ticket_id(ticket_id: str) -> bool:
 def normalize_ticket_id(ticket_id: str) -> Optional[str]:
     """
     Normalize a ticket ID to uppercase prefix format.
-    
+
     Args:
         ticket_id: Ticket ID to normalize
-        
+
     Returns:
         Normalized ticket ID or None if invalid
-        
+
     Examples:
         >>> normalize_ticket_id("ep-001")
         'EP-001'
@@ -146,17 +146,17 @@ def normalize_ticket_id(ticket_id: str) -> Optional[str]:
     """
     if not ticket_id or not isinstance(ticket_id, str):
         return None
-        
+
     # Split by hyphen
     parts = ticket_id.split("-", 1)
     if len(parts) != 2:
         return None
-        
+
     prefix = parts[0].upper()
     number_part = parts[1]
-    
+
     # Check if it's a valid prefix
     if prefix not in PREFIX_TO_TYPE:
         return None
-        
+
     return f"{prefix}-{number_part}"

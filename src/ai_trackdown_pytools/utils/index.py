@@ -142,6 +142,7 @@ class IndexManager:
 
         # Index all markdown files in tasks directory
         from ai_trackdown_pytools.core.config import Config
+
         config = Config.load(project_path=self.project_path)
         tasks_dir = self.project_path / config.get("tasks.directory", "tasks")
         if tasks_dir.exists():
@@ -206,6 +207,7 @@ class IndexManager:
         # Check existing files
         existing_files = set()
         from ai_trackdown_pytools.core.config import Config
+
         config = Config.load(project_path=self.project_path)
         tasks_dir = self.project_path / config.get("tasks.directory", "tasks")
 

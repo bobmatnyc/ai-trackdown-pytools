@@ -13,7 +13,6 @@ from pydantic import (
     field_serializer,
     StringConstraints,
 )
-from pydantic.types import confloat, conint
 from typing_extensions import Annotated
 
 
@@ -148,7 +147,7 @@ class BaseTicketModel(BaseModel):
         return v
 
     @model_validator(mode="after")
-    def updated_at_after_created_at(self):
+    def updated_at_after_created_at(self) -> "BaseTicketModel":
         """Ensure updated_at is not before created_at."""
         if self.updated_at < self.created_at:
             raise ValueError("updated_at cannot be before created_at")
@@ -166,10 +165,10 @@ class TaskModel(BaseTicketModel):
     )
     status: TaskStatus = Field(TaskStatus.OPEN, description="Task status")
     due_date: Optional[date] = Field(None, description="Task due date")
-    estimated_hours: Optional[confloat(ge=0)] = Field(
+    estimated_hours: Optional[Annotated[float, Field(ge=0)]] = Field(
         None, description="Estimated hours"
     )
-    actual_hours: Optional[confloat(ge=0)] = Field(None, description="Actual hours")
+    actual_hours: Optional[Annotated[float, Field(ge=0)]] = Field(None, description="Actual hours")
     dependencies: List[str] = Field(
         default_factory=list, description="Task dependencies"
     )
@@ -181,21 +180,21 @@ class TaskModel(BaseTicketModel):
         return value.isoformat() if value else None
 
     @model_validator(mode="after")
-    def parent_not_self(self):
+    def parent_not_self(self) -> "TaskModel":
         """Ensure parent is not the task itself."""
         if self.parent and self.parent == self.id:
             raise ValueError("Task cannot be its own parent")
         return self
 
     @model_validator(mode="after")
-    def dependencies_not_self(self):
+    def dependencies_not_self(self) -> "TaskModel":
         """Ensure task doesn't depend on itself."""
         if self.dependencies and self.id in self.dependencies:
             raise ValueError("Task cannot depend on itself")
         return self
 
     @model_validator(mode="after")
-    def actual_hours_validation(self):
+    def actual_hours_validation(self) -> "TaskModel":
         """Validate actual hours against estimated hours."""
         if self.actual_hours is not None and self.estimated_hours is not None:
             if (
@@ -219,7 +218,7 @@ class EpicModel(BaseTicketModel):
     business_value: str = Field("", description="Business value or impact")
     success_criteria: str = Field("", description="Success criteria")
     target_date: Optional[date] = Field(None, description="Target completion date")
-    estimated_story_points: Optional[confloat(ge=0)] = Field(
+    estimated_story_points: Optional[Annotated[float, Field(ge=0)]] = Field(
         None, description="Total story points"
     )
     child_issues: List[str] = Field(default_factory=list, description="Child issue IDs")
@@ -234,7 +233,7 @@ class EpicModel(BaseTicketModel):
 
     @field_validator("child_issues")
     @classmethod
-    def unique_child_issues(cls, v):
+    def unique_child_issues(cls, v: List[str]) -> List[str]:
         """Ensure child issues are unique."""
         if v:
             return list(dict.fromkeys(v))
@@ -242,7 +241,7 @@ class EpicModel(BaseTicketModel):
 
     @field_validator("target_date")
     @classmethod
-    def target_date_in_future(cls, v):
+    def target_date_in_future(cls, v: Optional[date]) -> Optional[date]:
         """Ensure target date is not in the past for new epics."""
         if v and v < date.today():
             raise ValueError("Target date should not be in the past")
@@ -262,11 +261,11 @@ class IssueModel(BaseTicketModel):
     severity: Priority = Field(Priority.MEDIUM, description="Issue severity")
     status: IssueStatus = Field(IssueStatus.OPEN, description="Issue status")
     due_date: Optional[date] = Field(None, description="Issue due date")
-    estimated_hours: Optional[confloat(ge=0)] = Field(
+    estimated_hours: Optional[Annotated[float, Field(ge=0)]] = Field(
         None, description="Estimated hours"
     )
-    actual_hours: Optional[confloat(ge=0)] = Field(None, description="Actual hours")
-    story_points: Optional[confloat(ge=0)] = Field(None, description="Story points")
+    actual_hours: Optional[Annotated[float, Field(ge=0)]] = Field(None, description="Actual hours")
+    story_points: Optional[Annotated[float, Field(ge=0)]] = Field(None, description="Story points")
     environment: str = Field("", description="Environment where issue occurs")
     steps_to_reproduce: str = Field("", description="Steps to reproduce")
     expected_behavior: str = Field("", description="Expected behavior")
@@ -285,7 +284,7 @@ class IssueModel(BaseTicketModel):
 
     @field_validator("parent")
     @classmethod
-    def parent_is_epic(cls, v):
+    def parent_is_epic(cls, v: Optional[str]) -> Optional[str]:
         """Ensure parent is an epic if specified."""
         if v and not v.startswith("EP-"):
             raise ValueError("Issue parent must be an epic (EP-XXXX)")
@@ -293,7 +292,7 @@ class IssueModel(BaseTicketModel):
 
     @field_validator("child_tasks")
     @classmethod
-    def child_tasks_are_tasks(cls, v):
+    def child_tasks_are_tasks(cls, v: List[str]) -> List[str]:
         """Ensure child tasks are task IDs."""
         if v:
             for task_id in v:
@@ -354,9 +353,9 @@ class PRModel(BaseTicketModel):
         Field(default_factory=list, description="Commit SHAs")
     )
     files_changed: List[str] = Field(default_factory=list, description="Files changed")
-    lines_added: Optional[conint(ge=0)] = Field(None, description="Lines added")
-    lines_deleted: Optional[conint(ge=0)] = Field(None, description="Lines deleted")
-    test_coverage: Optional[confloat(ge=0, le=100)] = Field(
+    lines_added: Optional[Annotated[int, Field(ge=0)]] = Field(None, description="Lines added")
+    lines_deleted: Optional[Annotated[int, Field(ge=0)]] = Field(None, description="Lines deleted")
+    test_coverage: Optional[Annotated[float, Field(ge=0, le=100)]] = Field(
         None, description="Test coverage %"
     )
 
@@ -366,7 +365,7 @@ class PRModel(BaseTicketModel):
         return value.isoformat() if value else None
 
     @model_validator(mode="after")
-    def merged_at_validation(self):
+    def merged_at_validation(self) -> "PRModel":
         """Validate merge timestamp."""
         if self.merged_at:
             if self.status not in [PRStatus.MERGED, PRStatus.CLOSED]:
@@ -377,7 +376,7 @@ class PRModel(BaseTicketModel):
 
     @field_validator("closes_issues")
     @classmethod
-    def closes_issues_are_issues(cls, v):
+    def closes_issues_are_issues(cls, v: List[str]) -> List[str]:
         """Ensure closed items are issue IDs."""
         if v:
             for issue_id in v:
@@ -405,14 +404,14 @@ class ProjectModel(BaseTicketModel):
     start_date: Optional[date] = Field(None, description="Project start date")
     end_date: Optional[date] = Field(None, description="Project end date")
     target_completion: Optional[date] = Field(None, description="Target completion")
-    budget: Optional[confloat(ge=0)] = Field(None, description="Project budget")
-    estimated_hours: Optional[confloat(ge=0)] = Field(
+    budget: Optional[Annotated[float, Field(ge=0)]] = Field(None, description="Project budget")
+    estimated_hours: Optional[Annotated[float, Field(ge=0)]] = Field(
         None, description="Total estimated hours"
     )
-    actual_hours: Optional[confloat(ge=0)] = Field(
+    actual_hours: Optional[Annotated[float, Field(ge=0)]] = Field(
         None, description="Total actual hours"
     )
-    progress_percentage: Optional[confloat(ge=0, le=100)] = Field(
+    progress_percentage: Optional[Annotated[float, Field(ge=0, le=100)]] = Field(
         None, description="Completion %"
     )
     epics: List[str] = Field(default_factory=list, description="Project epic IDs")
@@ -428,14 +427,14 @@ class ProjectModel(BaseTicketModel):
         return value.isoformat() if value else None
 
     @model_validator(mode="after")
-    def end_date_after_start_date(self):
+    def end_date_after_start_date(self) -> "ProjectModel":
         """Ensure end date is after start date."""
         if self.end_date and self.start_date and self.end_date <= self.start_date:
             raise ValueError("end_date must be after start_date")
         return self
 
     @model_validator(mode="after")
-    def target_completion_validation(self):
+    def target_completion_validation(self) -> "ProjectModel":
         """Validate target completion date."""
         if self.target_completion:
             if self.start_date and self.target_completion <= self.start_date:
@@ -446,7 +445,7 @@ class ProjectModel(BaseTicketModel):
 
     @field_validator("epics")
     @classmethod
-    def epics_are_epic_ids(cls, v):
+    def epics_are_epic_ids(cls, v: List[str]) -> List[str]:
         """Ensure epics are epic IDs."""
         if v:
             for epic_id in v:

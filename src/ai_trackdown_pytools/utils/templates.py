@@ -1,6 +1,5 @@
 """Template management utilities for AI Trackdown PyTools."""
 
-import json
 import shutil
 from datetime import datetime
 from pathlib import Path
@@ -195,7 +194,7 @@ class TemplateManager:
                     "default": "",
                 },
             },
-            "content": f"# {{{{ title }}}}\n\n{{{{ description or 'No description provided.' }}}}\n",
+            "content": "# {{ title }}\n\n{{ description or 'No description provided.' }}\n",
         }
 
         with open(template_file, "w", encoding="utf-8") as f:

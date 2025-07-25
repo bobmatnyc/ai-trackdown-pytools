@@ -1,6 +1,5 @@
 """Task management for AI Trackdown PyTools."""
 
-import json
 import re
 from datetime import datetime
 from pathlib import Path
@@ -182,85 +181,10 @@ class Task:
         except yaml.YAMLError:
             return None
 
-    @property
-    def id(self) -> str:
-        """Get task ID."""
-        return self.data.id
-
-    @property
-    def title(self) -> str:
-        """Get task title."""
-        return self.data.title
-
-    @property
-    def description(self) -> str:
-        """Get task description."""
-        return self.data.description
-
-    @property
-    def status(self) -> str:
-        """Get task status."""
-        return self.data.status
-
-    @property
-    def priority(self) -> str:
-        """Get task priority."""
-        return self.data.priority
-
-    @property
-    def assignees(self) -> List[str]:
-        """Get task assignees."""
-        return self.data.assignees
-
-    @property
-    def tags(self) -> List[str]:
-        """Get task tags."""
-        return self.data.tags
-
-    @property
-    def created_at(self) -> datetime:
-        """Get task creation time."""
-        return self.data.created_at
-
-    @property
-    def updated_at(self) -> datetime:
-        """Get task last update time."""
-        return self.data.updated_at
-
-    @property
-    def parent(self) -> Optional[str]:
-        """Get task parent."""
-        return self.data.parent
-
     @parent.setter
     def parent(self, value: Optional[str]) -> None:
         """Set task parent."""
         self.data.parent = value
-
-    @property
-    def due_date(self) -> Optional[datetime]:
-        """Get task due date."""
-        return self.data.due_date
-
-    @property
-    def estimated_hours(self) -> Optional[float]:
-        """Get task estimated hours."""
-        return self.data.estimated_hours
-
-    @property
-    def actual_hours(self) -> Optional[float]:
-        """Get task actual hours."""
-        return self.data.actual_hours
-
-    @property
-    def dependencies(self) -> List[str]:
-        """Get task dependencies."""
-        return self.data.dependencies
-
-    @property
-    def metadata(self) -> Dict[str, Any]:
-        """Get task metadata."""
-        return self.data.metadata
 
     def update(self, **kwargs) -> None:
         """Update task data."""

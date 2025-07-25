@@ -279,7 +279,7 @@ def relationships(directory: Path, pattern: str):
     # Validate relationships
     result = validate_relationships(tickets)
 
-    console.print(f"\n[blue]Relationship Validation Results[/blue]")
+    console.print("\n[blue]Relationship Validation Results[/blue]")
     console.print(f"Tickets analyzed: {len(tickets)}")
 
     if result.valid:
@@ -360,7 +360,7 @@ def _display_directory_results(results: List[tuple], summary_only: bool = False)
     invalid_files = total_files - valid_files
 
     # Summary statistics
-    console.print(f"\n[blue]Validation Summary[/blue]")
+    console.print("\n[blue]Validation Summary[/blue]")
     console.print(f"Total files: {total_files}")
     console.print(f"[green]Valid: {valid_files}[/green]")
     console.print(f"[red]Invalid: {invalid_files}[/red]")

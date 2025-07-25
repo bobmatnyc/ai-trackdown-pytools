@@ -299,6 +299,7 @@ def content(
 
     # Search in task files
     from ai_trackdown_pytools.core.config import Config
+
     config = Config.load(project_path=project_path)
     tasks_dir = project_path / config.get("tasks.directory", "tasks")
     if not tasks_dir.exists():
@@ -475,7 +476,7 @@ def filters(
         # Show search command examples
         console.print(
             Panel.fit(
-                f"""[bold blue]Search Command Examples[/bold blue]
+                """[bold blue]Search Command Examples[/bold blue]
 
 [dim]Basic search:[/dim]
 aitrackdown search tasks "bug fix"

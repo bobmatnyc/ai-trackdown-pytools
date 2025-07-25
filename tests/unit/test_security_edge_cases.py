@@ -414,7 +414,6 @@ class TestPrivilegeEscalationPrevention:
 
     def test_temp_file_security(self, temp_dir: Path):
         """Test that temporary files are created securely."""
-        import tempfile
 
         # Test secure temp file creation
         with tempfile.NamedTemporaryFile(
@@ -469,7 +468,7 @@ class TestInputSanitizationEdgeCases:
 
         for injection_pattern in sql_injection_patterns:
             task_data = {
-                "id": f"TSK-0001",
+                "id": "TSK-0001",
                 "title": injection_pattern,
                 "description": injection_pattern,
                 "priority": "medium",

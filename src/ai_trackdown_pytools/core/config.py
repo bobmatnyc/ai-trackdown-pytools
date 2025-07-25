@@ -201,10 +201,10 @@ class Config:
         """Check if the config file has been modified since it was loaded."""
         if not self._config_path or not self._config_path.exists():
             return False
-        
+
         if self._loaded_at is None:
             return True
-        
+
         current_mtime = self._config_path.stat().st_mtime
         return current_mtime > self._loaded_at
 
@@ -213,20 +213,20 @@ class Config:
         """Reload configuration by removing cached instance and creating a fresh one."""
         if project_path is None:
             project_path = Path.cwd()
-        
+
         # Look for project root from the given path
         from ai_trackdown_pytools.core.project import Project
-        
+
         actual_project_root = Project.find_project_root(project_path)
         if actual_project_root:
             project_path = actual_project_root
-        
+
         # Get the config path from the existing instance if available
         config_path = None
         if project_path in cls._instances:
             config_path = cls._instances[project_path]._config_path
             del cls._instances[project_path]
-        
+
         # Load and return a fresh instance
         return cls.load(config_path=config_path, project_path=project_path)
 

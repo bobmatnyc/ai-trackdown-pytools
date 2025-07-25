@@ -1,6 +1,5 @@
 """Project management for AI Trackdown PyTools."""
 
-import json
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any, Optional

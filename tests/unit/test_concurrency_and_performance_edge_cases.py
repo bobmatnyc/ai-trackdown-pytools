@@ -389,7 +389,7 @@ class TestResourceExhaustionScenarios:
             for file_handle in open_files:
                 try:
                     file_handle.close()
-                except:
+                except Exception:
                     pass
 
         # Should handle file descriptor limits gracefully

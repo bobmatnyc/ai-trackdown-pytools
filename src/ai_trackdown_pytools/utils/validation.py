@@ -4,7 +4,7 @@ import json
 import re
 from datetime import datetime, date
 from pathlib import Path
-from typing import Dict, Any, List, Optional, Union, Type
+from typing import Dict, Any, List, Optional
 
 import jsonschema
 from jsonschema import ValidationError
@@ -534,6 +534,7 @@ def validate_project_structure(project_path: Path) -> Dict[str, Any]:
 
     # Check required directories
     from ai_trackdown_pytools.core.config import Config
+
     config = Config.load(project_path=project_path)
     tasks_directory = config.get("tasks.directory", "tasks")
     required_dirs = [".ai-trackdown", tasks_directory]
@@ -604,7 +605,6 @@ def validate_task_file(file_path: Path) -> Dict[str, Any]:
     # Extract and validate frontmatter
     try:
         import re
-        import yaml
 
         pattern = r"^---\s*\n(.*?)\n---\s*\n"
         match = re.match(pattern, content, re.DOTALL)
