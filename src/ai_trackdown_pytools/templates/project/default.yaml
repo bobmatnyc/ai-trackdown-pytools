@@ -54,7 +54,7 @@ content: |
   ## Project Structure
   ```
   {{ project_name }}/
-  ├── tasks/              # Task files and documentation
+  ├── tickets/            # Ticket files and documentation
   ├── docs/               # Project documentation
   ├── .ai-trackdown/      # Configuration and templates
   │   ├── config.yaml     # Project configuration

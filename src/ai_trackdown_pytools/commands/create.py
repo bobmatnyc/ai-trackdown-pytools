@@ -8,6 +8,13 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt
 
+from ai_trackdown_pytools.core.constants import (
+    DEFAULT_PRIORITY,
+    TicketPriority,
+    TicketStatus,
+    TicketType,
+    VALID_STATUSES,
+)
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
 from ai_trackdown_pytools.utils.editor import EditorUtils
@@ -39,10 +46,10 @@ def task(
         help="Task tag (can be specified multiple times)",
     ),
     priority: Optional[str] = typer.Option(
-        "medium",
+        DEFAULT_PRIORITY.value,
         "--priority",
         "-p",
-        help="Task priority (low, medium, high, critical)",
+        help=f"Task priority ({', '.join([p.value for p in TicketPriority])})",
     ),
     template: Optional[str] = typer.Option(
         None,
@@ -96,8 +103,8 @@ def task(
         description = description or Prompt.ask("Task description", default="")
         priority = Prompt.ask(
             "Priority",
-            choices=["low", "medium", "high", "critical"],
-            default=priority or "medium",
+            choices=[p.value for p in TicketPriority],
+            default=priority or DEFAULT_PRIORITY.value,
         )
 
         assignee_input = Prompt.ask("Assignees (comma-separated)", default="")
@@ -114,7 +121,7 @@ def task(
         "description": description or "",
         "assignees": assignee or [],
         "tags": tag or [],
-        "priority": priority or "medium",
+        "priority": priority or DEFAULT_PRIORITY.value,
     }
 
     # Set parent if issue is provided
@@ -246,17 +253,17 @@ def issue(
 
     # Add epic to metadata and set parent if epic is provided
     issue_metadata = {
-        "type": "issue",
+        "type": TicketType.ISSUE.value,
         "issue_type": issue_type,
         "severity": severity,
     }
 
     create_kwargs = {
-        "type": "issue",
+        "type": TicketType.ISSUE.value,
         "title": title,
         "description": description,
         "tags": issue_tags,
-        "priority": severity or "medium",
+        "priority": severity or DEFAULT_PRIORITY.value,
         "metadata": issue_metadata,
     }
 
@@ -345,7 +352,7 @@ def epic(
 
     # Create epic as a task with specific metadata
     new_epic = task_manager.create_task(
-        type="epic",
+        type=TicketType.EPIC.value,
         title=title,
         description=description,
         tags=["epic"],
@@ -431,11 +438,11 @@ def pr(
     task_manager = TaskManager(project_path)
 
     new_pr = task_manager.create_task(
-        type="pr",  # Specify PR type for correct ID generation
+        type=TicketType.PR.value,  # Specify PR type for correct ID generation
         title=f"PR: {title}",
         description=description,
         tags=["pull-request", "review"],
-        priority="medium",
+        priority=DEFAULT_PRIORITY.value,
         metadata={
             "type": "pull_request",
             "source_branch": branch,
@@ -512,7 +519,8 @@ def update(
     if description:
         updates["description"] = description
     if status:
-        if status not in ["open", "in_progress", "completed", "cancelled", "blocked"]:
+        valid_statuses = [s.value for s in VALID_STATUSES.get(TicketType.TASK, [])]
+        if status not in valid_statuses:
             console.print(f"[red]Invalid status: {status}[/red]")
             console.print(
                 "Valid statuses: open, in_progress, completed, cancelled, blocked"
@@ -520,7 +528,7 @@ def update(
             raise typer.Exit(1)
         updates["status"] = status
     if priority:
-        if priority not in ["low", "medium", "high", "critical"]:
+        if priority not in [p.value for p in TicketPriority]:
             console.print(f"[red]Invalid priority: {priority}[/red]")
             console.print("Valid priorities: low, medium, high, critical")
             raise typer.Exit(1)

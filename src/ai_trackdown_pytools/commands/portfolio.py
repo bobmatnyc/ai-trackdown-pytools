@@ -10,6 +10,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.tree import Tree
 
+from ai_trackdown_pytools.core.constants import PRIORITY_ORDER, TicketPriority, TicketStatus
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
 
@@ -202,7 +203,7 @@ def backlog(
         open_tasks = [t for t in open_tasks if assignee_filter in t.assignees]
 
     # Sort by priority and creation date
-    priority_order = {"critical": 4, "high": 3, "medium": 2, "low": 1}
+    priority_order = {p.value: v for p, v in PRIORITY_ORDER.items()}
     open_tasks.sort(
         key=lambda t: (priority_order.get(t.priority, 0), t.created_at), reverse=True
     )
@@ -223,7 +224,7 @@ def backlog(
                 priority_groups[priority] = []
             priority_groups[priority].append(task)
 
-        for priority in ["critical", "high", "medium", "low"]:
+        for priority in [p.value for p in sorted(TicketPriority, key=lambda x: PRIORITY_ORDER[x], reverse=True)]:
             if priority in priority_groups:
                 tasks = priority_groups[priority]
                 console.print(
@@ -318,7 +319,7 @@ def roadmap(
         return
 
     # Sort epics by priority and creation date
-    priority_order = {"critical": 4, "high": 3, "medium": 2, "low": 1}
+    priority_order = {p.value: v for p, v in PRIORITY_ORDER.items()}
     epics.sort(
         key=lambda t: (priority_order.get(t.priority, 0), t.created_at), reverse=True
     )
@@ -627,7 +628,12 @@ def _get_task_type(task) -> str:
 
 def _get_priority_color(priority: str) -> str:
     """Get color for priority display."""
-    colors = {"critical": "red", "high": "yellow", "medium": "blue", "low": "green"}
+    colors = {
+        TicketPriority.CRITICAL.value: "red",
+        TicketPriority.HIGH.value: "yellow",
+        TicketPriority.MEDIUM.value: "blue",
+        TicketPriority.LOW.value: "green",
+    }
     return colors.get(priority, "white")
 
 

@@ -8,12 +8,7 @@ import yaml
 from pydantic import BaseModel, ConfigDict, field_serializer
 
 from ai_trackdown_pytools.core.config import Config
-
-
-class ProjectError(Exception):
-    """Exception raised for project-related errors."""
-
-    pass
+from ai_trackdown_pytools.core.exceptions import ProjectError
 
 
 class ProjectModel(BaseModel):
@@ -150,7 +145,7 @@ class Project:
             ".ai-trackdown",
             ".ai-trackdown/templates",
             ".ai-trackdown/schemas",
-            "tasks",
+            "tickets",
             "docs",
         ]
 
@@ -202,7 +197,7 @@ AI Trackdown project for task and project management.
 
 ## Project Structure
 
-- `tasks/` - Task files and documentation
+- `tickets/` - Ticket files and documentation
 - `docs/` - Project documentation
 - `.ai-trackdown/` - Configuration and templates
 

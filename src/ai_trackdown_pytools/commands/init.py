@@ -71,7 +71,7 @@ def project(
 
 [dim]Created structure:[/dim]
 • Configuration: .ai-trackdown/config.yaml
-• Tasks directory: tasks/
+• Tickets directory: tickets/
 • Templates: .ai-trackdown/templates/
 • Documentation: docs/
 

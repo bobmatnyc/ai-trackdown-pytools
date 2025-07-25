@@ -9,16 +9,26 @@ import yaml
 from pydantic import BaseModel, ConfigDict, field_serializer
 
 from ai_trackdown_pytools.core.config import Config
+from ai_trackdown_pytools.core.constants import (
+    DEFAULT_PRIORITY,
+    DEFAULT_STATUS,
+    DEFAULT_TICKET_TYPE,
+    PREFIX_TO_SUBDIR,
+    TYPE_TO_PREFIX,
+    TicketPrefix,
+    TicketPriority,
+    TicketStatus,
+    TicketSubdir,
+    TicketType,
+)
+from ai_trackdown_pytools.core.exceptions import TaskError
+from ai_trackdown_pytools.utils.id_generator import IDGenerator
 from ai_trackdown_pytools.utils.index import update_index_on_file_change
 
 # from ai_trackdown_pytools.core.models import TaskModel as NewTaskModel, get_model_for_type
 # from ai_trackdown_pytools.utils.validation import SchemaValidator, ValidationResult
 
 
-class TaskError(Exception):
-    """Exception raised for task-related errors."""
-
-    pass
 
 
 class TaskModel(BaseModel):
@@ -28,7 +38,7 @@ class TaskModel(BaseModel):
     title: str
     description: str = ""
     status: str = "open"
-    priority: str = "medium"
+    priority: str = DEFAULT_PRIORITY.value
     assignees: List[str] = []
     tags: List[str] = []
     created_at: datetime
@@ -215,8 +225,8 @@ class TaskManager:
         """Create a new task."""
         now = datetime.now()
 
-        # Determine type (default to 'task')
-        task_type = kwargs.get("type", "task")
+        # Determine type (default to task)
+        task_type = kwargs.get("type", DEFAULT_TICKET_TYPE.value)
 
         # Generate task ID based on type
         task_id = self._generate_task_id(task_type)
@@ -226,8 +236,8 @@ class TaskManager:
             id=task_id,
             title=kwargs.get("title", f"Untitled {task_type.title()}"),
             description=kwargs.get("description", ""),
-            status=kwargs.get("status", "open"),
-            priority=kwargs.get("priority", "medium"),
+            status=kwargs.get("status", DEFAULT_STATUS.value),
+            priority=kwargs.get("priority", DEFAULT_PRIORITY.value),
             assignees=kwargs.get("assignees", []),
             tags=kwargs.get("tags", []),
             created_at=now,
@@ -319,17 +329,20 @@ class TaskManager:
         # Update index
         update_index_on_file_change(self.project_path, task.file_path)
 
-    def _generate_task_id(self, task_type: str = "task") -> str:
+    def _generate_task_id(self, task_type: str = None) -> str:
         """Generate unique task ID based on type."""
+        if task_type is None:
+            task_type = DEFAULT_TICKET_TYPE.value
+            
         # Determine prefix and counter key based on type
         type_config = {
-            "epic": {"prefix": "EP", "counter_key": "epics.counter"},
-            "issue": {"prefix": "ISS", "counter_key": "issues.counter"},
-            "task": {"prefix": "TSK", "counter_key": "tasks.counter"},
-            "pr": {"prefix": "PR", "counter_key": "prs.counter"},
+            TicketType.EPIC.value: {"prefix": TicketPrefix.EPIC.value, "counter_key": "epics.counter"},
+            TicketType.ISSUE.value: {"prefix": TicketPrefix.ISSUE.value, "counter_key": "issues.counter"},
+            TicketType.TASK.value: {"prefix": TicketPrefix.TASK.value, "counter_key": "tasks.counter"},
+            TicketType.PR.value: {"prefix": TicketPrefix.PR.value, "counter_key": "prs.counter"},
         }
 
-        config = type_config.get(task_type, type_config["task"])
+        config = type_config.get(task_type, type_config[TicketType.TASK.value])
         prefix = config["prefix"]
         counter_key = config["counter_key"]
 
@@ -352,13 +365,16 @@ class TaskManager:
     def _get_task_file_path(self, task_id: str, title: Optional[str] = None) -> Path:
         """Get task file path for task ID."""
         # Determine directory based on prefix
-        prefix = task_id.split("-")[0] if "-" in task_id else "misc"
+        prefix = task_id.split("-")[0] if "-" in task_id else None
 
-        # Map prefixes to directories
-        dir_map = {"EP": "epics", "ISS": "issues", "TSK": "tasks", "PR": "prs"}
+        # Get subdirectory from mapping or use misc
+        subdir_name = TicketSubdir.MISC
+        for ticket_prefix, ticket_subdir in PREFIX_TO_SUBDIR.items():
+            if prefix == ticket_prefix.value:
+                subdir_name = ticket_subdir
+                break
 
-        subdir_name = dir_map.get(prefix, "misc")
-        subdir = self.tasks_dir / subdir_name
+        subdir = self.tasks_dir / subdir_name.value
         subdir.mkdir(exist_ok=True)
 
         # Use just the ID for the filename to avoid issues with special characters

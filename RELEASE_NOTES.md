@@ -1,11 +1,11 @@
-# Release Notes - v1.2.0
+# Release Notes - v1.3.0
 
-## AI Trackdown PyTools v1.2.0 - Enhanced Unified Commands and Relationship Management
+## AI Trackdown PyTools v1.3.0 - Comprehensive Enum System and Improved Type Safety
 
-**Release Date**: 2025-07-24  
+**Release Date**: 2025-07-25  
 **Status**: Production/Stable
 
-We are excited to announce version 1.2.0 of AI Trackdown PyTools! This release brings significant improvements with unified ticket management commands, enhanced epic-issue-task relationship management, and improved configuration handling.
+We are excited to announce version 1.3.0 of AI Trackdown PyTools! This release introduces a major refactoring to use enums throughout the codebase for better type safety and consistency. The default parent directory for tickets has been changed from "tasks/" to "tickets/" for better clarity.
 
 ## 🎉 Highlights
 

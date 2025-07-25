@@ -279,10 +279,11 @@ my-project/
 │   ├── project.yaml        # Project metadata
 │   ├── templates/          # Custom templates
 │   └── schemas/            # Custom schemas
-├── tasks/                  # Task files organized by type
-│   ├── tsk/               # Standard tasks
-│   ├── epic/              # Epic tasks
-│   └── bug/               # Bug reports
+├── tickets/                # Ticket files organized by type
+│   ├── tasks/             # Standard tasks (TSK-XXXX)
+│   ├── epics/             # Epic tasks (EP-XXXX)
+│   ├── issues/            # Issues and bugs (ISS-XXXX)
+│   └── prs/               # Pull requests (PR-XXXX)
 ├── docs/                   # Documentation
 └── README.md              # Project documentation
 ```

@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2025-07-25
+
+### Added
+- Comprehensive enum system for type safety:
+  - `TicketType` enum for ticket types (epic, issue, task, pr, comment)
+  - `TicketPrefix` enum for ticket prefixes (EP, ISS, TSK, PR, CMT)
+  - `TicketSubdir` enum for ticket subdirectories
+  - `TicketStatus` enum for all possible ticket statuses
+  - `TicketPriority` enum for priority levels (low, medium, high, critical)
+- New `core/constants.py` module centralizing all magic strings
+- Mapping dictionaries for enum conversions
+- Default values for status, priority, and ticket type
+- Priority ordering for consistent sorting
+
+### Changed
+- Default parent directory changed from "tasks/" to "tickets/" for new projects
+- All hardcoded strings replaced with proper enums throughout codebase
+- Improved type safety and IDE support with autocomplete
+- Better validation against allowed enum values
+- All directory references now configuration-driven
+
+### Fixed
+- Import issues with TaskError exception
+- Nested directory structure problems
+- Test compatibility with new enum system
+- Exception module organization
+
+### Technical Details
+- Created centralized exceptions module at `core/exceptions.py`
+- Updated key modules to use enums: task.py, create.py, status.py, portfolio.py
+- Maintained backward compatibility for existing projects
+- Configuration preserved for existing installations
+
 ## [1.2.0] - 2025-07-24
 
 ### Added

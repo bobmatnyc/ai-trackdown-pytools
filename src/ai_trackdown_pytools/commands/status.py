@@ -9,6 +9,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.tree import Tree
 
+from ai_trackdown_pytools.core.constants import TicketStatus
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
 from ai_trackdown_pytools.utils.git import GitUtils
@@ -75,9 +76,9 @@ def project(
         "issues": len(issues),
         "prs": len(prs),
         "tasks": len(regular_tasks),
-        "open": len([t for t in tasks if t.status == "open"]),
-        "in_progress": len([t for t in tasks if t.status == "in_progress"]),
-        "completed": len([t for t in tasks if t.status == "completed"]),
+        TicketStatus.OPEN.value: len([t for t in tasks if t.status == TicketStatus.OPEN.value]),
+        TicketStatus.IN_PROGRESS.value: len([t for t in tasks if t.status == TicketStatus.IN_PROGRESS.value]),
+        TicketStatus.COMPLETED.value: len([t for t in tasks if t.status == TicketStatus.COMPLETED.value]),
         "blocked": len([t for t in tasks if t.status == "blocked"]),
     }
 
@@ -99,10 +100,10 @@ def project(
     status_table.add_column("Status", style="cyan")
     status_table.add_column("Count", justify="right", style="magenta")
 
-    status_table.add_row("Open", str(task_stats["open"]))
-    status_table.add_row("In Progress", str(task_stats["in_progress"]))
-    status_table.add_row("Blocked", str(task_stats["blocked"]))
-    status_table.add_row("Completed", str(task_stats["completed"]))
+    status_table.add_row("Open", str(task_stats[TicketStatus.OPEN.value]))
+    status_table.add_row("In Progress", str(task_stats[TicketStatus.IN_PROGRESS.value]))
+    status_table.add_row("Blocked", str(task_stats.get(TicketStatus.BLOCKED.value, 0)))
+    status_table.add_row("Completed", str(task_stats[TicketStatus.COMPLETED.value]))
 
     console.print(status_table)
 
@@ -132,9 +133,9 @@ def project(
             task_tree = Tree("Recent Tasks")
             for task in recent_tasks:
                 status_color = {
-                    "open": "red",
-                    "in_progress": "yellow",
-                    "completed": "green",
+                    TicketStatus.OPEN.value: "red",
+                    TicketStatus.IN_PROGRESS.value: "yellow",
+                    TicketStatus.COMPLETED.value: "green",
                     "blocked": "magenta",
                 }.get(task.status, "white")
                 task_tree.add(
@@ -152,11 +153,11 @@ def project(
                         1
                         for st_id in subtasks
                         if task_manager.load_task(st_id)
-                        and task_manager.load_task(st_id).status == "completed"
+                        and task_manager.load_task(st_id).status == TicketStatus.COMPLETED.value
                     )
                     progress = int((completed / len(subtasks)) * 100)
                 else:
-                    progress = 0 if epic.status != "completed" else 100
+                    progress = 0 if epic.status != TicketStatus.COMPLETED.value else 100
 
                 progress_bar = "█" * (progress // 10) + "░" * (10 - progress // 10)
                 console.print(f"  • {epic.title[:30]}... {progress_bar} {progress}%")
@@ -225,9 +226,9 @@ def tasks(
 
     for task in tasks:
         status_style = {
-            "open": "[red]open[/red]",
-            "in_progress": "[yellow]in_progress[/yellow]",
-            "completed": "[green]completed[/green]",
+            TicketStatus.OPEN.value: "[red]open[/red]",
+            TicketStatus.IN_PROGRESS.value: "[yellow]in_progress[/yellow]",
+            TicketStatus.COMPLETED.value: "[green]completed[/green]",
         }.get(task.status, task.status)
 
         table.add_row(

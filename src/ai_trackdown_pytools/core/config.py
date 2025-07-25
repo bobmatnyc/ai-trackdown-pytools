@@ -15,7 +15,7 @@ class ConfigModel(BaseModel):
     project: Dict[str, Any] = {}
     editor: Dict[str, Any] = {"default": "code"}
     templates: Dict[str, Any] = {"directory": "templates"}
-    tasks: Dict[str, Any] = {"directory": "tasks"}
+    tasks: Dict[str, Any] = {"directory": "tickets"}
     git: Dict[str, Any] = {"auto_commit": False}
     plugins: Dict[str, Any] = {}
 
@@ -100,7 +100,7 @@ class Config:
             "editor": {"default": os.getenv("EDITOR", "code")},
             "templates": {"directory": "templates"},
             "tasks": {
-                "directory": "tasks",
+                "directory": "tickets",
                 "auto_id": True,
                 "id_format": "TSK-{counter:04d}",
             },
