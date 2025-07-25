@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.2] - 2025-07-25
+
+### Changed
+- Updated default directory from "tasks" to "tickets" to align with ai-trackdown schema v4.5.1
+- Fixed TaskManager to properly use configured directory without appending subdirectories
+
+### Fixed  
+- Issue detection now works correctly when tickets are organized in subdirectories (epics/, issues/, tasks/)
+- Configuration handling now properly respects the tasks.directory setting
+
 ## [1.3.1] - 2025-07-25
 
 ### Fixed

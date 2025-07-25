@@ -215,7 +215,7 @@ class TaskManager:
         """Initialize task manager."""
         self.project_path = Path(project_path)
         self.config = Config.load(project_path=self.project_path)
-        self.tasks_dir = self.project_path / self.config.get("tasks.directory", "tasks")
+        self.tasks_dir = self.project_path / self.config.get("tasks.directory", "tickets")
 
         # Ensure tasks directory exists
         self.tasks_dir.mkdir(exist_ok=True)
