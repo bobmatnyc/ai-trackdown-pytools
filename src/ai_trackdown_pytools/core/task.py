@@ -22,7 +22,6 @@ from ai_trackdown_pytools.core.constants import (
     TicketType,
 )
 from ai_trackdown_pytools.core.exceptions import TaskError
-from ai_trackdown_pytools.utils.id_generator import IDGenerator
 from ai_trackdown_pytools.utils.index import update_index_on_file_change
 
 # from ai_trackdown_pytools.core.models import TaskModel as NewTaskModel, get_model_for_type
