@@ -1,7 +1,7 @@
 """Pydantic models for AI Trackdown PyTools."""
 
 from datetime import datetime, date
-from typing import Dict, Any, List, Optional, Union
+from typing import Dict, Any, List, Optional, Union, Literal
 from enum import Enum
 
 from pydantic import (
@@ -14,6 +14,8 @@ from pydantic import (
     StringConstraints,
 )
 from typing_extensions import Annotated
+
+from .constants import BugSeverity
 
 
 # Enums for validation
@@ -46,6 +48,18 @@ class IssueStatus(str, Enum):
     COMPLETED = "completed"
     CANCELLED = "cancelled"
     BLOCKED = "blocked"
+
+
+class BugStatus(str, Enum):
+    """Bug status enumeration."""
+
+    OPEN = "open"
+    IN_PROGRESS = "in_progress"
+    TESTING = "testing"
+    COMPLETED = "completed"
+    CANCELLED = "cancelled"
+    BLOCKED = "blocked"
+    CLOSED = "closed"
 
 
 class PRStatus(str, Enum):
@@ -303,6 +317,72 @@ class IssueModel(BaseTicketModel):
         return list(dict.fromkeys(v)) if v else v
 
 
+class BugModel(BaseTicketModel):
+    """Bug data model."""
+
+    id: Annotated[str, StringConstraints(pattern=r"^BUG-[0-9]+$")] = Field(
+        ..., description="Unique bug identifier"
+    )
+    type: Literal["bug"] = Field("bug", description="Ticket type (always 'bug')")
+    title: Annotated[str, StringConstraints(min_length=1, max_length=250)] = Field(
+        ..., description="Bug title"
+    )
+    severity: BugSeverity = Field(BugSeverity.MEDIUM, description="Bug severity")
+    status: BugStatus = Field(BugStatus.OPEN, description="Bug status")
+    environment: str = Field("", description="Environment where bug occurs")
+    steps_to_reproduce: str = Field("", description="Steps to reproduce the bug")
+    expected_behavior: str = Field("", description="Expected behavior")
+    actual_behavior: str = Field("", description="Actual behavior")
+    affected_versions: List[str] = Field(
+        default_factory=list, description="Affected versions"
+    )
+    fixed_in_version: Optional[str] = Field(None, description="Version with fix")
+    is_regression: bool = Field(False, description="Is this a regression?")
+    related_issues: List[str] = Field(
+        default_factory=list, description="Related issue IDs"
+    )
+    related_prs: List[str] = Field(default_factory=list, description="Related PR IDs")
+    parent: Optional[str] = Field(None, description="Parent epic ID")
+    browser: Optional[str] = Field(None, description="Browser information")
+    os: Optional[str] = Field(None, description="Operating system")
+    device: Optional[str] = Field(None, description="Device information")
+    error_logs: str = Field("", description="Relevant error logs")
+    verified_fixed: bool = Field(False, description="Has fix been verified?")
+    resolution_notes: str = Field("", description="Resolution notes")
+
+    @field_validator("parent")
+    @classmethod
+    def parent_is_epic(cls, v: Optional[str]) -> Optional[str]:
+        """Ensure parent is an epic if specified."""
+        if v and not v.startswith("EP-"):
+            raise ValueError("Bug parent must be an epic (EP-XXXX)")
+        return v
+
+    @field_validator("related_issues")
+    @classmethod
+    def related_issues_validation(cls, v: List[str]) -> List[str]:
+        """Ensure related issues are issue IDs."""
+        if v:
+            for issue_id in v:
+                if not (issue_id.startswith("ISS-") or issue_id.startswith("BUG-")):
+                    raise ValueError(
+                        f"Related issue {issue_id} must be an issue ID (ISS-XXXX) or bug ID (BUG-XXXX)"
+                    )
+        return list(dict.fromkeys(v)) if v else v
+
+    @field_validator("related_prs")
+    @classmethod
+    def related_prs_validation(cls, v: List[str]) -> List[str]:
+        """Ensure related PRs are PR IDs."""
+        if v:
+            for pr_id in v:
+                if not pr_id.startswith("PR-"):
+                    raise ValueError(
+                        f"Related PR {pr_id} must be a PR ID (PR-XXXX)"
+                    )
+        return list(dict.fromkeys(v)) if v else v
+
+
 class MilestoneModel(BaseModel):
     """Milestone model for projects."""
 
@@ -455,11 +535,11 @@ class ProjectModel(BaseTicketModel):
 
 
 # Union types for status types
-StatusType = Union[TaskStatus, EpicStatus, IssueStatus, PRStatus, ProjectStatus]
+StatusType = Union[TaskStatus, EpicStatus, IssueStatus, BugStatus, PRStatus, ProjectStatus]
 PriorityType = Priority
 
 # Union type for all ticket models
-TicketModel = Union[TaskModel, EpicModel, IssueModel, PRModel, ProjectModel]
+TicketModel = Union[TaskModel, EpicModel, IssueModel, BugModel, PRModel, ProjectModel]
 
 
 def get_model_for_type(ticket_type: str) -> type:
@@ -468,6 +548,7 @@ def get_model_for_type(ticket_type: str) -> type:
         "task": TaskModel,
         "epic": EpicModel,
         "issue": IssueModel,
+        "bug": BugModel,
         "pr": PRModel,
         "project": ProjectModel,
     }
@@ -480,6 +561,7 @@ def get_id_pattern_for_type(ticket_type: str) -> str:
         "task": r"^TSK-[0-9]+$",
         "epic": r"^EP-[0-9]+$",
         "issue": r"^ISS-[0-9]+$",
+        "bug": r"^BUG-[0-9]+$",
         "pr": r"^PR-[0-9]+$",
         "project": r"^PROJ-[0-9]+$",
     }

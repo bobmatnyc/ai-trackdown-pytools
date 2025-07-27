@@ -13,6 +13,7 @@ from rich.traceback import install
 from . import __version__
 from .commands import (
     ai,
+    bug,
     comment,
     create,
     epic,
@@ -146,6 +147,7 @@ app.add_typer(validate_cmd.app, name="validate", help="Validate data")
 # Add task management commands
 app.add_typer(task.app, name="task", help="Task operations")
 app.add_typer(issue.app, name="issue", help="Issue tracking")
+app.add_typer(bug.app, name="bug", help="Bug tracking")
 app.add_typer(epic.app, name="epic", help="Epic management")
 app.add_typer(pr.app, name="pr", help="Pull requests")
 app.add_typer(comment.app, name="comment", help="Comments")

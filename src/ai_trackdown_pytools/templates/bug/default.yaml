@@ -1,0 +1,144 @@
+name: "Default Bug Template"
+description: "Standard bug report template for tracking defects and issues"
+type: "bug"
+version: "1.0.0"
+author: "AI Trackdown Team"
+
+variables:
+  title:
+    description: "Bug title"
+    required: true
+  description:
+    description: "Bug description"
+    default: ""
+  severity:
+    description: "Bug severity"
+    default: "medium"
+    choices: ["critical", "high", "medium", "low"]
+  environment:
+    description: "Environment where bug occurs"
+    default: ""
+  browser:
+    description: "Browser information"
+    default: ""
+  os:
+    description: "Operating system"
+    default: ""
+  device:
+    description: "Device information"
+    default: ""
+  steps_to_reproduce:
+    description: "Steps to reproduce the bug"
+    default: ""
+  expected_behavior:
+    description: "Expected behavior"
+    default: ""
+  actual_behavior:
+    description: "Actual behavior"
+    default: ""
+  error_logs:
+    description: "Relevant error logs or console output"
+    default: ""
+  affected_versions:
+    description: "Affected versions (comma-separated)"
+    default: ""
+  is_regression:
+    description: "Is this a regression?"
+    default: false
+    type: boolean
+
+content: |
+  # 🐛 {{ title }}
+
+  ## Bug Details
+  **Severity**: {{ severity }}
+  **Status**: {{ status | default('open') }}
+  {% if is_regression %}**⚠️ REGRESSION**: This bug was previously fixed{% endif %}
+  {% if affected_versions %}**Affected Versions**: {{ affected_versions }}{% endif %}
+
+  ## Environment
+  {% if environment %}**Environment**: {{ environment }}{% endif %}
+  {% if browser %}**Browser**: {{ browser }}{% endif %}
+  {% if os %}**OS**: {{ os }}{% endif %}
+  {% if device %}**Device**: {{ device }}{% endif %}
+
+  ## Description
+  {{ description or "Provide a clear and concise description of the bug." }}
+
+  ## Steps to Reproduce
+  {% if steps_to_reproduce %}
+  {{ steps_to_reproduce }}
+  {% else %}
+  1. Go to '...'
+  2. Click on '...'
+  3. Scroll down to '...'
+  4. See error
+  {% endif %}
+
+  ## Expected Behavior
+  {{ expected_behavior or "A clear and concise description of what you expected to happen." }}
+
+  ## Actual Behavior
+  {{ actual_behavior or "A clear and concise description of what actually happened." }}
+
+  ## Error Logs
+  {% if error_logs %}
+  ```
+  {{ error_logs }}
+  ```
+  {% else %}
+  _If applicable, add error messages, console output, or stack traces._
+  {% endif %}
+
+  ## Screenshots/Videos
+  _If applicable, add screenshots or videos to help explain the problem._
+
+  ## Root Cause Analysis
+  _To be filled after investigation_
+
+  ## Proposed Solution
+  _Describe the fix or workaround if known_
+
+  ## Impact Analysis
+  - [ ] Data integrity affected
+  - [ ] Security implications
+  - [ ] Performance degradation
+  - [ ] User experience impact
+  - [ ] Business logic affected
+
+  ## Testing Checklist
+  - [ ] Bug reproduced locally
+  - [ ] Root cause identified
+  - [ ] Fix implemented
+  - [ ] Unit tests added/updated
+  - [ ] Integration tests added/updated
+  - [ ] Regression tests added
+  - [ ] Fix verified in affected environments
+
+  ## Metadata
+  - **Created**: {{ created_at }}
+  - **Updated**: {{ updated_at }}
+  - **Assignee**: {{ assignees | join(', ') if assignees else "Unassigned" }}
+  - **Labels**: {{ tags | join(', ') if tags else "None" }}
+  {% if parent %}
+  - **Parent Epic**: {{ parent }}
+  {% endif %}
+
+  ## Related Items
+  {% if related_issues %}
+  - Related Issues: {{ related_issues | join(', ') }}
+  {% endif %}
+  {% if related_prs %}
+  - Related PRs: {{ related_prs | join(', ') }}
+  {% endif %}
+
+  ## Resolution
+  {% if fixed_in_version %}
+  **Fixed in Version**: {{ fixed_in_version }}
+  {% endif %}
+  {% if resolution_notes %}
+  **Resolution Notes**: {{ resolution_notes }}
+  {% endif %}
+  {% if verified_fixed %}
+  ✅ **Fix Verified**
+  {% endif %}

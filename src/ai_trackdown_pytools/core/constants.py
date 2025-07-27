@@ -8,6 +8,7 @@ class TicketType(str, Enum):
     
     EPIC = "epic"
     ISSUE = "issue"
+    BUG = "bug"
     TASK = "task"
     PR = "pr"
     COMMENT = "comment"
@@ -18,6 +19,7 @@ class TicketPrefix(str, Enum):
     
     EPIC = "EP"
     ISSUE = "ISS"
+    BUG = "BUG"
     TASK = "TSK"
     PR = "PR"
     COMMENT = "CMT"
@@ -28,6 +30,7 @@ class TicketSubdir(str, Enum):
     
     EPICS = "epics"
     ISSUES = "issues"
+    BUGS = "bugs"
     TASKS = "tasks"
     PRS = "prs"
     COMMENTS = "comments"
@@ -72,6 +75,7 @@ PRIORITY_ORDER = {
 PREFIX_TO_SUBDIR = {
     TicketPrefix.EPIC: TicketSubdir.EPICS,
     TicketPrefix.ISSUE: TicketSubdir.ISSUES,
+    TicketPrefix.BUG: TicketSubdir.BUGS,
     TicketPrefix.TASK: TicketSubdir.TASKS,
     TicketPrefix.PR: TicketSubdir.PRS,
     TicketPrefix.COMMENT: TicketSubdir.COMMENTS,
@@ -82,6 +86,7 @@ PREFIX_TO_SUBDIR = {
 TYPE_TO_PREFIX = {
     TicketType.EPIC: TicketPrefix.EPIC,
     TicketType.ISSUE: TicketPrefix.ISSUE,
+    TicketType.BUG: TicketPrefix.BUG,
     TicketType.TASK: TicketPrefix.TASK,
     TicketType.PR: TicketPrefix.PR,
     TicketType.COMMENT: TicketPrefix.COMMENT,
@@ -104,6 +109,14 @@ VALID_STATUSES = {
         TicketStatus.CANCELLED,
         TicketStatus.BLOCKED,
     ],
+    TicketType.BUG: [
+        TicketStatus.OPEN,
+        TicketStatus.IN_PROGRESS,
+        TicketStatus.COMPLETED,
+        TicketStatus.CANCELLED,
+        TicketStatus.BLOCKED,
+        TicketStatus.CLOSED,
+    ],
     TicketType.EPIC: [
         TicketStatus.OPEN,
         TicketStatus.IN_PROGRESS,
@@ -125,3 +138,12 @@ VALID_STATUSES = {
 DEFAULT_STATUS = TicketStatus.OPEN
 DEFAULT_PRIORITY = TicketPriority.MEDIUM
 DEFAULT_TICKET_TYPE = TicketType.TASK
+
+
+class BugSeverity(str, Enum):
+    """Bug severity enumeration."""
+    
+    CRITICAL = "critical"
+    HIGH = "high"
+    MEDIUM = "medium"
+    LOW = "low"

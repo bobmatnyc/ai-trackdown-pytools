@@ -2,6 +2,7 @@
 
 from ai_trackdown_pytools.commands import (
     ai,
+    bug,
     comment,
     create,
     epic,
@@ -20,6 +21,7 @@ from ai_trackdown_pytools.commands import (
 
 __all__ = [
     "ai",
+    "bug",
     "comment",
     "create",
     "epic",

@@ -7,6 +7,7 @@ from typing import Optional
 PREFIX_TO_TYPE = {
     "EP": "epic",
     "ISS": "issue",
+    "BUG": "bug",
     "TSK": "task",
     "PR": "pr",
     "COM": "comment",
@@ -16,6 +17,7 @@ PREFIX_TO_TYPE = {
 TYPE_TO_PREFIX = {
     "epic": "EP",
     "issue": "ISS",
+    "bug": "BUG",
     "task": "TSK",
     "pr": "PR",
     "comment": "COM",
@@ -27,23 +29,25 @@ def infer_ticket_type(ticket_id: str) -> Optional[str]:
     Infer ticket type from ticket ID based on prefix.
 
     Args:
-        ticket_id: Ticket ID like "EP-001", "ISS-002", "TSK-003", "PR-004", "COM-005"
+        ticket_id: Ticket ID like "EP-001", "ISS-002", "BUG-003", "TSK-004", "PR-005", "COM-006"
 
     Returns:
-        Ticket type ("epic", "issue", "task", "pr", "comment") or None if invalid
+        Ticket type ("epic", "issue", "bug", "task", "pr", "comment") or None if invalid
 
     Examples:
         >>> infer_ticket_type("EP-001")
         'epic'
         >>> infer_ticket_type("iss-002")  # Case insensitive
         'issue'
-        >>> infer_ticket_type("TSK-003")
+        >>> infer_ticket_type("BUG-003")
+        'bug'
+        >>> infer_ticket_type("TSK-004")
         'task'
-        >>> infer_ticket_type("PR-004")
+        >>> infer_ticket_type("PR-005")
         'pr'
-        >>> infer_ticket_type("COM-005")
+        >>> infer_ticket_type("COM-006")
         'comment'
-        >>> infer_ticket_type("INVALID-006")
+        >>> infer_ticket_type("INVALID-007")
         None
         >>> infer_ticket_type("EP001")  # Missing hyphen
         None
@@ -72,10 +76,10 @@ def get_ticket_prefix(ticket_type: str) -> str:
     Get the ticket prefix for a given ticket type.
 
     Args:
-        ticket_type: Ticket type ("epic", "issue", "task", "pr", "comment")
+        ticket_type: Ticket type ("epic", "issue", "bug", "task", "pr", "comment")
 
     Returns:
-        Ticket prefix (e.g., "EP", "ISS", "TSK", "PR", "COM")
+        Ticket prefix (e.g., "EP", "ISS", "BUG", "TSK", "PR", "COM")
 
     Raises:
         ValueError: If ticket_type is not recognized
@@ -85,6 +89,8 @@ def get_ticket_prefix(ticket_type: str) -> str:
         'EP'
         >>> get_ticket_prefix("issue")
         'ISS'
+        >>> get_ticket_prefix("bug")
+        'BUG'
         >>> get_ticket_prefix("task")
         'TSK'
         >>> get_ticket_prefix("pr")

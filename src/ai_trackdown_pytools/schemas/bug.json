@@ -1,0 +1,160 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AI Trackdown Bug Schema",
+  "description": "Schema for AI Trackdown bug files",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique bug identifier",
+      "pattern": "^BUG-[0-9]+$"
+    },
+    "type": {
+      "type": "string",
+      "description": "Ticket type (always 'bug')",
+      "const": "bug"
+    },
+    "title": {
+      "type": "string",
+      "description": "Bug title",
+      "minLength": 1,
+      "maxLength": 250
+    },
+    "description": {
+      "type": "string",
+      "description": "Bug description"
+    },
+    "severity": {
+      "type": "string",
+      "description": "Bug severity",
+      "enum": ["critical", "high", "medium", "low"]
+    },
+    "status": {
+      "type": "string",
+      "description": "Bug status",
+      "enum": ["open", "in_progress", "testing", "completed", "cancelled", "blocked", "closed"]
+    },
+    "priority": {
+      "type": "string",
+      "description": "Bug priority",
+      "enum": ["low", "medium", "high", "critical"]
+    },
+    "assignees": {
+      "type": "array",
+      "description": "Bug assignees",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "tags": {
+      "type": "array",
+      "description": "Bug tags",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "created_at": {
+      "type": "string",
+      "description": "Bug creation timestamp",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "description": "Bug last update timestamp",
+      "format": "date-time"
+    },
+    "environment": {
+      "type": "string",
+      "description": "Environment where bug occurs"
+    },
+    "steps_to_reproduce": {
+      "type": "string",
+      "description": "Steps to reproduce the bug"
+    },
+    "expected_behavior": {
+      "type": "string",
+      "description": "Expected behavior"
+    },
+    "actual_behavior": {
+      "type": "string",
+      "description": "Actual behavior"
+    },
+    "affected_versions": {
+      "type": "array",
+      "description": "Affected versions",
+      "items": {
+        "type": "string"
+      }
+    },
+    "fixed_in_version": {
+      "type": ["string", "null"],
+      "description": "Version where bug is fixed"
+    },
+    "is_regression": {
+      "type": "boolean",
+      "description": "Is this a regression bug?",
+      "default": false
+    },
+    "related_issues": {
+      "type": "array",
+      "description": "Related issue/bug IDs",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "related_prs": {
+      "type": "array",
+      "description": "Related pull request IDs",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "parent": {
+      "type": ["string", "null"],
+      "description": "Parent epic ID"
+    },
+    "browser": {
+      "type": ["string", "null"],
+      "description": "Browser information"
+    },
+    "os": {
+      "type": ["string", "null"],
+      "description": "Operating system"
+    },
+    "device": {
+      "type": ["string", "null"],
+      "description": "Device information"
+    },
+    "error_logs": {
+      "type": "string",
+      "description": "Relevant error logs"
+    },
+    "verified_fixed": {
+      "type": "boolean",
+      "description": "Has fix been verified?",
+      "default": false
+    },
+    "resolution_notes": {
+      "type": "string",
+      "description": "Resolution notes"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional bug metadata",
+      "additionalProperties": true
+    },
+    "labels": {
+      "type": "array",
+      "description": "Bug labels",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": ["id", "type", "title", "severity", "status", "priority", "created_at", "updated_at"],
+  "additionalProperties": false
+}
