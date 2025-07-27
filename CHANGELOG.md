@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2025-07-26
+
+### Added
+- Comprehensive bug ticket type support:
+  - New `BUG` ticket type with `BUG-` prefix pattern
+  - `BugSeverity` enum (critical, high, medium, low)
+  - `BugStatus` enum with additional 'closed' status
+  - `BugModel` with specialized fields:
+    - severity, environment, steps_to_reproduce
+    - expected_behavior, actual_behavior
+    - affected_versions, fixed_in_version
+    - is_regression flag and verified_fixed status
+    - browser, os, device information
+    - error_logs and resolution_notes
+- Full-featured bug command CLI:
+  - `bug create` - Create bug reports with all metadata
+  - `bug list` - Filter by status, severity, regression, verified
+  - `bug show` - Display in panel, json, or markdown format
+  - `bug update` - Modify bug information
+  - `bug close` - Close with resolution types
+  - `bug stats` - Analytics and statistics
+- Bug validation schema (bug.json)
+- Default bug report template with comprehensive sections
+- Updated ticket inference to recognize BUG prefix
+
+### Changed
+- Extended `TicketType`, `TicketPrefix`, and `TicketSubdir` enums to include bug
+- Updated model mappings to include BugModel
+- Enhanced ticket ID pattern recognition for BUG-XXXX format
+
 ## [1.3.2] - 2025-07-25
 
 ### Changed
