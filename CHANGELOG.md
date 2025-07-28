@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2025-07-28
+
+### Added
+- **Unified Workflow States System**: Comprehensive workflow management with standardized states
+  - OPEN, IN_PROGRESS, BLOCKED, IN_REVIEW, RESOLVED, CLOSED, WONT_FIX states
+  - State machine with enforced valid transitions
+  - Automatic resolution tracking for terminal states
+  - Resolution field automatically set when transitioning to terminal states
+  
+- **Comment Status Inheritance**: Intelligent status propagation through comment hierarchies
+  - Child comments automatically inherit status from parent tickets
+  - Supports deeply nested comment structures
+  - Maintains backward compatibility with existing comments
+  - Status updates propagate through entire comment chains
+  
+- **Comprehensive Testing Suite**: Full E2E test coverage for all ticket types
+  - Complete test coverage for epics, issues, and tasks
+  - Unit tests for workflow state transitions
+  - Comment inheritance validation tests
+  - Performance benchmarks for status operations
+  - 100% coverage of new functionality
+
+### Changed
+- **Breaking Change**: Status field is now required for all tickets
+  - Existing tickets without status will default to OPEN
+  - Invalid status values are automatically corrected to OPEN
+  - Terminal states without resolution get resolution set to status value
+  
+### Fixed
+- Fixed status validation to ensure only valid states are accepted
+- Fixed resolution field to be automatically populated for terminal states
+- Fixed comment status inheritance edge cases with orphaned comments
+
+### Migration Guide
+Existing tickets will be automatically migrated when loaded:
+1. Tickets without status → status set to OPEN
+2. Tickets with invalid status → status set to OPEN  
+3. Terminal states without resolution → resolution set to status value
+4. Comments without status → inherit from parent ticket
+
 ## [1.4.0] - 2025-07-26
 
 ### Added
