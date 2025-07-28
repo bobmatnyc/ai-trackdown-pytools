@@ -13,6 +13,8 @@ from ai_trackdown_pytools.core.constants import TicketStatus
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
 from ai_trackdown_pytools.utils.git import GitUtils
+from ai_trackdown_pytools.core.workflow import UnifiedStatus, map_legacy_status
+from ai_trackdown_pytools.core.compatibility import convert_to_unified_status
 
 app = typer.Typer(help="Show project and task status")
 console = Console()
@@ -70,16 +72,21 @@ def project(
         if not any(tag in t.tags for tag in ["epic", "issue", "pull-request"])
     ]
 
+    # Count tasks by unified status
+    def normalize_task_status(task):
+        """Normalize task status to UnifiedStatus."""
+        return convert_to_unified_status(task.status)
+    
     task_stats = {
         "total": len(tasks),
         "epics": len(epics),
         "issues": len(issues),
         "prs": len(prs),
         "tasks": len(regular_tasks),
-        TicketStatus.OPEN.value: len([t for t in tasks if t.status == TicketStatus.OPEN.value]),
-        TicketStatus.IN_PROGRESS.value: len([t for t in tasks if t.status == TicketStatus.IN_PROGRESS.value]),
-        TicketStatus.COMPLETED.value: len([t for t in tasks if t.status == TicketStatus.COMPLETED.value]),
-        "blocked": len([t for t in tasks if t.status == "blocked"]),
+        UnifiedStatus.OPEN.value: len([t for t in tasks if normalize_task_status(t) == UnifiedStatus.OPEN]),
+        UnifiedStatus.IN_PROGRESS.value: len([t for t in tasks if normalize_task_status(t) == UnifiedStatus.IN_PROGRESS]),
+        UnifiedStatus.COMPLETED.value: len([t for t in tasks if normalize_task_status(t) == UnifiedStatus.COMPLETED]),
+        UnifiedStatus.BLOCKED.value: len([t for t in tasks if normalize_task_status(t) == UnifiedStatus.BLOCKED]),
     }
 
     # Type breakdown
@@ -100,10 +107,10 @@ def project(
     status_table.add_column("Status", style="cyan")
     status_table.add_column("Count", justify="right", style="magenta")
 
-    status_table.add_row("Open", str(task_stats[TicketStatus.OPEN.value]))
-    status_table.add_row("In Progress", str(task_stats[TicketStatus.IN_PROGRESS.value]))
-    status_table.add_row("Blocked", str(task_stats.get(TicketStatus.BLOCKED.value, 0)))
-    status_table.add_row("Completed", str(task_stats[TicketStatus.COMPLETED.value]))
+    status_table.add_row("Open", str(task_stats[UnifiedStatus.OPEN.value]))
+    status_table.add_row("In Progress", str(task_stats[UnifiedStatus.IN_PROGRESS.value]))
+    status_table.add_row("Blocked", str(task_stats[UnifiedStatus.BLOCKED.value]))
+    status_table.add_row("Completed", str(task_stats[UnifiedStatus.COMPLETED.value]))
 
     console.print(status_table)
 
@@ -132,12 +139,16 @@ def project(
         if recent_tasks:
             task_tree = Tree("Recent Tasks")
             for task in recent_tasks:
+                unified_status = convert_to_unified_status(task.status)
                 status_color = {
-                    TicketStatus.OPEN.value: "red",
-                    TicketStatus.IN_PROGRESS.value: "yellow",
-                    TicketStatus.COMPLETED.value: "green",
-                    "blocked": "magenta",
-                }.get(task.status, "white")
+                    UnifiedStatus.OPEN: "red",
+                    UnifiedStatus.IN_PROGRESS: "yellow",
+                    UnifiedStatus.COMPLETED: "green",
+                    UnifiedStatus.BLOCKED: "magenta",
+                    UnifiedStatus.CLOSED: "dim",
+                    UnifiedStatus.RESOLVED: "green",
+                    UnifiedStatus.CANCELLED: "red",
+                }.get(unified_status, "white")
                 task_tree.add(
                     f"[{status_color}]{task.title}[/{status_color}] ({task.status})"
                 )
@@ -153,11 +164,11 @@ def project(
                         1
                         for st_id in subtasks
                         if task_manager.load_task(st_id)
-                        and task_manager.load_task(st_id).status == TicketStatus.COMPLETED.value
+                        and convert_to_unified_status(task_manager.load_task(st_id).status) == UnifiedStatus.COMPLETED
                     )
                     progress = int((completed / len(subtasks)) * 100)
                 else:
-                    progress = 0 if epic.status != TicketStatus.COMPLETED.value else 100
+                    progress = 0 if convert_to_unified_status(epic.status) != UnifiedStatus.COMPLETED else 100
 
                 progress_bar = "█" * (progress // 10) + "░" * (10 - progress // 10)
                 console.print(f"  • {epic.title[:30]}... {progress_bar} {progress}%")
@@ -225,11 +236,16 @@ def tasks(
     table.add_column("Updated", style="dim")
 
     for task in tasks:
+        unified_status = convert_to_unified_status(task.status)
         status_style = {
-            TicketStatus.OPEN.value: "[red]open[/red]",
-            TicketStatus.IN_PROGRESS.value: "[yellow]in_progress[/yellow]",
-            TicketStatus.COMPLETED.value: "[green]completed[/green]",
-        }.get(task.status, task.status)
+            UnifiedStatus.OPEN: "[red]open[/red]",
+            UnifiedStatus.IN_PROGRESS: "[yellow]in_progress[/yellow]",
+            UnifiedStatus.COMPLETED: "[green]completed[/green]",
+            UnifiedStatus.BLOCKED: "[magenta]blocked[/magenta]",
+            UnifiedStatus.CLOSED: "[dim]closed[/dim]",
+            UnifiedStatus.RESOLVED: "[green]resolved[/green]",
+            UnifiedStatus.CANCELLED: "[red]cancelled[/red]",
+        }.get(unified_status, f"[white]{unified_status.value}[/white]")
 
         table.add_row(
             task.id,
