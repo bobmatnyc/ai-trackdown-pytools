@@ -12,6 +12,7 @@ from rich.table import Table
 from ai_trackdown_pytools.core.config import Config
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.utils.comments import CommentManager, add_comment_to_item
+from ai_trackdown_pytools.core.workflow import is_terminal_status
 
 app = typer.Typer(help="Manage comments on tasks, issues, and epics")
 console = Console()
@@ -32,6 +33,12 @@ def add(
         "--type",
         "-t",
         help="Item type (task, issue, epic) - auto-detected if not specified",
+    ),
+    force: bool = typer.Option(
+        False,
+        "--force",
+        "-f",
+        help="Force adding comment even on closed/terminal tickets",
     ),
 ) -> None:
     """Add a comment to a task, issue, or epic."""
@@ -59,7 +66,7 @@ def add(
         author = os.getenv("USER") or os.getenv("USERNAME") or "Unknown"
 
     # Add the comment
-    success = add_comment_to_item(item_type, item_id, author, content, project_path)
+    success = add_comment_to_item(item_type, item_id, author, content, project_path, force=force)
 
     if success:
         console.print(

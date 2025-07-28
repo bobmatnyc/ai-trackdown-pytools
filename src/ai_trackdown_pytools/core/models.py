@@ -16,6 +16,14 @@ from pydantic import (
 from typing_extensions import Annotated
 
 from .constants import BugSeverity
+from .workflow import (
+    UnifiedStatus,
+    ResolutionType,
+    map_legacy_status,
+    is_terminal_status,
+    requires_resolution,
+    workflow_state_machine,
+)
 
 
 # Enums for validation
@@ -144,13 +152,35 @@ class BaseTicketModel(BaseModel):
     metadata: Dict[str, Any] = Field(
         default_factory=dict, description="Additional metadata"
     )
+    
+    # Resolution tracking fields
+    resolution: Optional[ResolutionType] = Field(
+        None, description="Resolution type for terminal states"
+    )
+    resolution_comment: Optional[str] = Field(
+        None, description="Additional context for resolution"
+    )
+    resolved_at: Optional[datetime] = Field(
+        None, description="Timestamp when resolved"
+    )
+    resolved_by: Optional[str] = Field(
+        None, description="User who resolved the ticket"
+    )
+    
+    # State tracking fields
+    status_history: List[Dict[str, Any]] = Field(
+        default_factory=list, description="History of status changes"
+    )
+    reopen_count: int = Field(
+        0, description="Number of times ticket was reopened"
+    )
 
     model_config = ConfigDict(use_enum_values=True)
 
-    @field_serializer("created_at", "updated_at")
-    def serialize_datetime(self, value: datetime) -> str:
+    @field_serializer("created_at", "updated_at", "resolved_at")
+    def serialize_datetime(self, value: Optional[datetime]) -> Optional[str]:
         """Serialize datetime to ISO format."""
-        return value.isoformat()
+        return value.isoformat() if value else None
 
     @field_validator("assignees", "tags", "labels")
     @classmethod
@@ -166,6 +196,143 @@ class BaseTicketModel(BaseModel):
         if self.updated_at < self.created_at:
             raise ValueError("updated_at cannot be before created_at")
         return self
+    
+    @model_validator(mode="after")
+    def validate_resolution_fields(self) -> "BaseTicketModel":
+        """Validate resolution-related fields.
+        
+        WHY: Ensures data integrity by validating that:
+        - Resolution is only set for terminal states that require it
+        - Resolution timestamp is after creation time
+        - Required resolution comments are provided
+        """
+        if self.resolution:
+            # Check if resolved_at is set and valid
+            if self.resolved_at and self.resolved_at < self.created_at:
+                raise ValueError("resolved_at cannot be before created_at")
+            
+            # Check if resolution requires comment
+            from .workflow import resolution_requires_comment
+            if resolution_requires_comment(self.resolution) and not self.resolution_comment:
+                raise ValueError(f"Resolution {self.resolution} requires a comment")
+        
+        return self
+    
+    def can_transition_to(
+        self, 
+        new_status: Union[UnifiedStatus, str],
+        resolution: Optional[ResolutionType] = None
+    ) -> tuple[bool, Optional[str]]:
+        """Check if transition to new status is valid.
+        
+        WHY: Enforces workflow rules by validating state transitions before
+        they occur. This prevents invalid state changes and maintains data integrity.
+        
+        Args:
+            new_status: Target status
+            resolution: Resolution type if transitioning to terminal state
+            
+        Returns:
+            Tuple of (is_valid, error_message)
+        """
+        # Normalize current and new status
+        if hasattr(self, 'status'):
+            current_unified = map_legacy_status(
+                self.status.value if isinstance(self.status, Enum) else str(self.status)
+            )
+            new_unified = map_legacy_status(
+                new_status.value if isinstance(new_status, Enum) else str(new_status)
+            )
+            
+            # Use the workflow state machine to validate
+            return workflow_state_machine.validate_transition(
+                current_unified, new_unified, resolution
+            )
+        
+        return True, None
+    
+    def transition_to(
+        self,
+        new_status: Union[UnifiedStatus, str],
+        resolution: Optional[ResolutionType] = None,
+        resolution_comment: Optional[str] = None,
+        user: Optional[str] = None
+    ) -> None:
+        """Transition to a new status with validation.
+        
+        WHY: Provides a safe way to change status that enforces workflow rules,
+        tracks history, and updates resolution fields when needed.
+        
+        Args:
+            new_status: Target status
+            resolution: Resolution type for terminal states
+            resolution_comment: Comment explaining the resolution
+            user: User making the transition
+            
+        Raises:
+            ValueError: If transition is invalid
+        """
+        # Validate transition
+        is_valid, error_msg = self.can_transition_to(new_status, resolution)
+        if not is_valid:
+            raise ValueError(error_msg)
+        
+        # Normalize statuses
+        old_status = self.status if hasattr(self, 'status') else None
+        new_unified = map_legacy_status(
+            new_status.value if isinstance(new_status, Enum) else str(new_status)
+        )
+        
+        # Update status
+        if hasattr(self, 'status'):
+            self.status = new_unified
+        
+        # Update resolution fields if transitioning to terminal state
+        if is_terminal_status(new_unified):
+            if resolution:
+                self.resolution = resolution
+                self.resolution_comment = resolution_comment
+                self.resolved_at = datetime.now()
+                self.resolved_by = user
+            elif requires_resolution(new_unified) and not self.resolution:
+                raise ValueError(f"Status {new_unified} requires a resolution")
+        
+        # Track status change in history
+        self.status_history.append({
+            "from_status": old_status.value if isinstance(old_status, Enum) else str(old_status) if old_status else None,
+            "to_status": new_unified.value,
+            "timestamp": datetime.now().isoformat(),
+            "user": user,
+            "resolution": resolution.value if resolution else None,
+            "comment": resolution_comment
+        })
+        
+        # Update timestamps
+        self.updated_at = datetime.now()
+        
+        # Track reopens
+        if new_unified == UnifiedStatus.REOPENED:
+            self.reopen_count += 1
+    
+    def get_comment_lock_status(self) -> tuple[bool, Optional[str]]:
+        """Check if comments should be locked based on ticket status.
+        
+        WHY: Provides a centralized way to determine if comments on this
+        ticket should be read-only based on the ticket's current status.
+        This ensures consistent behavior across the system.
+        
+        Returns:
+            Tuple of (should_lock, reason)
+        """
+        if hasattr(self, 'status'):
+            status = self.status
+            if isinstance(status, str):
+                status = map_legacy_status(status)
+            
+            if is_terminal_status(status):
+                return True, f"Ticket is in terminal state: {status.value}"
+        
+        return False, None
 
 
 class TaskModel(BaseTicketModel):
@@ -177,7 +344,9 @@ class TaskModel(BaseTicketModel):
     title: Annotated[str, StringConstraints(min_length=1, max_length=200)] = Field(
         ..., description="Task title"
     )
-    status: TaskStatus = Field(TaskStatus.OPEN, description="Task status")
+    status: Union[UnifiedStatus, TaskStatus] = Field(
+        UnifiedStatus.OPEN, description="Task status"
+    )
     due_date: Optional[date] = Field(None, description="Task due date")
     estimated_hours: Optional[Annotated[float, Field(ge=0)]] = Field(
         None, description="Estimated hours"
@@ -216,6 +385,27 @@ class TaskModel(BaseTicketModel):
             ):  # Allow up to 200% of estimate
                 raise ValueError("Actual hours significantly exceed estimate (>200%)")
         return self
+    
+    @field_validator("status", mode="before")
+    @classmethod
+    def normalize_status(cls, v):
+        """Normalize status to UnifiedStatus for backward compatibility."""
+        if isinstance(v, str):
+            # Try to convert from TaskStatus enum value
+            try:
+                # If it's a valid TaskStatus, map it to UnifiedStatus
+                task_status = TaskStatus(v)
+                return map_legacy_status(v)
+            except ValueError:
+                # Try UnifiedStatus directly
+                try:
+                    return UnifiedStatus(v)
+                except ValueError:
+                    # Use legacy mapping as fallback
+                    return map_legacy_status(v)
+        elif isinstance(v, TaskStatus):
+            return map_legacy_status(v.value)
+        return v
 
 
 class EpicModel(BaseTicketModel):
@@ -227,7 +417,9 @@ class EpicModel(BaseTicketModel):
     title: Annotated[str, StringConstraints(min_length=1, max_length=300)] = Field(
         ..., description="Epic title"
     )
-    status: EpicStatus = Field(EpicStatus.PLANNING, description="Epic status")
+    status: Union[UnifiedStatus, EpicStatus] = Field(
+        UnifiedStatus.PLANNING, description="Epic status"
+    )
     goal: str = Field("", description="Epic goal or objective")
     business_value: str = Field("", description="Business value or impact")
     success_criteria: str = Field("", description="Success criteria")
@@ -260,6 +452,24 @@ class EpicModel(BaseTicketModel):
         if v and v < date.today():
             raise ValueError("Target date should not be in the past")
         return v
+    
+    @field_validator("status", mode="before")
+    @classmethod
+    def normalize_status(cls, v):
+        """Normalize status to UnifiedStatus for backward compatibility."""
+        if isinstance(v, str):
+            try:
+                # If it's a valid EpicStatus, map it to UnifiedStatus
+                epic_status = EpicStatus(v)
+                return map_legacy_status(v)
+            except ValueError:
+                try:
+                    return UnifiedStatus(v)
+                except ValueError:
+                    return map_legacy_status(v)
+        elif isinstance(v, EpicStatus):
+            return map_legacy_status(v.value)
+        return v
 
 
 class IssueModel(BaseTicketModel):
@@ -273,7 +483,9 @@ class IssueModel(BaseTicketModel):
     )
     issue_type: IssueType = Field(IssueType.BUG, description="Type of issue")
     severity: Priority = Field(Priority.MEDIUM, description="Issue severity")
-    status: IssueStatus = Field(IssueStatus.OPEN, description="Issue status")
+    status: Union[UnifiedStatus, IssueStatus] = Field(
+        UnifiedStatus.OPEN, description="Issue status"
+    )
     due_date: Optional[date] = Field(None, description="Issue due date")
     estimated_hours: Optional[Annotated[float, Field(ge=0)]] = Field(
         None, description="Estimated hours"
@@ -315,6 +527,24 @@ class IssueModel(BaseTicketModel):
                         f"Child task {task_id} must be a task ID (TSK-XXXX)"
                     )
         return list(dict.fromkeys(v)) if v else v
+    
+    @field_validator("status", mode="before")
+    @classmethod
+    def normalize_status(cls, v):
+        """Normalize status to UnifiedStatus for backward compatibility."""
+        if isinstance(v, str):
+            try:
+                # If it's a valid IssueStatus, map it to UnifiedStatus
+                issue_status = IssueStatus(v)
+                return map_legacy_status(v)
+            except ValueError:
+                try:
+                    return UnifiedStatus(v)
+                except ValueError:
+                    return map_legacy_status(v)
+        elif isinstance(v, IssueStatus):
+            return map_legacy_status(v.value)
+        return v
 
 
 class BugModel(BaseTicketModel):
@@ -328,7 +558,9 @@ class BugModel(BaseTicketModel):
         ..., description="Bug title"
     )
     severity: BugSeverity = Field(BugSeverity.MEDIUM, description="Bug severity")
-    status: BugStatus = Field(BugStatus.OPEN, description="Bug status")
+    status: Union[UnifiedStatus, BugStatus] = Field(
+        UnifiedStatus.OPEN, description="Bug status"
+    )
     environment: str = Field("", description="Environment where bug occurs")
     steps_to_reproduce: str = Field("", description="Steps to reproduce the bug")
     expected_behavior: str = Field("", description="Expected behavior")
@@ -381,6 +613,24 @@ class BugModel(BaseTicketModel):
                         f"Related PR {pr_id} must be a PR ID (PR-XXXX)"
                     )
         return list(dict.fromkeys(v)) if v else v
+    
+    @field_validator("status", mode="before")
+    @classmethod
+    def normalize_status(cls, v):
+        """Normalize status to UnifiedStatus for backward compatibility."""
+        if isinstance(v, str):
+            try:
+                # If it's a valid BugStatus, map it to UnifiedStatus
+                bug_status = BugStatus(v)
+                return map_legacy_status(v)
+            except ValueError:
+                try:
+                    return UnifiedStatus(v)
+                except ValueError:
+                    return map_legacy_status(v)
+        elif isinstance(v, BugStatus):
+            return map_legacy_status(v.value)
+        return v
 
 
 class MilestoneModel(BaseModel):
@@ -413,7 +663,9 @@ class PRModel(BaseTicketModel):
         ..., description="PR title"
     )
     pr_type: PRType = Field(PRType.FEATURE, description="Type of pull request")
-    status: PRStatus = Field(PRStatus.DRAFT, description="PR status")
+    status: Union[UnifiedStatus, PRStatus] = Field(
+        UnifiedStatus.DRAFT, description="PR status"
+    )
     source_branch: Annotated[str, StringConstraints(min_length=1)] = Field(
         ..., description="Source branch"
     )
@@ -465,6 +717,24 @@ class PRModel(BaseTicketModel):
                         f"Closed issue {issue_id} must be an issue ID (ISS-XXXX)"
                     )
         return list(dict.fromkeys(v)) if v else v
+    
+    @field_validator("status", mode="before")
+    @classmethod
+    def normalize_status(cls, v):
+        """Normalize status to UnifiedStatus for backward compatibility."""
+        if isinstance(v, str):
+            try:
+                # If it's a valid PRStatus, map it to UnifiedStatus
+                pr_status = PRStatus(v)
+                return map_legacy_status(v)
+            except ValueError:
+                try:
+                    return UnifiedStatus(v)
+                except ValueError:
+                    return map_legacy_status(v)
+        elif isinstance(v, PRStatus):
+            return map_legacy_status(v.value)
+        return v
 
 
 class ProjectModel(BaseTicketModel):
@@ -476,7 +746,9 @@ class ProjectModel(BaseTicketModel):
     name: Annotated[str, StringConstraints(min_length=1, max_length=100)] = Field(
         ..., description="Project name"
     )
-    status: ProjectStatus = Field(ProjectStatus.PLANNING, description="Project status")
+    status: Union[UnifiedStatus, ProjectStatus] = Field(
+        UnifiedStatus.PLANNING, description="Project status"
+    )
     author: str = Field("", description="Project author")
     license: str = Field("MIT", description="Project license")
     tech_stack: List[str] = Field(default_factory=list, description="Technology stack")
@@ -532,11 +804,158 @@ class ProjectModel(BaseTicketModel):
                 if not epic_id.startswith("EP-"):
                     raise ValueError(f"Epic {epic_id} must be an epic ID (EP-XXXX)")
         return list(dict.fromkeys(v)) if v else v
+    
+    @field_validator("status", mode="before")
+    @classmethod
+    def normalize_status(cls, v):
+        """Normalize status to UnifiedStatus for backward compatibility."""
+        if isinstance(v, str):
+            try:
+                # If it's a valid ProjectStatus, map it to UnifiedStatus
+                project_status = ProjectStatus(v)
+                return map_legacy_status(v)
+            except ValueError:
+                try:
+                    return UnifiedStatus(v)
+                except ValueError:
+                    return map_legacy_status(v)
+        elif isinstance(v, ProjectStatus):
+            return map_legacy_status(v.value)
+        return v
 
 
 # Union types for status types
-StatusType = Union[TaskStatus, EpicStatus, IssueStatus, BugStatus, PRStatus, ProjectStatus]
+StatusType = Union[UnifiedStatus, TaskStatus, EpicStatus, IssueStatus, BugStatus, PRStatus, ProjectStatus]
 PriorityType = Priority
+
+# Comment model for tracking comments with status awareness
+class CommentModel(BaseModel):
+    """Comment data model with status inheritance support.
+    
+    WHY: Comments need to respect parent ticket status to prevent modifications
+    to closed tickets and maintain data integrity. This model provides:
+    - Structured comment data with validation
+    - Read-only enforcement for terminal state tickets
+    - Parent ticket status awareness
+    - Comment modification tracking
+    """
+    
+    id: str = Field(..., description="Unique comment identifier")
+    parent_id: Annotated[
+        str, Field(pattern=r"^[A-Z]+-[0-9]+$", description="Parent ticket ID")
+    ]
+    parent_type: str = Field(..., description="Type of parent ticket")
+    author: str = Field(..., description="Comment author")
+    content: str = Field(..., description="Comment content")
+    created_at: datetime = Field(..., description="Creation timestamp")
+    updated_at: Optional[datetime] = Field(None, description="Last update timestamp")
+    edited_by: Optional[str] = Field(None, description="User who last edited")
+    is_system: bool = Field(False, description="System-generated comment")
+    is_read_only: bool = Field(False, description="Comment cannot be edited")
+    
+    # Status inheritance fields
+    parent_status: Optional[UnifiedStatus] = Field(
+        None, description="Current status of parent ticket"
+    )
+    locked_at: Optional[datetime] = Field(
+        None, description="When comment was locked due to parent status"
+    )
+    locked_reason: Optional[str] = Field(
+        None, description="Reason for locking (e.g., 'Parent ticket closed')"
+    )
+    
+    model_config = ConfigDict(use_enum_values=True)
+    
+    @field_serializer("created_at", "updated_at", "locked_at")
+    def serialize_datetime(self, value: Optional[datetime]) -> Optional[str]:
+        """Serialize datetime to ISO format."""
+        return value.isoformat() if value else None
+    
+    @model_validator(mode="after")
+    def validate_timestamps(self) -> "CommentModel":
+        """Ensure timestamp consistency."""
+        if self.updated_at and self.updated_at < self.created_at:
+            raise ValueError("updated_at cannot be before created_at")
+        if self.locked_at and self.locked_at < self.created_at:
+            raise ValueError("locked_at cannot be before created_at")
+        return self
+    
+    def can_edit(self, parent_ticket: Optional[BaseTicketModel] = None) -> tuple[bool, Optional[str]]:
+        """Check if comment can be edited based on parent ticket status.
+        
+        WHY: Comments should become read-only when their parent ticket reaches
+        a terminal state. This prevents modifications to historical records
+        and maintains audit trail integrity.
+        
+        Args:
+            parent_ticket: Parent ticket model instance
+            
+        Returns:
+            Tuple of (can_edit, reason_if_not)
+        """
+        # System comments are always read-only
+        if self.is_system:
+            return False, "System comments cannot be edited"
+        
+        # Explicitly locked comments
+        if self.is_read_only:
+            return False, self.locked_reason or "Comment is read-only"
+        
+        # Check parent ticket status
+        if parent_ticket and hasattr(parent_ticket, 'status'):
+            parent_status = parent_ticket.status
+            if isinstance(parent_status, str):
+                parent_status = map_legacy_status(parent_status)
+            
+            if is_terminal_status(parent_status):
+                return False, f"Cannot edit comments on {parent_status.value} tickets"
+        
+        # Check if parent status is terminal (from stored value)
+        if self.parent_status and is_terminal_status(self.parent_status):
+            return False, f"Cannot edit comments on {self.parent_status.value} tickets"
+        
+        return True, None
+    
+    def lock_due_to_parent_status(self, parent_status: UnifiedStatus, user: Optional[str] = None) -> None:
+        """Lock comment when parent reaches terminal status.
+        
+        WHY: When a ticket is closed/resolved, its comments should be preserved
+        as-is for historical accuracy. This method enforces that preservation.
+        
+        Args:
+            parent_status: The parent ticket's new status
+            user: User who triggered the status change
+        """
+        if is_terminal_status(parent_status):
+            self.is_read_only = True
+            self.parent_status = parent_status
+            self.locked_at = datetime.now()
+            self.locked_reason = f"Parent ticket changed to {parent_status.value}"
+            if user:
+                self.locked_reason += f" by {user}"
+    
+    def update_content(self, new_content: str, editor: str, parent_ticket: Optional[BaseTicketModel] = None) -> None:
+        """Update comment content with validation.
+        
+        WHY: Centralizes comment editing logic with proper validation and
+        audit trail tracking. Ensures comments can only be edited when allowed.
+        
+        Args:
+            new_content: New comment content
+            editor: User making the edit
+            parent_ticket: Parent ticket for status checking
+            
+        Raises:
+            ValueError: If comment cannot be edited
+        """
+        can_edit, reason = self.can_edit(parent_ticket)
+        if not can_edit:
+            raise ValueError(f"Cannot edit comment: {reason}")
+        
+        self.content = new_content
+        self.updated_at = datetime.now()
+        self.edited_by = editor
+
 
 # Union type for all ticket models
 TicketModel = Union[TaskModel, EpicModel, IssueModel, BugModel, PRModel, ProjectModel]
