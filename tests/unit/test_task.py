@@ -1,14 +1,15 @@
 """Unit tests for task management functionality."""
 
-import pytest
 import tempfile
+from datetime import date, datetime, timedelta
 from pathlib import Path
-from datetime import datetime, date, timedelta
-from unittest.mock import Mock, patch, mock_open
+from unittest.mock import Mock, mock_open, patch
 
-from ai_trackdown_pytools.core.task import Task, TaskManager, TaskError
-from ai_trackdown_pytools.core.project import Project
+import pytest
+
 from ai_trackdown_pytools.core.models import TaskModel
+from ai_trackdown_pytools.core.project import Project
+from ai_trackdown_pytools.core.task import Task, TaskError, TaskManager
 
 
 class TestTask:

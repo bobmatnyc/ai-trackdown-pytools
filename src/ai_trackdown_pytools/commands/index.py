@@ -6,8 +6,8 @@ from typing import Optional
 import typer
 from rich.console import Console
 from rich.panel import Panel
-from rich.table import Table
 from rich.progress import Progress, SpinnerColumn, TextColumn
+from rich.table import Table
 
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.utils.index import IndexManager

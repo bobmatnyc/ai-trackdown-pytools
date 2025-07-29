@@ -29,7 +29,7 @@ __email__ = "dev@ai-trackdown.com"
 from .core.config import Config
 from .core.project import Project
 from .core.task import Task
-from .version import get_version, get_version_info, format_version_info, Version
+from .version import Version, format_version_info, get_version, get_version_info
 
 __all__ = [
     "Config",

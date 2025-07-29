@@ -12,14 +12,15 @@ This test suite focuses on:
 import asyncio
 import gc
 import os
-import psutil
+import tempfile
 import threading
 import time
-from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from pathlib import Path
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
+
+import psutil
 import pytest
-import tempfile
 
 from ai_trackdown_pytools.core.config import Config
 from ai_trackdown_pytools.core.project import Project

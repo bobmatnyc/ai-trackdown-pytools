@@ -1,15 +1,15 @@
 """Sync commands for GitHub and other platforms."""
 
-from pathlib import Path
-from typing import List, Optional
 import json
 from datetime import datetime
+from pathlib import Path
+from typing import List, Optional
 
 import typer
 from rich.console import Console
 from rich.panel import Panel
+from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn
 from rich.table import Table
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
 
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager

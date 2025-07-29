@@ -1,25 +1,25 @@
 """End-to-end integration tests for real-world ticket management workflows."""
 
-import os
 import json
-import yaml
-import tempfile
-import shutil
-from pathlib import Path
-from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional, Tuple
-from unittest.mock import patch, Mock, MagicMock, call
-import time
+import os
 import re
+import shutil
+import tempfile
+import time
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+from unittest.mock import MagicMock, Mock, call, patch
 
 import pytest
-from typer.testing import CliRunner
+import yaml
 from rich.console import Console
+from typer.testing import CliRunner
 
 from ai_trackdown_pytools.cli import app
+from ai_trackdown_pytools.core.models import Priority, TaskModel, TaskStatus
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
-from ai_trackdown_pytools.core.models import TaskModel, TaskStatus, Priority
 from ai_trackdown_pytools.utils.templates import TemplateManager
 from ai_trackdown_pytools.utils.validation import SchemaValidator
 

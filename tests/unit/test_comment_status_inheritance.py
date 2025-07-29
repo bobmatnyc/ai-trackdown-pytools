@@ -5,21 +5,22 @@ tickets and enforce read-only behavior when parent tickets reach terminal states
 This is critical for maintaining data integrity and audit trails.
 """
 
-import pytest
+import shutil
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
-import tempfile
-import shutil
 
-from ai_trackdown_pytools.core.models import (
-    CommentModel,
-    TaskModel,
-    IssueModel,
-    BugModel,
-)
-from ai_trackdown_pytools.core.workflow import UnifiedStatus, ResolutionType
-from ai_trackdown_pytools.utils.comments import CommentManager, add_comment_to_item
+import pytest
+
 from ai_trackdown_pytools.core.config import Config
+from ai_trackdown_pytools.core.models import (
+    BugModel,
+    CommentModel,
+    IssueModel,
+    TaskModel,
+)
+from ai_trackdown_pytools.core.workflow import ResolutionType, UnifiedStatus
+from ai_trackdown_pytools.utils.comments import CommentManager, add_comment_to_item
 
 
 class TestCommentModel:

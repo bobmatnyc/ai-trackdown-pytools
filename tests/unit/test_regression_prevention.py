@@ -12,9 +12,10 @@ import os
 import re
 import tempfile
 import time
-from datetime import datetime, date, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
-from unittest.mock import patch, Mock, mock_open
+from unittest.mock import Mock, mock_open, patch
+
 import pytest
 import yaml
 
@@ -531,7 +532,7 @@ Raw HTML: {{ raw_html | safe }}
 
         Fix: Recursion depth limiting and cycle detection.
         """
-        from jinja2 import Environment, DictLoader
+        from jinja2 import DictLoader, Environment
 
         # Templates that could cause infinite recursion
         templates = {

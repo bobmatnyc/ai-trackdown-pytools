@@ -1,8 +1,8 @@
 """AI-specific commands for token tracking and context management."""
 
+import json
 from pathlib import Path
 from typing import List, Optional
-import json
 
 import typer
 from rich.console import Console

@@ -1,15 +1,15 @@
 """End-to-end integration tests for complete ticket lifecycle workflows."""
 
+import json
 import os
 import tempfile
-import json
 from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
+from unittest.mock import MagicMock, Mock, patch
 
 import pytest
-from typer.testing import CliRunner
 from rich.console import Console
+from typer.testing import CliRunner
 
 from ai_trackdown_pytools.cli import app
 from ai_trackdown_pytools.core.project import Project

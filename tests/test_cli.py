@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Simple test script to verify CLI framework functionality."""
 
-import sys
 import subprocess
+import sys
 from pathlib import Path
 
 

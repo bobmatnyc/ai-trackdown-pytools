@@ -12,31 +12,32 @@ WHY: Comprehensive workflow testing ensures that:
 - Comment permissions follow parent ticket status
 """
 
-import pytest
-from datetime import datetime, date
+from datetime import date, datetime
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
+
+import pytest
 
 from ai_trackdown_pytools.core.models import (
-    TaskModel,
+    BugModel,
+    BugSeverity,
     EpicModel,
     IssueModel,
-    BugModel,
-    PRModel,
-    Priority,
     IssueType,
+    Priority,
+    PRModel,
     PRType,
-    BugSeverity,
+    TaskModel,
 )
 from ai_trackdown_pytools.core.workflow import (
-    UnifiedStatus,
     ResolutionType,
-    workflow_state_machine,
+    UnifiedStatus,
     is_terminal_status,
     requires_resolution,
+    workflow_state_machine,
 )
-from ai_trackdown_pytools.utils.ticket_io import save_ticket, load_ticket
 from ai_trackdown_pytools.utils.comments import CommentManager
+from ai_trackdown_pytools.utils.ticket_io import load_ticket, save_ticket
 
 
 @pytest.fixture

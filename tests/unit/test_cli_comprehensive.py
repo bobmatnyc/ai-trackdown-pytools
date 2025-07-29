@@ -2,26 +2,26 @@
 
 import sys
 from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import MagicMock, Mock, patch
 
 import pytest
 import typer
 from click.testing import CliRunner
 from rich.console import Console
 
+from ai_trackdown_pytools import __version__
 from ai_trackdown_pytools.cli import (
     app,
-    main,
-    version_callback,
     config,
     doctor,
     edit,
+    health,
+    info,
+    main,
     search,
     validate,
-    info,
-    health,
+    version_callback,
 )
-from ai_trackdown_pytools import __version__
 
 
 class TestCLIMain:

@@ -11,8 +11,8 @@ from rich.table import Table
 
 from ai_trackdown_pytools.core.config import Config
 from ai_trackdown_pytools.core.project import Project
-from ai_trackdown_pytools.utils.comments import CommentManager, add_comment_to_item
 from ai_trackdown_pytools.core.workflow import is_terminal_status
+from ai_trackdown_pytools.utils.comments import CommentManager, add_comment_to_item
 
 app = typer.Typer(help="Manage comments on tasks, issues, and epics")
 console = Console()

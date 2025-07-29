@@ -13,7 +13,8 @@ import os
 import tempfile
 import time
 from pathlib import Path
-from unittest.mock import patch, mock_open
+from unittest.mock import mock_open, patch
+
 import pytest
 import yaml
 
@@ -154,7 +155,7 @@ class TestTemplateInjectionPrevention:
 
     def test_jinja2_injection_prevention(self):
         """Test prevention of Jinja2 template injection."""
-        from jinja2 import Template, Environment, meta
+        from jinja2 import Environment, Template, meta
 
         malicious_templates = [
             "{{ config.__class__.__module__ }}",

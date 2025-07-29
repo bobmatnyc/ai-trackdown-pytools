@@ -1,15 +1,15 @@
 """Comprehensive testing for CLI output formats and error conditions."""
 
+import json
 import os
 import tempfile
-import json
-from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
 from io import StringIO
+from pathlib import Path
+from unittest.mock import MagicMock, Mock, patch
 
 import pytest
-from typer.testing import CliRunner
 from rich.console import Console
+from typer.testing import CliRunner
 
 from ai_trackdown_pytools.cli import app
 

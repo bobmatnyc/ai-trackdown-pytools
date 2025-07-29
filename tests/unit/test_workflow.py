@@ -3,41 +3,42 @@
 Tests the unified status, resolution tracking, and state transition validation.
 """
 
-import pytest
 from datetime import datetime
 
-from ai_trackdown_pytools.core.workflow import (
-    UnifiedStatus,
-    ResolutionType,
-    StatusCategory,
-    ResolutionCategory,
-    WorkflowStateMachine,
-    get_status_category,
-    get_resolution_category,
-    is_terminal_status,
-    requires_resolution,
-    resolution_requires_comment,
-    map_legacy_status,
-    workflow_state_machine,
-)
-from ai_trackdown_pytools.core.models import (
-    TaskModel,
-    EpicModel,
-    IssueModel,
-    BugModel,
-    PRModel,
-    ProjectModel,
-    TaskStatus,
-    EpicStatus,
-    IssueStatus,
-    BugStatus,
-    PRStatus,
-    ProjectStatus,
-)
+import pytest
+
 from ai_trackdown_pytools.core.compatibility import (
+    convert_to_legacy_status,
     convert_to_unified_status,
     is_compatible_status,
-    convert_to_legacy_status,
+)
+from ai_trackdown_pytools.core.models import (
+    BugModel,
+    BugStatus,
+    EpicModel,
+    EpicStatus,
+    IssueModel,
+    IssueStatus,
+    PRModel,
+    ProjectModel,
+    ProjectStatus,
+    PRStatus,
+    TaskModel,
+    TaskStatus,
+)
+from ai_trackdown_pytools.core.workflow import (
+    ResolutionCategory,
+    ResolutionType,
+    StatusCategory,
+    UnifiedStatus,
+    WorkflowStateMachine,
+    get_resolution_category,
+    get_status_category,
+    is_terminal_status,
+    map_legacy_status,
+    requires_resolution,
+    resolution_requires_comment,
+    workflow_state_machine,
 )
 
 

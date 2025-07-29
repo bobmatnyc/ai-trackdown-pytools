@@ -1,10 +1,10 @@
 """Git utilities for AI Trackdown PyTools."""
 
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 try:
-    from git import Repo, InvalidGitRepositoryError
+    from git import InvalidGitRepositoryError, Repo
 
     GIT_AVAILABLE = True
 except ImportError:

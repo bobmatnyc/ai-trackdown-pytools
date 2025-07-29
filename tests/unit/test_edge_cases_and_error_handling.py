@@ -17,24 +17,25 @@ import os
 import tempfile
 import threading
 import time
-from datetime import datetime, date, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
-from typing import Dict, Any, List
-from unittest.mock import Mock, patch, mock_open
+from typing import Any, Dict, List
+from unittest.mock import Mock, mock_open, patch
+
 import pytest
 import yaml
 
 from ai_trackdown_pytools.core.config import Config, ConfigModel
 from ai_trackdown_pytools.core.models import (
-    TaskModel,
     EpicModel,
     IssueModel,
     PRModel,
     ProjectModel,
+    TaskModel,
 )
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
-from ai_trackdown_pytools.utils.frontmatter import FrontmatterParser, FrontmatterError
+from ai_trackdown_pytools.utils.frontmatter import FrontmatterError, FrontmatterParser
 from ai_trackdown_pytools.utils.git import GitUtils
 from ai_trackdown_pytools.utils.templates import TemplateManager
 from ai_trackdown_pytools.utils.validation import SchemaValidator, ValidationResult

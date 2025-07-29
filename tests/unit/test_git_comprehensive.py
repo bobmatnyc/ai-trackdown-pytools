@@ -2,11 +2,11 @@
 
 import subprocess
 from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import MagicMock, Mock, patch
 
 import pytest
 
-from ai_trackdown_pytools.utils.git import GitUtils, GIT_AVAILABLE, GitError
+from ai_trackdown_pytools.utils.git import GIT_AVAILABLE, GitError, GitUtils
 
 
 class TestGitAvailability:
@@ -19,6 +19,7 @@ class TestGitAvailability:
 
         # Re-import to test the module-level check
         import importlib
+
         import ai_trackdown_pytools.utils.git
 
         importlib.reload(ai_trackdown_pytools.utils.git)
@@ -34,6 +35,7 @@ class TestGitAvailability:
 
         # Re-import to test the module-level check
         import importlib
+
         import ai_trackdown_pytools.utils.git
 
         importlib.reload(ai_trackdown_pytools.utils.git)

@@ -7,19 +7,18 @@ WHY: Existing code and data may still use the old status enums. This adapter
 ensures smooth migration without breaking existing functionality.
 """
 
-from typing import Union, Type
 from enum import Enum
+from typing import Type, Union
 
 from .models import (
-    TaskStatus,
+    BugStatus,
     EpicStatus,
     IssueStatus,
-    BugStatus,
-    PRStatus,
     ProjectStatus,
+    PRStatus,
+    TaskStatus,
 )
 from .workflow import UnifiedStatus, map_legacy_status
-
 
 # Type alias for all legacy status types
 LegacyStatusType = Union[

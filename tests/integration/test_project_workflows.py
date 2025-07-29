@@ -1,15 +1,16 @@
 """Integration tests for complete project workflows."""
 
-import pytest
-import tempfile
 import shutil
-from pathlib import Path
+import tempfile
 from datetime import datetime
+from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
+from ai_trackdown_pytools.core.config import Config
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
-from ai_trackdown_pytools.core.config import Config
 from ai_trackdown_pytools.utils.templates import TemplateManager
 from ai_trackdown_pytools.utils.validation import SchemaValidator
 

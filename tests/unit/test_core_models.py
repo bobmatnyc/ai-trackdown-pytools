@@ -1,20 +1,21 @@
 """Unit tests for core data models."""
 
+from datetime import date, datetime, timedelta
+from typing import Any, Dict
+
 import pytest
-from datetime import datetime, date, timedelta
-from typing import Dict, Any
 
 from ai_trackdown_pytools.core.models import (
-    TaskModel,
+    BaseModel,
     EpicModel,
     IssueModel,
+    IssueType,
+    PriorityType,
     PRModel,
     ProjectModel,
-    BaseModel,
-    StatusType,
-    PriorityType,
-    IssueType,
     PRType,
+    StatusType,
+    TaskModel,
 )
 
 

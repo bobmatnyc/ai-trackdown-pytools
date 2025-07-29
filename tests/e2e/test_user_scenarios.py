@@ -1,12 +1,13 @@
 """End-to-end tests for complete user scenarios."""
 
-import pytest
-import tempfile
+import json
 import shutil
 import subprocess
-import json
+import tempfile
 from pathlib import Path
 from unittest.mock import patch
+
+import pytest
 from typer.testing import CliRunner
 
 from ai_trackdown_pytools.cli import app

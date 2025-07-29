@@ -1,12 +1,13 @@
 """Enhanced pytest configuration and fixtures."""
 
-import tempfile
 import shutil
-from pathlib import Path
-from typing import Generator, Dict, Any
-import pytest
 import sys
+import tempfile
+from pathlib import Path
+from typing import Any, Dict, Generator
 from unittest.mock import Mock, patch
+
+import pytest
 
 # Add src to path for testing
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
@@ -18,7 +19,6 @@ from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
 from ai_trackdown_pytools.utils.templates import TemplateManager
 from ai_trackdown_pytools.utils.validation import SchemaValidator
-
 
 # ===== BASIC FIXTURES =====
 
@@ -170,7 +170,7 @@ def sample_task_data() -> Dict[str, Any]:
 @pytest.fixture
 def sample_epic_data() -> Dict[str, Any]:
     """Sample epic data for testing."""
-    from datetime import datetime, date, timedelta
+    from datetime import date, datetime, timedelta
 
     return {
         "id": "EP-0001",
@@ -234,7 +234,7 @@ def sample_pr_data() -> Dict[str, Any]:
 @pytest.fixture
 def sample_project_data() -> Dict[str, Any]:
     """Sample project data for testing."""
-    from datetime import datetime, date, timedelta
+    from datetime import date, datetime, timedelta
 
     return {
         "id": "PROJ-0001",

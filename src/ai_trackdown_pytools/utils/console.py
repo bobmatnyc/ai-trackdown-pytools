@@ -1,7 +1,8 @@
 """Console output utilities for AI-friendly and plain output modes."""
 
 import os
-from typing import Optional, Any, Dict, List
+from typing import Any, Dict, List, Optional
+
 from rich.console import Console as RichConsole
 from rich.panel import Panel
 from rich.table import Table

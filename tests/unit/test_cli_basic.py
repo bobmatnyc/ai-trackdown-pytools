@@ -2,14 +2,14 @@
 
 import sys
 from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import MagicMock, Mock, patch
 
 import pytest
 import typer
 from typer.testing import CliRunner
 
-from ai_trackdown_pytools.cli import app, version_callback, main
 from ai_trackdown_pytools import __version__
+from ai_trackdown_pytools.cli import app, main, version_callback
 
 
 @pytest.fixture

@@ -4,17 +4,17 @@ import re
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 import yaml
 from pydantic import ValidationError
 
 from ai_trackdown_pytools.core.models import (
-    CommentModel,
     BaseTicketModel,
+    CommentModel,
     get_model_for_type,
 )
-from ai_trackdown_pytools.core.workflow import is_terminal_status, UnifiedStatus
+from ai_trackdown_pytools.core.workflow import UnifiedStatus, is_terminal_status
 
 
 class CommentManager:

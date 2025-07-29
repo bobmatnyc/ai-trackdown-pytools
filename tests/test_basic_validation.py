@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Basic test of the validation system."""
 
-import sys
 import json
+import sys
 from pathlib import Path
 
 # Add src to path

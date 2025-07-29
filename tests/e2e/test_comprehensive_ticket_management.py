@@ -1,23 +1,23 @@
 """Comprehensive end-to-end tests for all ticket management functionality."""
 
-import os
 import json
-import tempfile
+import os
 import shutil
-from pathlib import Path
-from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional
-from unittest.mock import patch, Mock, MagicMock
+import tempfile
 import time
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+from unittest.mock import MagicMock, Mock, patch
 
 import pytest
-from typer.testing import CliRunner
 from rich.console import Console
+from typer.testing import CliRunner
 
 from ai_trackdown_pytools.cli import app
+from ai_trackdown_pytools.core.models import Priority, TaskModel, TaskStatus
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
-from ai_trackdown_pytools.core.models import TaskModel, TaskStatus, Priority
 from ai_trackdown_pytools.utils.frontmatter import parse_ticket_file
 
 

@@ -10,10 +10,10 @@ from rich.prompt import Prompt
 
 from ai_trackdown_pytools.core.constants import (
     DEFAULT_PRIORITY,
+    VALID_STATUSES,
     TicketPriority,
     TicketStatus,
     TicketType,
-    VALID_STATUSES,
 )
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager

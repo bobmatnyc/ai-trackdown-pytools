@@ -2,11 +2,11 @@
 
 import re
 from pathlib import Path
-from typing import Dict, Any, Optional, Tuple, List
+from typing import Any, Dict, List, Optional, Tuple
 
 import yaml
-from yaml.loader import SafeLoader
 from yaml.dumper import SafeDumper
+from yaml.loader import SafeLoader
 
 from ai_trackdown_pytools.utils.validation import SchemaValidator, ValidationResult
 

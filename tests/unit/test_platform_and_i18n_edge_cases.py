@@ -15,7 +15,8 @@ import os
 import platform
 import sys
 from pathlib import Path
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
+
 import pytest
 
 from ai_trackdown_pytools.core.config import Config

@@ -1,13 +1,14 @@
 """Unit tests for ticket utility functions."""
 
 import pytest
+
 from ai_trackdown_pytools.utils.tickets import (
-    infer_ticket_type,
-    get_ticket_prefix,
-    is_valid_ticket_id,
-    normalize_ticket_id,
     PREFIX_TO_TYPE,
     TYPE_TO_PREFIX,
+    get_ticket_prefix,
+    infer_ticket_type,
+    is_valid_ticket_id,
+    normalize_ticket_id,
 )
 
 

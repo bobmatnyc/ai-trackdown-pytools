@@ -1,22 +1,23 @@
 """Unit tests for version management module."""
 
 import pytest
+
 from ai_trackdown_pytools.version import (
-    Version,
     CURRENT_VERSION,
+    FEATURES,
+    Version,
+    check_version_compatibility,
+    format_version_info,
+    get_feature_version,
+    get_latest_version,
     get_version,
+    get_version_history,
     get_version_info,
+    has_feature,
     is_development_version,
     is_stable_version,
-    format_version_info,
-    check_version_compatibility,
-    validate_version_string,
-    get_version_history,
-    get_latest_version,
-    has_feature,
-    get_feature_version,
     list_available_features,
-    FEATURES,
+    validate_version_string,
 )
 
 

@@ -380,6 +380,13 @@ ignore = [
 [tool.ruff.isort]
 known-first-party = ["ai_trackdown_pytools"]
 
+[tool.isort]
+profile = "black"
+line_length = 88
+known_first_party = ["ai_trackdown_pytools"]
+src_paths = ["src", "tests"]
+skip_gitignore = true
+
 [tool.mypy]
 python_version = "3.8"
 check_untyped_defs = true

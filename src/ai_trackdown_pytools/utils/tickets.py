@@ -2,7 +2,6 @@
 
 from typing import Optional
 
-
 # Mapping of prefixes to ticket types
 PREFIX_TO_TYPE = {
     "EP": "epic",

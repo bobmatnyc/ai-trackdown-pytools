@@ -1,13 +1,13 @@
 """Advanced search and filtering commands."""
 
+import re
 from pathlib import Path
 from typing import List, Optional
-import re
 
 import typer
 from rich.console import Console
-from rich.table import Table
 from rich.panel import Panel
+from rich.table import Table
 
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager

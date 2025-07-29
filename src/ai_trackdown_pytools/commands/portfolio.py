@@ -1,8 +1,8 @@
 """Portfolio and backlog management commands."""
 
+import json
 from pathlib import Path
 from typing import Optional
-import json
 
 import typer
 from rich.console import Console

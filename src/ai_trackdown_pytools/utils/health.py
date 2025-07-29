@@ -3,7 +3,7 @@
 import importlib
 import sys
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict
 
 from ai_trackdown_pytools.core.config import Config
 from ai_trackdown_pytools.core.project import Project
@@ -127,7 +127,7 @@ def _check_configuration() -> Dict[str, Any]:
 def _check_git() -> Dict[str, Any]:
     """Check Git availability."""
     try:
-        from ai_trackdown_pytools.utils.git import GitUtils, GIT_AVAILABLE
+        from ai_trackdown_pytools.utils.git import GIT_AVAILABLE, GitUtils
 
         if not GIT_AVAILABLE:
             return {

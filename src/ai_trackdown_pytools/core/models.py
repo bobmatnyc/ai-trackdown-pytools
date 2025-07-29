@@ -1,26 +1,26 @@
 """Pydantic models for AI Trackdown PyTools."""
 
-from datetime import datetime, date
-from typing import Dict, Any, List, Optional, Union, Literal
+from datetime import date, datetime
 from enum import Enum
+from typing import Any, Dict, List, Literal, Optional, Union
 
 from pydantic import (
     BaseModel,
+    ConfigDict,
     Field,
+    StringConstraints,
+    field_serializer,
     field_validator,
     model_validator,
-    ConfigDict,
-    field_serializer,
-    StringConstraints,
 )
 from typing_extensions import Annotated
 
 from .constants import BugSeverity
 from .workflow import (
-    UnifiedStatus,
     ResolutionType,
-    map_legacy_status,
+    UnifiedStatus,
     is_terminal_status,
+    map_legacy_status,
     requires_resolution,
     workflow_state_machine,
 )

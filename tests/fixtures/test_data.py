@@ -1,21 +1,22 @@
 """Test data fixtures and mock data generators."""
 
-import pytest
-from datetime import datetime, date, timedelta
-from pathlib import Path
-from typing import Dict, List, Any, Optional
-import tempfile
 import shutil
+import tempfile
+from datetime import date, datetime, timedelta
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 from unittest.mock import Mock
 
-from ai_trackdown_pytools.core.project import Project
+import pytest
+
 from ai_trackdown_pytools.core.models import (
-    TaskModel,
     EpicModel,
     IssueModel,
     PRModel,
     ProjectModel,
+    TaskModel,
 )
+from ai_trackdown_pytools.core.project import Project
 
 
 class TestDataGenerator:

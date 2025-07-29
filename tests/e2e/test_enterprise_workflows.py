@@ -1,20 +1,20 @@
 """End-to-end tests for enterprise and business workflows."""
 
-import os
-import json
-import yaml
 import csv
-import tempfile
+import json
+import os
 import shutil
-from pathlib import Path
-from datetime import datetime, timedelta, date
-from typing import Dict, List, Any, Optional, Tuple
-from unittest.mock import patch, Mock, MagicMock
+import tempfile
 import time
+from datetime import date, datetime, timedelta
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+from unittest.mock import MagicMock, Mock, patch
 
 import pytest
-from typer.testing import CliRunner
+import yaml
 from rich.console import Console
+from typer.testing import CliRunner
 
 from ai_trackdown_pytools.cli import app
 from ai_trackdown_pytools.core.project import Project

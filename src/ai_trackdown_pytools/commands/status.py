@@ -9,12 +9,12 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.tree import Tree
 
+from ai_trackdown_pytools.core.compatibility import convert_to_unified_status
 from ai_trackdown_pytools.core.constants import TicketStatus
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
-from ai_trackdown_pytools.utils.git import GitUtils
 from ai_trackdown_pytools.core.workflow import UnifiedStatus, map_legacy_status
-from ai_trackdown_pytools.core.compatibility import convert_to_unified_status
+from ai_trackdown_pytools.utils.git import GitUtils
 
 app = typer.Typer(help="Show project and task status")
 console = Console()

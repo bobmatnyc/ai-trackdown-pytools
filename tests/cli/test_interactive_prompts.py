@@ -2,14 +2,14 @@
 
 import os
 import tempfile
-from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
 from io import StringIO
+from pathlib import Path
+from unittest.mock import MagicMock, Mock, patch
 
 import pytest
-from typer.testing import CliRunner
 from rich.console import Console
-from rich.prompt import Prompt, Confirm, IntPrompt
+from rich.prompt import Confirm, IntPrompt, Prompt
+from typer.testing import CliRunner
 
 from ai_trackdown_pytools.cli import app
 

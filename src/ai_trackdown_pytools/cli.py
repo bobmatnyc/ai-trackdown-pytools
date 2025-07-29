@@ -1,8 +1,8 @@
 """Main CLI entry point for ai-trackdown-pytools."""
 
 import sys
-from typing import Optional
 from pathlib import Path
+from typing import Optional
 
 import typer
 
@@ -23,7 +23,9 @@ from .commands import (
     migrate,
     portfolio,
     pr,
-    search as search_cmd,
+)
+from .commands import search as search_cmd
+from .commands import (
     status,
     sync,
     task,
@@ -31,8 +33,8 @@ from .commands import (
 )
 from .commands import validate_typer as validate_cmd
 from .core.config import Config
+from .utils.console import Console, get_console
 from .utils.logging import setup_logging
-from .utils.console import get_console, Console
 
 # Install rich traceback handler for better error display
 install(show_locals=False)
@@ -273,8 +275,9 @@ def config(
 @app.command()
 def doctor() -> None:
     """Run system diagnostics."""
-    from ai_trackdown_pytools.utils.health import check_health, check_project_health
     from pathlib import Path
+
+    from ai_trackdown_pytools.utils.health import check_health, check_project_health
 
     console.print_info("Running diagnostics...")
     print()  # Blank line for readability
@@ -332,7 +335,7 @@ def doctor() -> None:
         console.print("[bold]Git Integration[/bold]")
     else:
         print("Git Integration:")
-    from ai_trackdown_pytools.utils.git import GitUtils, GIT_AVAILABLE
+    from ai_trackdown_pytools.utils.git import GIT_AVAILABLE, GitUtils
 
     if GIT_AVAILABLE:
         git_utils = GitUtils()
@@ -380,6 +383,7 @@ def edit(
 ) -> None:
     """Edit a task file in your default editor."""
     from pathlib import Path
+
     from ai_trackdown_pytools.core.project import Project
     from ai_trackdown_pytools.core.task import TaskManager
     from ai_trackdown_pytools.utils.editor import EditorUtils
@@ -417,9 +421,11 @@ def search(
 ) -> None:
     """Search tasks and content."""
     from pathlib import Path
+
+    from rich.table import Table
+
     from ai_trackdown_pytools.core.project import Project
     from ai_trackdown_pytools.core.task import TaskManager
-    from rich.table import Table
 
     project_path = Path.cwd()
 
@@ -487,14 +493,16 @@ def show(
 ) -> None:
     """Show details of any ticket (epic, issue, task, or PR)."""
     from pathlib import Path
+
+    from rich.panel import Panel
+    from rich.table import Table
+
     from ai_trackdown_pytools.core.project import Project
     from ai_trackdown_pytools.core.task import TaskManager
     from ai_trackdown_pytools.utils.tickets import (
         infer_ticket_type,
         normalize_ticket_id,
     )
-    from rich.panel import Panel
-    from rich.table import Table
 
     project_path = Path.cwd()
 
@@ -656,8 +664,9 @@ def close(
     ),
 ) -> None:
     """Close any ticket (epic, issue, task, or PR)."""
-    from pathlib import Path
     from datetime import datetime
+    from pathlib import Path
+
     from ai_trackdown_pytools.core.project import Project
     from ai_trackdown_pytools.core.task import TaskManager
     from ai_trackdown_pytools.utils.tickets import (
@@ -748,8 +757,9 @@ def transition(
     ),
 ) -> None:
     """Transition any ticket to a new workflow state."""
-    from pathlib import Path
     from datetime import datetime
+    from pathlib import Path
+
     from ai_trackdown_pytools.core.project import Project
     from ai_trackdown_pytools.core.task import TaskManager
     from ai_trackdown_pytools.utils.tickets import (
@@ -867,6 +877,7 @@ def archive(
 ) -> None:
     """Archive any ticket by moving it to an archive subdirectory."""
     from pathlib import Path
+
     from ai_trackdown_pytools.core.project import Project
     from ai_trackdown_pytools.core.task import TaskManager
     from ai_trackdown_pytools.utils.tickets import (
@@ -978,6 +989,7 @@ def delete(
 ) -> None:
     """Permanently delete any ticket (with confirmation)."""
     from pathlib import Path
+
     from ai_trackdown_pytools.core.project import Project
     from ai_trackdown_pytools.core.task import TaskManager
     from ai_trackdown_pytools.utils.tickets import (
@@ -1102,14 +1114,16 @@ def validate(
 ) -> None:
     """Validate project structure, tasks, or configuration."""
     from pathlib import Path
-    from ai_trackdown_pytools.utils.validation import (
-        validate_project_structure,
-        validate_task_file,
-        SchemaValidator,
-    )
+
+    from rich.table import Table
+
     from ai_trackdown_pytools.core.project import Project
     from ai_trackdown_pytools.core.task import TaskManager
-    from rich.table import Table
+    from ai_trackdown_pytools.utils.validation import (
+        SchemaValidator,
+        validate_project_structure,
+        validate_task_file,
+    )
 
     if not target:
         # Default: validate current project

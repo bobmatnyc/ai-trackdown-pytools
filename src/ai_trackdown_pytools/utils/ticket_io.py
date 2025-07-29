@@ -9,20 +9,20 @@ tests and other utilities often need simpler direct YAML serialization for
 ticket models. This module provides that functionality.
 """
 
+from datetime import date, datetime
 from pathlib import Path
 from typing import Type, TypeVar, Union
+
 import yaml
-from datetime import datetime, date
 
 from ai_trackdown_pytools.core.models import (
     BaseTicketModel,
-    TaskModel,
+    BugModel,
     EpicModel,
     IssueModel,
-    BugModel,
     PRModel,
+    TaskModel,
 )
-
 
 # Type variable for ticket models
 T = TypeVar("T", bound=BaseTicketModel)
