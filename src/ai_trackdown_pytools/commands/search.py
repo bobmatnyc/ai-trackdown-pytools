@@ -427,10 +427,10 @@ def filters(
 
     if list_values:
         # Collect all unique values
-        statuses = set(task.status for task in all_tasks)
-        priorities = set(task.priority for task in all_tasks)
-        assignees = set(assignee for task in all_tasks for assignee in task.assignees)
-        tags = set(tag for task in all_tasks for tag in task.tags)
+        statuses = {task.status for task in all_tasks}
+        priorities = {task.priority for task in all_tasks}
+        assignees = {assignee for task in all_tasks for assignee in task.assignees}
+        tags = {tag for task in all_tasks for tag in task.tags}
 
         if field:
             if field == "status":

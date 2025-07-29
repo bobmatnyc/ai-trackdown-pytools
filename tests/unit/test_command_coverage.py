@@ -1,15 +1,23 @@
 """Tests for command modules to increase coverage."""
 
-import pytest
-from pathlib import Path
 import tempfile
-from unittest.mock import patch, MagicMock, Mock
-from click.testing import CliRunner
+from pathlib import Path
+from unittest.mock import patch
 
 # Import command modules
 from ai_trackdown_pytools.commands import (
-    init, task, issue, epic, comment, search, index, sync,
-    status, template, validate, validate_typer
+    comment,
+    epic,
+    index,
+    init,
+    issue,
+    search,
+    status,
+    sync,
+    task,
+    template,
+    validate,
+    validate_typer,
 )
 
 
@@ -31,14 +39,14 @@ class TestCommandCoverage:
         assert validate is not None
         assert validate_typer is not None
 
-    @patch('ai_trackdown_pytools.commands.init.init_project')
+    @patch("ai_trackdown_pytools.commands.init.init_project")
     def test_init_command_function(self, mock_init):
         """Test init command function."""
         from ai_trackdown_pytools.commands.init import cmd_init
-        
+
         # Mock successful init
         mock_init.return_value = True
-        
+
         with tempfile.TemporaryDirectory() as tmpdir:
             result = cmd_init(Path(tmpdir), name="Test Project")
             assert mock_init.called
@@ -47,38 +55,38 @@ class TestCommandCoverage:
         """Test task command module."""
         # Just import to increase coverage
         from ai_trackdown_pytools.commands import task
-        
+
         # Check module exists
         assert task is not None
-        assert hasattr(task, 'create')
-        assert hasattr(task, 'list_tasks')
+        assert hasattr(task, "create")
+        assert hasattr(task, "list_tasks")
 
-    @patch('ai_trackdown_pytools.core.project.get_current_project')
+    @patch("ai_trackdown_pytools.core.project.get_current_project")
     def test_search_command_functions(self, mock_project):
         """Test search command module."""
         # Just import to increase coverage
         from ai_trackdown_pytools.commands import search
-        
-        # Check that command functions exist
-        assert hasattr(search, 'tasks')
-        assert hasattr(search, 'content')
-        assert hasattr(search, 'filters')
 
-    @patch('ai_trackdown_pytools.utils.index.build_search_index')
+        # Check that command functions exist
+        assert hasattr(search, "tasks")
+        assert hasattr(search, "content")
+        assert hasattr(search, "filters")
+
+    @patch("ai_trackdown_pytools.utils.index.build_search_index")
     def test_index_command_functions(self, mock_build):
         """Test index command module."""
         # Just import to increase coverage
         from ai_trackdown_pytools.commands import index
-        
+
         # Check that command functions exist
-        assert hasattr(index, 'rebuild')
-        assert hasattr(index, 'update')
+        assert hasattr(index, "rebuild")
+        assert hasattr(index, "update")
 
     def test_sync_command_module(self):
         """Test sync command module."""
         # Just import to increase coverage
         from ai_trackdown_pytools.commands import sync
-        
+
         # Check module exists
         assert sync is not None
 
@@ -86,7 +94,7 @@ class TestCommandCoverage:
         """Test status command module."""
         # Just import to increase coverage
         from ai_trackdown_pytools.commands import status
-        
+
         # Check module exists
         assert status is not None
 
@@ -94,7 +102,7 @@ class TestCommandCoverage:
         """Test template command module."""
         # Just import to increase coverage
         from ai_trackdown_pytools.commands import template
-        
+
         # Check module exists
         assert template is not None
 
@@ -102,7 +110,7 @@ class TestCommandCoverage:
         """Test validate command module."""
         # Just import to increase coverage
         from ai_trackdown_pytools.commands import validate
-        
+
         # Check module exists
         assert validate is not None
 
@@ -110,7 +118,7 @@ class TestCommandCoverage:
         """Test comment command module."""
         # Just import to increase coverage
         from ai_trackdown_pytools.commands import comment
-        
+
         # Check module exists
         assert comment is not None
 
@@ -118,7 +126,7 @@ class TestCommandCoverage:
         """Test epic command module."""
         # Just import to increase coverage
         from ai_trackdown_pytools.commands import epic
-        
+
         # Check module exists
         assert epic is not None
 
@@ -126,7 +134,7 @@ class TestCommandCoverage:
         """Test issue command module."""
         # Just import to increase coverage
         from ai_trackdown_pytools.commands import issue
-        
+
         # Check module exists
         assert issue is not None
 
@@ -134,6 +142,6 @@ class TestCommandCoverage:
         """Test validate typer module."""
         # Just import to increase coverage
         from ai_trackdown_pytools.commands import validate_typer
-        
+
         # Check module exists
         assert validate_typer is not None

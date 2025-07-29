@@ -168,6 +168,7 @@ class Task:
         else:
             # It's a date object, compare with today
             from datetime import date
+
             return date.today() > self.data.due_date
 
     # Proxy properties to make Task objects work like they have direct attributes
@@ -335,7 +336,7 @@ class TaskManager:
 
     def create_task(self, task_data: Optional[Dict[str, Any]] = None, **kwargs) -> Task:
         """Create a new task.
-        
+
         Args:
             task_data: Dictionary with task data (for compatibility)
             **kwargs: Task fields as keyword arguments

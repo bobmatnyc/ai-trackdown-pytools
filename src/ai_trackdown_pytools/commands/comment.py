@@ -73,7 +73,7 @@ def add(
         console.print(
             Panel.fit(
                 f"""[bold green]Comment added successfully![/bold green]
-            
+
 [dim]Item:[/dim] {item_id}
 [dim]Author:[/dim] {author}
 [dim]Content:[/dim] {content[:50]}{'...' if len(content) > 50 else ''}""",

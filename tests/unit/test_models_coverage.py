@@ -1,13 +1,20 @@
 """Unit tests for models module to increase coverage."""
 
-import pytest
 from datetime import datetime, timedelta
-from typing import List, Optional
 
 from ai_trackdown_pytools.core.models import (
-    TaskModel, IssueModel, EpicModel, CommentModel, BugModel,
-    TaskStatus, IssueStatus, EpicStatus, Priority,
-    BaseTicketModel, MilestoneModel, PRModel, ProjectModel
+    BaseTicketModel,
+    BugModel,
+    CommentModel,
+    EpicModel,
+    IssueModel,
+    IssueStatus,
+    MilestoneModel,
+    Priority,
+    PRModel,
+    ProjectModel,
+    TaskModel,
+    TaskStatus,
 )
 
 
@@ -21,9 +28,9 @@ class TestModelsCoverage:
             title="Test Task",
             description="A test task",
             status="open",
-            priority="medium"
+            priority="medium",
         )
-        
+
         assert task.id == "TSK-001"
         assert task.title == "Test Task"
         assert task.status == "open"
@@ -34,15 +41,15 @@ class TestModelsCoverage:
         """Test TaskModel with date fields."""
         now = datetime.now()
         due = now + timedelta(days=7)
-        
+
         task = TaskModel(
             id="TSK-002",
             title="Task with dates",
             created_at=now,
             updated_at=now,
-            due_date=due
+            due_date=due,
         )
-        
+
         assert task.created_at == now
         assert task.updated_at == now
         assert task.due_date == due
@@ -50,31 +57,20 @@ class TestModelsCoverage:
     def test_task_model_with_hours(self):
         """Test TaskModel with hour tracking."""
         task = TaskModel(
-            id="TSK-003",
-            title="Task with hours",
-            estimated_hours=8.0,
-            actual_hours=6.5
+            id="TSK-003", title="Task with hours", estimated_hours=8.0, actual_hours=6.5
         )
-        
+
         assert task.estimated_hours == 8.0
         assert task.actual_hours == 6.5
 
     def test_task_model_validation(self):
         """Test TaskModel validation."""
         # Test with valid statuses
-        task = TaskModel(
-            id="TSK-004",
-            title="Valid task",
-            status="open"
-        )
+        task = TaskModel(id="TSK-004", title="Valid task", status="open")
         assert task.status == "open"
-        
+
         # Test priority validation
-        task2 = TaskModel(
-            id="TSK-005",
-            title="Priority task",
-            priority="high"
-        )
+        task2 = TaskModel(id="TSK-005", title="Priority task", priority="high")
         assert task2.priority == "high"
 
     def test_issue_model_basic(self):
@@ -84,9 +80,9 @@ class TestModelsCoverage:
             title="Test Issue",
             description="A test issue",
             status="open",
-            priority="high"
+            priority="high",
         )
-        
+
         assert issue.id == "ISS-001"
         assert issue.title == "Test Issue"
         assert issue.ticket_type == "issue"
@@ -94,12 +90,9 @@ class TestModelsCoverage:
     def test_issue_model_with_resolution(self):
         """Test IssueModel with resolution."""
         issue = IssueModel(
-            id="ISS-002",
-            title="Resolved Issue",
-            status="closed",
-            resolution="fixed"
+            id="ISS-002", title="Resolved Issue", status="closed", resolution="fixed"
         )
-        
+
         assert issue.resolution == "fixed"
         assert issue.status == "closed"
 
@@ -108,9 +101,9 @@ class TestModelsCoverage:
         issue = IssueModel(
             id="ISS-003",
             title="Issue with tasks",
-            tasks=["TSK-001", "TSK-002", "TSK-003"]
+            tasks=["TSK-001", "TSK-002", "TSK-003"],
         )
-        
+
         assert len(issue.tasks) == 3
         assert "TSK-001" in issue.tasks
 
@@ -121,9 +114,9 @@ class TestModelsCoverage:
             title="Test Epic",
             description="A test epic",
             status="open",
-            priority="high"
+            priority="high",
         )
-        
+
         assert epic.id == "EP-001"
         assert epic.title == "Test Epic"
         assert epic.ticket_type == "epic"
@@ -133,9 +126,9 @@ class TestModelsCoverage:
         epic = EpicModel(
             id="EP-002",
             title="Epic with issues",
-            issues=["ISS-001", "ISS-002", "ISS-003"]
+            issues=["ISS-001", "ISS-002", "ISS-003"],
         )
-        
+
         assert len(epic.issues) == 3
         assert "ISS-001" in epic.issues
 
@@ -147,9 +140,9 @@ class TestModelsCoverage:
             content="This is a test comment",
             author="test_user",
             created_at=now,
-            updated_at=now
+            updated_at=now,
         )
-        
+
         assert comment.id == "CMT-001"
         assert comment.content == "This is a test comment"
         assert comment.author == "test_user"
@@ -162,9 +155,9 @@ class TestModelsCoverage:
             description="A test bug",
             status="open",
             priority="high",
-            severity="major"
+            severity="major",
         )
-        
+
         assert bug.id == "BUG-001"
         assert bug.ticket_type == "bug"
         assert bug.severity == "major"
@@ -177,9 +170,9 @@ class TestModelsCoverage:
             title="Version 1.0",
             description="First release",
             due_date=now + timedelta(days=30),
-            created_at=now
+            created_at=now,
         )
-        
+
         assert milestone.id == "M-001"
         assert milestone.title == "Version 1.0"
 
@@ -210,9 +203,9 @@ class TestModelsCoverage:
             id="TSK-006",
             title="Serialization test",
             tags=["python", "testing"],
-            assignees=["user1", "user2"]
+            assignees=["user1", "user2"],
         )
-        
+
         # Test model_dump
         data = task.model_dump(mode="json")
         assert data["id"] == "TSK-006"
@@ -221,11 +214,8 @@ class TestModelsCoverage:
 
     def test_model_field_defaults(self):
         """Test model field defaults."""
-        task = TaskModel(
-            id="TSK-007",
-            title="Default test"
-        )
-        
+        task = TaskModel(id="TSK-007", title="Default test")
+
         # Check defaults
         assert task.description == ""
         assert task.status == "open"
@@ -240,15 +230,11 @@ class TestModelsCoverage:
         metadata = {
             "custom_field": "value",
             "another_field": 123,
-            "nested": {"key": "value"}
+            "nested": {"key": "value"},
         }
-        
-        task = TaskModel(
-            id="TSK-008",
-            title="Metadata test",
-            metadata=metadata
-        )
-        
+
+        task = TaskModel(id="TSK-008", title="Metadata test", metadata=metadata)
+
         assert task.metadata["custom_field"] == "value"
         assert task.metadata["another_field"] == 123
         assert task.metadata["nested"]["key"] == "value"
@@ -261,9 +247,9 @@ class TestModelsCoverage:
             description="Fixes issue #123",
             status="open",
             source_branch="fix/login-bug",
-            target_branch="main"
+            target_branch="main",
         )
-        
+
         assert pr.id == "PR-001"
         assert pr.source_branch == "fix/login-bug"
         assert pr.target_branch == "main"
@@ -274,9 +260,9 @@ class TestModelsCoverage:
             id="PROJ-001",
             title="AI Trackdown",
             description="Project management tool",
-            status="active"
+            status="active",
         )
-        
+
         assert project.id == "PROJ-001"
         assert project.status == "active"
 
@@ -285,9 +271,9 @@ class TestModelsCoverage:
         # All ticket types should inherit from BaseTicketModel
         task = TaskModel(id="T-1", title="Task")
         assert isinstance(task, BaseTicketModel)
-        
+
         issue = IssueModel(id="I-1", title="Issue")
         assert isinstance(issue, BaseTicketModel)
-        
+
         epic = EpicModel(id="E-1", title="Epic")
         assert isinstance(epic, BaseTicketModel)

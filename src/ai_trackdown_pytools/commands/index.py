@@ -54,7 +54,7 @@ def rebuild(
     console.print(
         Panel.fit(
             f"""[bold green]Index rebuilt successfully![/bold green]
-        
+
 [dim]Files indexed:[/dim] {stats['indexed']}
 [dim]Errors:[/dim] {stats['errors']}""",
             title="Index Rebuilt",
@@ -96,7 +96,7 @@ def update(
         console.print(
             Panel.fit(
                 f"""[bold green]Index updated successfully![/bold green]
-            
+
 [dim]Files added:[/dim] {stats['added']}
 [dim]Files updated:[/dim] {stats['updated']}
 [dim]Files removed:[/dim] {stats['removed']}""",

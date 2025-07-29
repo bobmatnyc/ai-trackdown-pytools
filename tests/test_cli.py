@@ -12,7 +12,6 @@ def test_cli_import():
         src_path = Path(__file__).parent / "src"
         sys.path.insert(0, str(src_path))
 
-
         print("✅ CLI import successful")
         return True
     except Exception as e:
@@ -25,7 +24,6 @@ def test_core_imports():
     try:
         src_path = Path(__file__).parent / "src"
         sys.path.insert(0, str(src_path))
-
 
         print("✅ Core modules import successful")
         return True

@@ -487,8 +487,13 @@ def import_data(
         raise typer.Exit(1)
 
     if dry_run:
+        if source == "github-json":
+            item_count = len(github_data)
+        else:
+            with open(import_file) as f:
+                item_count = len(list(csv.DictReader(f)))
         console.print(
-            f"[yellow]DRY RUN: Would import {len(github_data if source == 'github-json' else list(csv.DictReader(open(import_file))))} items[/yellow]"
+            f"[yellow]DRY RUN: Would import {item_count} items[/yellow]"
         )
     else:
         console.print(f"[green]Successfully imported {imported_count} items[/green]")

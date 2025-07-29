@@ -1,17 +1,20 @@
 """Unit tests for workflow module to increase coverage."""
 
-import pytest
-from pathlib import Path
-from unittest.mock import patch, MagicMock
 
 from ai_trackdown_pytools.core.workflow import (
-    WorkflowStateMachine, StateTransition,
-    UnifiedStatus, ResolutionType, StatusCategory, ResolutionCategory,
-    get_status_category, get_resolution_category,
-    is_terminal_status, requires_resolution, resolution_requires_comment,
-    map_legacy_status
+    ResolutionCategory,
+    ResolutionType,
+    StateTransition,
+    StatusCategory,
+    UnifiedStatus,
+    WorkflowStateMachine,
+    get_resolution_category,
+    get_status_category,
+    is_terminal_status,
+    map_legacy_status,
+    requires_resolution,
+    resolution_requires_comment,
 )
-from ai_trackdown_pytools.core.models import TaskModel, IssueModel, EpicModel
 
 
 class TestWorkflowCoverage:
@@ -20,10 +23,10 @@ class TestWorkflowCoverage:
     def test_workflow_state_machine_creation(self):
         """Test WorkflowStateMachine creation."""
         machine = WorkflowStateMachine()
-        
+
         assert machine is not None
-        assert hasattr(machine, 'transitions')
-        assert hasattr(machine, 'resolution_requirements')
+        assert hasattr(machine, "transitions")
+        assert hasattr(machine, "resolution_requirements")
 
     def test_unified_status_enum(self):
         """Test UnifiedStatus enum."""
@@ -31,7 +34,7 @@ class TestWorkflowCoverage:
         assert UnifiedStatus.OPEN.value == "open"
         assert UnifiedStatus.IN_PROGRESS.value == "in_progress"
         assert UnifiedStatus.CLOSED.value == "closed"
-        
+
         # Test ticket-specific statuses
         assert UnifiedStatus.DRAFT.value == "draft"
         assert UnifiedStatus.PLANNED.value == "planned"
@@ -40,7 +43,9 @@ class TestWorkflowCoverage:
     def test_get_status_category(self):
         """Test status categorization."""
         assert get_status_category(UnifiedStatus.OPEN) == StatusCategory.TODO
-        assert get_status_category(UnifiedStatus.IN_PROGRESS) == StatusCategory.IN_PROGRESS
+        assert (
+            get_status_category(UnifiedStatus.IN_PROGRESS) == StatusCategory.IN_PROGRESS
+        )
         assert get_status_category(UnifiedStatus.CLOSED) == StatusCategory.DONE
 
     def test_is_terminal_status(self):
@@ -70,9 +75,9 @@ class TestWorkflowCoverage:
         transition = StateTransition(
             from_status=UnifiedStatus.OPEN,
             to_status=UnifiedStatus.IN_PROGRESS,
-            allowed_ticket_types=["task", "issue"]
+            allowed_ticket_types=["task", "issue"],
         )
-        
+
         assert transition.from_status == UnifiedStatus.OPEN
         assert transition.to_status == UnifiedStatus.IN_PROGRESS
         assert "task" in transition.allowed_ticket_types
@@ -83,7 +88,7 @@ class TestWorkflowCoverage:
         assert map_legacy_status("todo") == UnifiedStatus.OPEN
         assert map_legacy_status("doing") == UnifiedStatus.IN_PROGRESS
         assert map_legacy_status("done") == UnifiedStatus.CLOSED
-        
+
         # Test exact matches
         assert map_legacy_status("open") == UnifiedStatus.OPEN
         assert map_legacy_status("closed") == UnifiedStatus.CLOSED
@@ -95,38 +100,43 @@ class TestWorkflowCoverage:
         assert ResolutionType.WONT_FIX.value == "wont_fix"
         assert ResolutionType.DUPLICATE.value == "duplicate"
         assert ResolutionType.INVALID.value == "invalid"
-        
+
         # Test epic resolutions
         assert ResolutionType.DELIVERED.value == "delivered"
         assert ResolutionType.PARTIALLY_DELIVERED.value == "partially_delivered"
 
     def test_get_resolution_category(self):
         """Test resolution categorization."""
-        assert get_resolution_category(ResolutionType.FIXED) == ResolutionCategory.COMPLETED
-        assert get_resolution_category(ResolutionType.WONT_FIX) == ResolutionCategory.REJECTED
-        assert get_resolution_category(ResolutionType.DUPLICATE) == ResolutionCategory.REJECTED
+        assert (
+            get_resolution_category(ResolutionType.FIXED)
+            == ResolutionCategory.COMPLETED
+        )
+        assert (
+            get_resolution_category(ResolutionType.WONT_FIX)
+            == ResolutionCategory.REJECTED
+        )
+        assert (
+            get_resolution_category(ResolutionType.DUPLICATE)
+            == ResolutionCategory.REJECTED
+        )
 
     def test_workflow_state_machine_validate_transition(self):
         """Test WorkflowStateMachine transition validation."""
         machine = WorkflowStateMachine()
-        
+
         # Valid transition
         result = machine.validate_transition(
-            "task",
-            UnifiedStatus.OPEN,
-            UnifiedStatus.IN_PROGRESS
+            "task", UnifiedStatus.OPEN, UnifiedStatus.IN_PROGRESS
         )
         assert result.valid is True
 
     def test_workflow_state_machine_validate_resolution(self):
         """Test WorkflowStateMachine resolution validation."""
         machine = WorkflowStateMachine()
-        
+
         # Valid resolution
         result = machine.validate_resolution(
-            "issue",
-            UnifiedStatus.RESOLVED,
-            ResolutionType.FIXED
+            "issue", UnifiedStatus.RESOLVED, ResolutionType.FIXED
         )
         assert result.valid is True
 
@@ -145,12 +155,12 @@ class TestWorkflowCoverage:
     def test_workflow_state_machine_get_allowed_transitions(self):
         """Test getting allowed transitions."""
         machine = WorkflowStateMachine()
-        
+
         # Get transitions from open
         transitions = machine.get_allowed_transitions("task", UnifiedStatus.OPEN)
         assert UnifiedStatus.IN_PROGRESS in transitions
         assert UnifiedStatus.CLOSED in transitions
-        
+
         # Terminal states have no transitions
         transitions = machine.get_allowed_transitions("task", UnifiedStatus.CLOSED)
         assert len(transitions) == 0

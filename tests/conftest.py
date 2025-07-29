@@ -1,7 +1,8 @@
 """Global test configuration to skip non-essential tests for fast CI/CD."""
 
-import pytest
 import os
+
+import pytest
 
 
 def pytest_collection_modifyitems(config, items):
@@ -30,21 +31,24 @@ def pytest_collection_modifyitems(config, items):
             "test_utils_",  # Skip most utils tests
             "test_cli_comprehensive",  # Skip comprehensive CLI tests
         ]
-        
+
         skip_mark = pytest.mark.skip(reason="Skipped for fast CI mode")
-        
+
         for item in items:
             # Skip based on test name patterns
             for pattern in skip_patterns:
                 if pattern in item.nodeid or pattern in item.name:
                     item.add_marker(skip_mark)
                     break
-            
+
             # Skip tests in certain directories
-            if any(path in item.nodeid for path in [
-                "/integration/",
-                "/performance/",
-                "/stress/",
-                "/e2e/",
-            ]):
+            if any(
+                path in item.nodeid
+                for path in [
+                    "/integration/",
+                    "/performance/",
+                    "/stress/",
+                    "/e2e/",
+                ]
+            ):
                 item.add_marker(skip_mark)

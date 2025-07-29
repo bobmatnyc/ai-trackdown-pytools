@@ -1,9 +1,10 @@
 """Unit tests for CLI module to increase coverage."""
 
-import pytest
-from unittest.mock import patch, MagicMock
-from click.testing import CliRunner
 from pathlib import Path
+from unittest.mock import MagicMock, patch
+
+import pytest
+from click.testing import CliRunner
 
 from ai_trackdown_pytools.cli import app
 
@@ -25,7 +26,7 @@ class TestCLICoverage:
     def test_cli_with_project_dir(self, mock_project):
         """Test CLI with project directory."""
         mock_project.return_value = MagicMock()
-        
+
         with self.runner.isolated_filesystem():
             result = self.runner.invoke(app, ["--project-dir", ".", "info"])
             assert result.exit_code == 0
@@ -89,25 +90,38 @@ class TestCLICoverage:
         """Test CLI exception handling."""
         with patch("ai_trackdown_pytools.cli.app") as mock_app:
             mock_app.side_effect = Exception("Test error")
-            
+
             # Import main to trigger exception
             from ai_trackdown_pytools.cli import main
+
             with pytest.raises(SystemExit):
                 main()
 
     def test_cli_subcommands_exist(self):
         """Test that all subcommands are registered."""
         # Get the list of commands
-        ctx = app.make_context('aitrackdown', [])
+        ctx = app.make_context("aitrackdown", [])
         commands = list(app.list_commands(ctx))
-        
+
         # Check essential commands exist
         essential_commands = [
-            'init', 'task', 'issue', 'epic', 'comment',
-            'search', 'index', 'sync', 'info', 'health',
-            'config', 'doctor', 'version', 'edit', 'validate'
+            "init",
+            "task",
+            "issue",
+            "epic",
+            "comment",
+            "search",
+            "index",
+            "sync",
+            "info",
+            "health",
+            "config",
+            "doctor",
+            "version",
+            "edit",
+            "validate",
         ]
-        
+
         for cmd in essential_commands:
             assert cmd in commands
 
@@ -115,7 +129,7 @@ class TestCLICoverage:
     def test_cli_current_directory(self, mock_cwd):
         """Test CLI uses current directory."""
         mock_cwd.return_value = Path("/test/dir")
-        
+
         with patch("ai_trackdown_pytools.cli.get_current_project") as mock_project:
             mock_project.return_value = None
             result = self.runner.invoke(app, ["info"])
