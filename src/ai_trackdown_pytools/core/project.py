@@ -72,14 +72,14 @@ class Project:
                 data_dict = project_data.model_dump()
                 yaml.dump(data_dict, f, default_flow_style=False)
         except Exception as e:
-            raise ProjectError(f"Failed to create project configuration: {e}")
+            raise ProjectError(f"Failed to create project configuration: {e}") from e
 
         # Create default configuration
         config_file = path / ".ai-trackdown" / "config.yaml"
         try:
             Config.create_default(config_file)
         except Exception as e:
-            raise ProjectError(f"Failed to create project configuration: {e}")
+            raise ProjectError(f"Failed to create project configuration: {e}") from e
 
         return cls(path, project_data)
 

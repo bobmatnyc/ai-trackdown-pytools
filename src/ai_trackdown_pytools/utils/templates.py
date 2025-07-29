@@ -38,7 +38,7 @@ class TemplateEngine:
             template = self.env.get_template(template_name)
             return template.render(**variables)
         except Exception as e:
-            raise TemplateError(f"Failed to render template {template_name}: {e}")
+            raise TemplateError(f"Failed to render template {template_name}: {e}") from e
 
     def render_string(self, template_string: str, variables: Dict[str, Any]) -> str:
         """Render template string with variables."""
@@ -46,7 +46,7 @@ class TemplateEngine:
             template = Template(template_string)
             return template.render(**variables)
         except Exception as e:
-            raise TemplateError(f"Failed to render template string: {e}")
+            raise TemplateError(f"Failed to render template string: {e}") from e
 
     def validate_template(self, template_string: str) -> bool:
         """Validate template syntax."""
@@ -373,7 +373,7 @@ def render_template(template_type: str, name: str, variables: Dict[str, Any]) ->
         template = Template(template_data.get("content", ""))
         return template.render(**variables)
     except Exception as e:
-        raise TemplateError(f"Failed to render template {template_type}/{name}: {e}")
+        raise TemplateError(f"Failed to render template {template_type}/{name}: {e}") from e
 
 
 def list_templates(template_type: Optional[str] = None) -> List[Dict[str, Any]]:

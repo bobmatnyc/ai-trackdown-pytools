@@ -60,11 +60,115 @@ class Task:
         """Initialize task."""
         self.data = data
         self.file_path = file_path
+        self.model = data  # Alias for backward compatibility
 
-    @property
-    def model(self) -> TaskModel:
-        """Get task model - backward compatibility alias for data."""
-        return self.data
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any], file_path: Path) -> "Task":
+        """Create task from dictionary."""
+        task_model = TaskModel(**data)
+        return cls(task_model, file_path)
+
+    @classmethod
+    def load(cls, file_path: Path) -> "Task":
+        """Load task from file."""
+        from ai_trackdown_pytools.utils.frontmatter import parse_ticket_file
+
+        if not file_path.exists():
+            raise TaskError(f"Task file not found: {file_path}")
+
+        try:
+            frontmatter, _ = parse_ticket_file(file_path)
+
+            # Convert datetime strings to datetime objects
+            for field in ["created_at", "updated_at", "due_date"]:
+                if field in frontmatter and isinstance(frontmatter[field], str):
+                    frontmatter[field] = datetime.fromisoformat(frontmatter[field])
+
+            task_model = TaskModel(**frontmatter)
+            return cls(task_model, file_path)
+        except Exception as e:
+            raise TaskError(f"Failed to parse task file: {e}") from e
+
+    def save(self, content: str = "") -> None:
+        """Save task to file."""
+        from ai_trackdown_pytools.utils.frontmatter import write_ticket_file
+
+        # Ensure directory exists
+        self.file_path.parent.mkdir(parents=True, exist_ok=True)
+
+        # Serialize task data
+        data = self.data.model_dump(mode="json")
+
+        # Write to file with frontmatter
+        result = write_ticket_file(self.file_path, data, content, validate=False)
+        if not result.valid:
+            raise TaskError(f"Failed to save task: {result.errors}")
+
+        # Update index if needed
+        try:
+            update_index_on_file_change(self.file_path, "modified")
+        except Exception:
+            # Ignore index update errors for now
+            pass
+
+    def update_status(self, status: str) -> None:
+        """Update task status."""
+        self.data.status = status
+        self.data.updated_at = datetime.now()
+
+    def add_assignee(self, assignee: str) -> None:
+        """Add assignee to task."""
+        if assignee not in self.data.assignees:
+            self.data.assignees.append(assignee)
+            self.data.updated_at = datetime.now()
+
+    def remove_assignee(self, assignee: str) -> None:
+        """Remove assignee from task."""
+        if assignee in self.data.assignees:
+            self.data.assignees.remove(assignee)
+            self.data.updated_at = datetime.now()
+
+    def add_tag(self, tag: str) -> None:
+        """Add tag to task."""
+        if tag not in self.data.tags:
+            self.data.tags.append(tag)
+            self.data.updated_at = datetime.now()
+
+    def remove_tag(self, tag: str) -> None:
+        """Remove tag from task."""
+        if tag in self.data.tags:
+            self.data.tags.remove(tag)
+            self.data.updated_at = datetime.now()
+
+    def set_priority(self, priority: str) -> None:
+        """Set task priority."""
+        self.data.priority = priority
+        self.data.updated_at = datetime.now()
+
+    def set_estimated_hours(self, hours: float) -> None:
+        """Set estimated hours."""
+        self.data.estimated_hours = hours
+        self.data.updated_at = datetime.now()
+
+    def set_due_date(self, due_date: datetime) -> None:
+        """Set due date."""
+        self.data.due_date = due_date
+        self.data.updated_at = datetime.now()
+
+    def is_overdue(self) -> bool:
+        """Check if task is overdue."""
+        if not self.data.due_date:
+            return False
+        # Completed tasks are never overdue
+        if self.data.status == "completed":
+            return False
+        # Handle both datetime and date objects
+        if isinstance(self.data.due_date, datetime):
+            return datetime.now() > self.data.due_date
+        else:
+            # It's a date object, compare with today
+            from datetime import date
+            return date.today() > self.data.due_date
 
     # Proxy properties to make Task objects work like they have direct attributes
     @property
@@ -166,7 +270,7 @@ class Task:
             return cls(task_data, file_path)
 
         except Exception as e:
-            raise TaskError(f"Failed to parse task file: {e}")
+            raise TaskError(f"Failed to parse task file: {e}") from e
 
     @staticmethod
     def _extract_frontmatter(content: str) -> Optional[Dict[str, Any]]:
@@ -200,15 +304,27 @@ class Task:
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert task to dictionary."""
-        return self.data.dict()
+        return self.data.model_dump()
+
+    def __str__(self) -> str:
+        """String representation of task."""
+        return f"Task({self.data.id}: {self.data.title})"
 
 
 class TaskManager:
     """Task manager for AI Trackdown projects."""
 
-    def __init__(self, project_path: Path):
+    def __init__(self, project_path):
         """Initialize task manager."""
-        self.project_path = Path(project_path)
+        # Handle both Path and Project objects
+        if hasattr(project_path, "path"):
+            # It's a Project object
+            self.project = project_path
+            self.project_path = Path(project_path.path)
+        else:
+            # It's a Path or string
+            self.project = None
+            self.project_path = Path(project_path)
         self.config = Config.load(project_path=self.project_path)
         self.tasks_dir = self.project_path / self.config.get(
             "tasks.directory", "tickets"
@@ -217,7 +333,16 @@ class TaskManager:
         # Ensure tasks directory exists
         self.tasks_dir.mkdir(exist_ok=True)
 
-    def create_task(self, **kwargs) -> Task:
+    def create_task(self, task_data: Optional[Dict[str, Any]] = None, **kwargs) -> Task:
+        """Create a new task.
+        
+        Args:
+            task_data: Dictionary with task data (for compatibility)
+            **kwargs: Task fields as keyword arguments
+        """
+        # Merge task_data and kwargs
+        if task_data:
+            kwargs.update(task_data)
         """Create a new task."""
         now = datetime.now()
 

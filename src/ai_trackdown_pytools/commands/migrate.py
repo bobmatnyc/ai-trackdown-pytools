@@ -231,7 +231,7 @@ def schema_upgrade(
                 )
             except Exception as e:
                 console.print(f"[red]Migration failed: {e}[/red]")
-                raise typer.Exit(1)
+                raise typer.Exit(1) from e
 
     # Update project schema version
     project.metadata["schema_version"] = target_version

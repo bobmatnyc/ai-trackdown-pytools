@@ -61,7 +61,7 @@ class GitHubCLI:
             )
             return result.stdout
         except subprocess.CalledProcessError as e:
-            raise GitHubError(f"GitHub CLI error: {e.stderr}")
+            raise GitHubError(f"GitHub CLI error: {e.stderr}") from e
 
     def create_issue(
         self,

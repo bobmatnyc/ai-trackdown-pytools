@@ -561,7 +561,7 @@ def close(
 
 @app.command()
 def stats(
-    days: int = typer.Option(30, "--days", "-d", help="Number of days to analyze"),
+    _days: int = typer.Option(30, "--days", "-d", help="Number of days to analyze"),
 ) -> None:
     """Show bug statistics and analytics."""
     project_path = Path.cwd()

@@ -400,7 +400,7 @@ class TaskModel(BaseTicketModel):
             # Try to convert from TaskStatus enum value
             try:
                 # If it's a valid TaskStatus, map it to UnifiedStatus
-                task_status = TaskStatus(v)
+                TaskStatus(v)  # Validate it's a valid TaskStatus
                 return map_legacy_status(v)
             except ValueError:
                 # Try UnifiedStatus directly
@@ -466,7 +466,7 @@ class EpicModel(BaseTicketModel):
         if isinstance(v, str):
             try:
                 # If it's a valid EpicStatus, map it to UnifiedStatus
-                epic_status = EpicStatus(v)
+                EpicStatus(v)  # Validate it's a valid EpicStatus
                 return map_legacy_status(v)
             except ValueError:
                 try:
@@ -545,7 +545,7 @@ class IssueModel(BaseTicketModel):
         if isinstance(v, str):
             try:
                 # If it's a valid IssueStatus, map it to UnifiedStatus
-                issue_status = IssueStatus(v)
+                IssueStatus(v)  # Validate it's a valid IssueStatus
                 return map_legacy_status(v)
             except ValueError:
                 try:
@@ -629,7 +629,7 @@ class BugModel(BaseTicketModel):
         if isinstance(v, str):
             try:
                 # If it's a valid BugStatus, map it to UnifiedStatus
-                bug_status = BugStatus(v)
+                BugStatus(v)  # Validate it's a valid BugStatus
                 return map_legacy_status(v)
             except ValueError:
                 try:
@@ -737,7 +737,7 @@ class PRModel(BaseTicketModel):
         if isinstance(v, str):
             try:
                 # If it's a valid PRStatus, map it to UnifiedStatus
-                pr_status = PRStatus(v)
+                PRStatus(v)  # Validate it's a valid PRStatus
                 return map_legacy_status(v)
             except ValueError:
                 try:
@@ -826,7 +826,7 @@ class ProjectModel(BaseTicketModel):
         if isinstance(v, str):
             try:
                 # If it's a valid ProjectStatus, map it to UnifiedStatus
-                project_status = ProjectStatus(v)
+                ProjectStatus(v)  # Validate it's a valid ProjectStatus
                 return map_legacy_status(v)
             except ValueError:
                 try:

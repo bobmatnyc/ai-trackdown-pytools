@@ -30,14 +30,14 @@ class GitRepo:
         try:
             self.repo = Repo(path)
         except Exception as e:
-            raise GitError(f"Not a git repository: {e}")
+            raise GitError(f"Not a git repository: {e}") from e
 
     def get_current_branch(self) -> str:
         """Get current branch name."""
         try:
             return self.repo.active_branch.name
         except Exception as e:
-            raise GitError(f"Failed to get current branch: {e}")
+            raise GitError(f"Failed to get current branch: {e}") from e
 
     def get_status(self) -> Dict[str, Any]:
         """Get repository status."""
@@ -50,7 +50,7 @@ class GitRepo:
                 "staged": [item.a_path for item in self.repo.index.diff("HEAD")],
             }
         except Exception as e:
-            raise GitError(f"Failed to get repository status: {e}")
+            raise GitError(f"Failed to get repository status: {e}") from e
 
     def commit_changes(self, message: str, files: Optional[List[str]] = None) -> None:
         """Commit changes."""
@@ -62,21 +62,21 @@ class GitRepo:
 
             self.repo.index.commit(message)
         except Exception as e:
-            raise GitError(f"Failed to commit changes: {e}")
+            raise GitError(f"Failed to commit changes: {e}") from e
 
     def create_branch(self, branch_name: str) -> None:
         """Create new branch."""
         try:
             self.repo.create_head(branch_name)
         except Exception as e:
-            raise GitError(f"Failed to create branch {branch_name}: {e}")
+            raise GitError(f"Failed to create branch {branch_name}: {e}") from e
 
     def switch_branch(self, branch_name: str) -> None:
         """Switch to branch."""
         try:
             self.repo.heads[branch_name].checkout()
         except Exception as e:
-            raise GitError(f"Failed to switch to branch {branch_name}: {e}")
+            raise GitError(f"Failed to switch to branch {branch_name}: {e}") from e
 
     def get_file_status(self) -> Dict[str, Any]:
         """Get file status information."""
@@ -87,7 +87,7 @@ class GitRepo:
                 "staged": [item.a_path for item in self.repo.index.diff("HEAD")],
             }
         except Exception as e:
-            raise GitError(f"Failed to get file status: {e}")
+            raise GitError(f"Failed to get file status: {e}") from e
 
 
 class GitUtils:

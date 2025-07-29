@@ -319,13 +319,13 @@ def generate_llms_txt(
         ".ini",
         ".cfg",
     }
-    test_extensions = {".py", ".js", ".ts"} if include_tests else set()
-
     include_extensions = set()
     if include_code:
         include_extensions.update(code_extensions)
     if include_docs:
         include_extensions.update(doc_extensions)
+    if include_tests:
+        include_extensions.update({".py", ".js", ".ts"})
 
     # Collect files
     files_to_include = []
@@ -440,7 +440,7 @@ def context(
     include_related: bool = typer.Option(
         True, "--include-related", help="Include related tasks"
     ),
-    include_files: bool = typer.Option(
+    _include_files: bool = typer.Option(
         True, "--include-files", help="Include relevant files"
     ),
     format: str = typer.Option(

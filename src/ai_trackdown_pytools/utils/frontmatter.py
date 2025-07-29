@@ -47,7 +47,7 @@ class FrontmatterParser:
             with open(file_path, encoding="utf-8") as f:
                 content = f.read()
         except Exception as e:
-            raise FrontmatterError(f"Cannot read file {file_path}: {e}")
+            raise FrontmatterError(f"Cannot read file {file_path}: {e}") from e
 
         return self.parse_string(content)
 

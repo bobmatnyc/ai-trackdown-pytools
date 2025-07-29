@@ -302,7 +302,7 @@ def backlog(
 @app.command()
 def roadmap(
     epic_only: bool = typer.Option(False, "--epics-only", "-e", help="Show epics only"),
-    timeline: Optional[str] = typer.Option(
+    _timeline: Optional[str] = typer.Option(
         None, "--timeline", "-t", help="Timeline filter (quarter, month)"
     ),
     format: str = typer.Option(

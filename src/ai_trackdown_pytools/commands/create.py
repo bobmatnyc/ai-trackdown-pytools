@@ -92,9 +92,9 @@ def task(
             if issue_task.metadata.get("type") != "issue":
                 console.print(f"[red]Error: {issue} is not an issue[/red]")
                 raise typer.Exit(1)
-        except Exception:
+        except Exception as err:
             console.print(f"[red]Error: Issue {issue} not found[/red]")
-            raise typer.Exit(1)
+            raise typer.Exit(1) from err
 
     # Interactive mode
     if interactive or not title:
@@ -205,7 +205,7 @@ def issue(
         "-l",
         help="Issue label (can be specified multiple times)",
     ),
-    template: Optional[str] = typer.Option(
+    _template: Optional[str] = typer.Option(
         None,
         "--template",
         help="Issue template to use",
@@ -235,9 +235,9 @@ def issue(
             if epic_task.metadata.get("type") != "epic":
                 console.print(f"[red]Error: {epic} is not an epic[/red]")
                 raise typer.Exit(1)
-        except Exception:
+        except Exception as err:
             console.print(f"[red]Error: Epic {epic} not found[/red]")
-            raise typer.Exit(1)
+            raise typer.Exit(1) from err
 
     if not title:
         title = Prompt.ask("Issue title")
@@ -325,7 +325,7 @@ def epic(
         "-g",
         help="Epic goal or objective",
     ),
-    template: Optional[str] = typer.Option(
+    _template: Optional[str] = typer.Option(
         None,
         "--template",
         help="Epic template to use",
@@ -402,7 +402,7 @@ def pr(
         "-t",
         help="Target branch for pull request",
     ),
-    template: Optional[str] = typer.Option(
+    _template: Optional[str] = typer.Option(
         None,
         "--template",
         help="PR template to use",

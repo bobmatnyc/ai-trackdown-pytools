@@ -58,7 +58,7 @@ def file(
 
     except Exception as e:
         console.print(f"[red]Error validating file: {e}[/red]")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
 
 @app.command()
@@ -150,10 +150,10 @@ def data(
 
     except (json.JSONDecodeError, yaml.YAMLError) as e:
         console.print(f"[red]Error parsing input data: {e}[/red]")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
     except Exception as e:
         console.print(f"[red]Error validating data: {e}[/red]")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
 
 @app.command()

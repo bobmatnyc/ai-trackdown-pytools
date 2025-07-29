@@ -80,7 +80,7 @@ def github(
         # Show sync status
         # Check if gh CLI is authenticated
         try:
-            test_gh = GitHubCLI(repo)
+            GitHubCLI(repo)  # Test if gh CLI is authenticated
             gh_auth_status = "Yes (via gh CLI)"
         except GitHubError:
             gh_auth_status = (
@@ -147,7 +147,7 @@ def github(
 
         except GitHubError as e:
             console.print(f"[red]GitHub sync error: {e}[/red]")
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
 
     elif action == "push":
         # Push local changes to GitHub
@@ -278,7 +278,7 @@ def github(
 
         except GitHubError as e:
             console.print(f"[red]GitHub sync error: {e}[/red]")
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
 
     else:
         console.print(f"[red]Unknown action: {action}[/red]")

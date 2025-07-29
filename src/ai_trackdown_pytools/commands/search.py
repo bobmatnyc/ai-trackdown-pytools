@@ -74,7 +74,7 @@ def tasks(
             )
         except re.error as e:
             console.print(f"[red]Invalid regex pattern: {e}[/red]")
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
     else:
         query_lower = query.lower() if not case_sensitive else query
 
@@ -125,11 +125,11 @@ def tasks(
                 after_date = datetime.strptime(created_after, "%Y-%m-%d")
                 if task.created_at.date() < after_date.date():
                     continue
-            except ValueError:
+            except ValueError as err:
                 console.print(
                     f"[red]Invalid date format: {created_after}. Use YYYY-MM-DD[/red]"
                 )
-                raise typer.Exit(1)
+                raise typer.Exit(1) from err
 
         if created_before:
             from datetime import datetime
@@ -138,11 +138,11 @@ def tasks(
                 before_date = datetime.strptime(created_before, "%Y-%m-%d")
                 if task.created_at.date() > before_date.date():
                     continue
-            except ValueError:
+            except ValueError as err:
                 console.print(
                     f"[red]Invalid date format: {created_before}. Use YYYY-MM-DD[/red]"
                 )
-                raise typer.Exit(1)
+                raise typer.Exit(1) from err
 
         # Perform search
         match_found = False
@@ -293,7 +293,7 @@ def content(
             )
         except re.error as e:
             console.print(f"[red]Invalid regex pattern: {e}[/red]")
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
     else:
         query_search = query if case_sensitive else query.lower()
 

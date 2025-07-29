@@ -631,7 +631,7 @@ def validate_task_file(file_path: Path) -> Dict[str, Any]:
 
 
 def validate_ticket_file(
-    file_path: Path, ticket_type: Optional[str] = None
+    file_path: Path, _ticket_type: Optional[str] = None
 ) -> ValidationResult:
     """Validate a ticket file with comprehensive schema validation.
 

@@ -59,8 +59,8 @@ def version_callback(value: bool) -> None:
 
 
 @app.callback()
-def main(
-    version: Optional[bool] = typer.Option(
+def callback(
+    _version: Optional[bool] = typer.Option(
         None,
         "--version",
         "-v",
@@ -81,13 +81,13 @@ def main(
         "-V",
         help="Enable verbose output",
     ),
-    config_file: Optional[str] = typer.Option(
+    config_file: Optional[Path] = typer.Option(
         None,
         "--config",
         "-c",
         help="Path to config file",
     ),
-    project_dir: Optional[str] = typer.Option(
+    project_dir: Optional[Path] = typer.Option(
         None,
         "--project-dir",
         "-d",
@@ -126,15 +126,15 @@ def main(
             if ctx:
                 ctx.ensure_object(dict)
                 ctx.obj["original_cwd"] = original_cwd
-        except (FileNotFoundError, PermissionError):
+        except (FileNotFoundError, PermissionError) as err:
             console.print(
                 f"[red]Error: Cannot access project directory: {project_dir}[/red]"
             )
-            raise typer.Exit(1)
+            raise typer.Exit(1) from err
 
     # Load configuration
     if config_file:
-        Config.load(Path(config_file))
+        Config.load(config_file)
 
 
 # Add subcommands - Core functionality
@@ -228,7 +228,7 @@ def config(
     key: Optional[str] = typer.Argument(None, help="Config key"),
     value: Optional[str] = typer.Argument(None, help="Config value"),
     list_all: bool = typer.Option(False, "--list", "-l", help="List all"),
-    global_config: bool = typer.Option(False, "--global", "-g", help="Use global"),
+    _global_config: bool = typer.Option(False, "--global", "-g", help="Use global"),
 ) -> None:
     """View or modify configuration."""
     config = Config.load()
@@ -531,7 +531,7 @@ def show(
         ticket = task_manager.load_task(normalized_id)
     except Exception as e:
         console.print_error(f"Failed to load {ticket_type} '{normalized_id}': {e}")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
     # Display the ticket details
     if console.is_plain:
@@ -701,7 +701,7 @@ def close(
         ticket = task_manager.load_task(normalized_id)
     except Exception as e:
         console.print_error(f"Failed to load {ticket_type} '{normalized_id}': {e}")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
     # Check if already closed
     if ticket.status.lower() in ["completed", "closed", "done"]:
@@ -814,7 +814,7 @@ def transition(
         ticket = task_manager.load_task(normalized_id)
     except Exception as e:
         console.print_error(f"Failed to load {ticket_type} '{normalized_id}': {e}")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
     # Get the old status for display
     old_status = ticket.status
@@ -912,7 +912,7 @@ def archive(
         ticket = task_manager.load_task(normalized_id)
     except Exception as e:
         console.print_error(f"Failed to load {ticket_type} '{normalized_id}': {e}")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
     # Determine archive directory structure
     # Map ticket types to archive subdirectories
@@ -975,7 +975,7 @@ def archive(
 
     except Exception as e:
         console.print_error(f"Failed to archive {ticket_type} '{normalized_id}': {e}")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
 
 @app.command()
@@ -1024,7 +1024,7 @@ def delete(
         ticket = task_manager.load_task(normalized_id)
     except Exception as e:
         console.print_error(f"Failed to load {ticket_type} '{normalized_id}': {e}")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
     # Show ticket details and ask for confirmation
     if not force:
@@ -1072,12 +1072,12 @@ def delete(
     # Update any child references if this ticket has children
     all_tasks = task_manager.list_tasks()
     children_updated = []
-    for task in all_tasks:
-        if task.parent == normalized_id:
+    for task_item in all_tasks:
+        if task_item.parent == normalized_id:
             # Update child to have no parent
-            task.data.parent = None
-            task_manager.save_task(task)
-            children_updated.append(task.id)
+            task_item.data.parent = None
+            task_manager.save_task(task_item)
+            children_updated.append(task_item.id)
 
     # Delete the ticket
     success = task_manager.delete_task(normalized_id)
@@ -1106,7 +1106,7 @@ def validate(
         None, help="What to validate (project, task, config, template)"
     ),
     path: Optional[str] = typer.Option(None, "--path", "-p", help="Path to validate"),
-    fix: bool = typer.Option(
+    _fix: bool = typer.Option(
         False, "--fix", "-f", help="Attempt to fix validation issues"
     ),
 ) -> None:
@@ -1237,5 +1237,10 @@ def run_cli() -> None:
         sys.exit(1)
 
 
-if __name__ == "__main__":
+def main():
+    """Main entry point for the CLI."""
     run_cli()
+
+
+if __name__ == "__main__":
+    main()

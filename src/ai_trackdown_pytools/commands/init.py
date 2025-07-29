@@ -50,7 +50,7 @@ def project(
     console.print(f"[blue]Initializing AI Trackdown project at {project_path}[/blue]")
 
     # Create project structure
-    project = Project.create(project_path)
+    Project.create(project_path)
 
     # Initialize git repository if requested
     if git_init and not GitUtils.is_git_repo_static(project_path):

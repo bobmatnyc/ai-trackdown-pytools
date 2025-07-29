@@ -65,7 +65,7 @@ def rebuild(
 
 @app.command()
 def update(
-    verbose: bool = typer.Option(
+    _verbose: bool = typer.Option(
         False,
         "--verbose",
         "-v",
