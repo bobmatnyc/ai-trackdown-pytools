@@ -5,7 +5,7 @@ from enum import Enum
 
 class TicketType(str, Enum):
     """Ticket type enumeration."""
-    
+
     EPIC = "epic"
     ISSUE = "issue"
     BUG = "bug"
@@ -16,7 +16,7 @@ class TicketType(str, Enum):
 
 class TicketPrefix(str, Enum):
     """Ticket prefix enumeration."""
-    
+
     EPIC = "EP"
     ISSUE = "ISS"
     BUG = "BUG"
@@ -27,7 +27,7 @@ class TicketPrefix(str, Enum):
 
 class TicketSubdir(str, Enum):
     """Ticket subdirectory enumeration."""
-    
+
     EPICS = "epics"
     ISSUES = "issues"
     BUGS = "bugs"
@@ -39,7 +39,7 @@ class TicketSubdir(str, Enum):
 
 class TicketStatus(str, Enum):
     """Ticket status enumeration."""
-    
+
     OPEN = "open"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
@@ -55,7 +55,7 @@ class TicketStatus(str, Enum):
 
 class TicketPriority(str, Enum):
     """Ticket priority enumeration."""
-    
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -142,7 +142,7 @@ DEFAULT_TICKET_TYPE = TicketType.TASK
 
 class BugSeverity(str, Enum):
     """Bug severity enumeration."""
-    
+
     CRITICAL = "critical"
     HIGH = "high"
     MEDIUM = "medium"

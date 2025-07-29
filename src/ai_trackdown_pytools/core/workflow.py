@@ -22,28 +22,29 @@ from pydantic import BaseModel, Field
 
 class UnifiedStatus(str, Enum):
     """Unified status enumeration for all ticket types.
-    
+
     WHY: Having a single status enum ensures consistency across ticket types
     and simplifies state transition logic. Categories help group related states.
     """
+
     # Initial states - tickets that haven't been started
     OPEN = "open"  # Default for new tickets
     NEW = "new"  # Alternative to open
     TODO = "todo"  # Planning/backlog state
-    
+
     # Active states - work is in progress
     IN_PROGRESS = "in_progress"  # Actively being worked on
     IN_REVIEW = "in_review"  # Under review (PRs, code)
     TESTING = "testing"  # In testing phase
     REOPENED = "reopened"  # Previously closed, now active again
     ESCALATED = "escalated"  # Requires urgent attention
-    
+
     # Waiting states - blocked or paused
     PENDING = "pending"  # Waiting for external input
     ON_HOLD = "on_hold"  # Temporarily suspended
     BLOCKED = "blocked"  # Cannot proceed due to dependencies
     WAITING = "waiting"  # General waiting state
-    
+
     # Terminal states - no more work expected
     COMPLETED = "completed"  # Successfully finished
     RESOLVED = "resolved"  # Issue addressed (requires resolution)
@@ -51,7 +52,7 @@ class UnifiedStatus(str, Enum):
     CANCELLED = "cancelled"  # Abandoned (requires resolution)
     MERGED = "merged"  # PR specific terminal state
     DONE = "done"  # Alternative to completed
-    
+
     # Special states for specific workflows
     DRAFT = "draft"  # PR specific initial state
     READY_FOR_REVIEW = "ready_for_review"  # PR ready state
@@ -64,10 +65,11 @@ class UnifiedStatus(str, Enum):
 
 class ResolutionType(str, Enum):
     """Resolution types for terminal states.
-    
+
     WHY: Tracking resolution provides valuable metrics on why tickets close.
     Categories help analyze success rates and identify patterns.
     """
+
     # Successful resolutions - goals achieved
     FIXED = "fixed"  # Bug was fixed, issue resolved
     COMPLETED = "completed"  # Work finished successfully
@@ -76,14 +78,14 @@ class ResolutionType(str, Enum):
     DOCUMENTED = "documented"  # Resolved via documentation
     CONFIGURED = "configured"  # Resolved via configuration
     WORKAROUND = "workaround"  # Alternative solution provided
-    
+
     # Unsuccessful resolutions - goals not achieved
     WONT_FIX = "wont_fix"  # Deliberate decision not to fix
     INCOMPLETE = "incomplete"  # Cannot complete due to missing info
     ABANDONED = "abandoned"  # Work stopped without completion
     TIMEOUT = "timeout"  # Exceeded time limits
     NO_RESPONSE = "no_response"  # No response from reporter
-    
+
     # Invalid resolutions - not actual issues
     DUPLICATE = "duplicate"  # Duplicate of another ticket
     INVALID = "invalid"  # Not a valid issue/request
@@ -91,7 +93,7 @@ class ResolutionType(str, Enum):
     WORKS_AS_DESIGNED = "works_as_designed"  # Not a bug
     USER_ERROR = "user_error"  # User mistake, not system issue
     OUT_OF_SCOPE = "out_of_scope"  # Outside project scope
-    
+
     # Deferred resolutions - postponed
     DEFERRED = "deferred"  # Postponed to future
     MOVED = "moved"  # Moved to different project/system
@@ -100,6 +102,7 @@ class ResolutionType(str, Enum):
 
 class StatusCategory(str, Enum):
     """Categories for grouping status states."""
+
     INITIAL = "initial"  # Starting states
     ACTIVE = "active"  # Work in progress
     WAITING = "waiting"  # Blocked or paused
@@ -108,6 +111,7 @@ class StatusCategory(str, Enum):
 
 class ResolutionCategory(str, Enum):
     """Categories for grouping resolution types."""
+
     SUCCESSFUL = "successful"  # Goals achieved
     UNSUCCESSFUL = "unsuccessful"  # Goals not achieved
     INVALID = "invalid"  # Not actual issues
@@ -381,6 +385,7 @@ RESOLUTION_METADATA = {
 
 class StateTransition(BaseModel):
     """Represents a valid state transition."""
+
     from_status: UnifiedStatus
     to_status: UnifiedStatus
     name: str
@@ -392,60 +397,71 @@ class StateTransition(BaseModel):
 
 class WorkflowStateMachine:
     """State machine for enforcing workflow transitions.
-    
+
     WHY: A state machine ensures only valid transitions occur and provides
     a centralized place to define workflow rules. This prevents invalid
     state changes and maintains data integrity.
     """
-    
+
     def __init__(self):
         """Initialize the state machine with default transitions."""
         self.transitions: Dict[UnifiedStatus, List[StateTransition]] = {}
         self._initialize_default_transitions()
-    
+
     def _initialize_default_transitions(self):
         """Set up default state transitions.
-        
+
         WHY: These transitions represent common workflow patterns that work
         across different ticket types. Specific workflows can override these.
         """
         # From OPEN
         self.add_transition(
-            UnifiedStatus.OPEN, UnifiedStatus.IN_PROGRESS,
-            "Start Work", "Begin working on ticket"
+            UnifiedStatus.OPEN,
+            UnifiedStatus.IN_PROGRESS,
+            "Start Work",
+            "Begin working on ticket",
         )
         self.add_transition(
-            UnifiedStatus.OPEN, UnifiedStatus.CANCELLED,
-            "Cancel", "Cancel without starting",
+            UnifiedStatus.OPEN,
+            UnifiedStatus.CANCELLED,
+            "Cancel",
+            "Cancel without starting",
             requires_resolution=True,
             allowed_resolutions=[
                 ResolutionType.DUPLICATE,
                 ResolutionType.INVALID,
                 ResolutionType.WONT_FIX,
                 ResolutionType.OUT_OF_SCOPE,
-            ]
+            ],
         )
         self.add_transition(
-            UnifiedStatus.OPEN, UnifiedStatus.BLOCKED,
-            "Block", "Mark as blocked"
+            UnifiedStatus.OPEN, UnifiedStatus.BLOCKED, "Block", "Mark as blocked"
         )
-        
+
         # From IN_PROGRESS
         self.add_transition(
-            UnifiedStatus.IN_PROGRESS, UnifiedStatus.TESTING,
-            "Send to Testing", "Move to testing phase"
+            UnifiedStatus.IN_PROGRESS,
+            UnifiedStatus.TESTING,
+            "Send to Testing",
+            "Move to testing phase",
         )
         self.add_transition(
-            UnifiedStatus.IN_PROGRESS, UnifiedStatus.IN_REVIEW,
-            "Request Review", "Submit for review"
+            UnifiedStatus.IN_PROGRESS,
+            UnifiedStatus.IN_REVIEW,
+            "Request Review",
+            "Submit for review",
         )
         self.add_transition(
-            UnifiedStatus.IN_PROGRESS, UnifiedStatus.COMPLETED,
-            "Complete", "Mark as complete"
+            UnifiedStatus.IN_PROGRESS,
+            UnifiedStatus.COMPLETED,
+            "Complete",
+            "Mark as complete",
         )
         self.add_transition(
-            UnifiedStatus.IN_PROGRESS, UnifiedStatus.RESOLVED,
-            "Resolve", "Resolve with reason",
+            UnifiedStatus.IN_PROGRESS,
+            UnifiedStatus.RESOLVED,
+            "Resolve",
+            "Resolve with reason",
             requires_resolution=True,
             allowed_resolutions=[
                 ResolutionType.FIXED,
@@ -453,87 +469,103 @@ class WorkflowStateMachine:
                 ResolutionType.DOCUMENTED,
                 ResolutionType.CONFIGURED,
                 ResolutionType.WORKAROUND,
-            ]
+            ],
         )
         self.add_transition(
-            UnifiedStatus.IN_PROGRESS, UnifiedStatus.BLOCKED,
-            "Block", "Mark as blocked"
+            UnifiedStatus.IN_PROGRESS, UnifiedStatus.BLOCKED, "Block", "Mark as blocked"
         )
         self.add_transition(
-            UnifiedStatus.IN_PROGRESS, UnifiedStatus.ON_HOLD,
-            "Put on Hold", "Temporarily suspend"
+            UnifiedStatus.IN_PROGRESS,
+            UnifiedStatus.ON_HOLD,
+            "Put on Hold",
+            "Temporarily suspend",
         )
-        
+
         # From TESTING
         self.add_transition(
-            UnifiedStatus.TESTING, UnifiedStatus.IN_PROGRESS,
-            "Return to Development", "Failed testing"
+            UnifiedStatus.TESTING,
+            UnifiedStatus.IN_PROGRESS,
+            "Return to Development",
+            "Failed testing",
         )
         self.add_transition(
-            UnifiedStatus.TESTING, UnifiedStatus.COMPLETED,
-            "Pass Testing", "Testing successful"
+            UnifiedStatus.TESTING,
+            UnifiedStatus.COMPLETED,
+            "Pass Testing",
+            "Testing successful",
         )
         self.add_transition(
-            UnifiedStatus.TESTING, UnifiedStatus.RESOLVED,
-            "Resolve", "Resolve after testing",
-            requires_resolution=True
+            UnifiedStatus.TESTING,
+            UnifiedStatus.RESOLVED,
+            "Resolve",
+            "Resolve after testing",
+            requires_resolution=True,
         )
-        
+
         # From BLOCKED/ON_HOLD
         for waiting_status in [UnifiedStatus.BLOCKED, UnifiedStatus.ON_HOLD]:
             self.add_transition(
-                waiting_status, UnifiedStatus.IN_PROGRESS,
-                "Resume", "Resume work"
+                waiting_status, UnifiedStatus.IN_PROGRESS, "Resume", "Resume work"
             )
             self.add_transition(
-                waiting_status, UnifiedStatus.CANCELLED,
-                "Cancel", "Cancel blocked work",
-                requires_resolution=True
+                waiting_status,
+                UnifiedStatus.CANCELLED,
+                "Cancel",
+                "Cancel blocked work",
+                requires_resolution=True,
             )
-        
+
         # From terminal states
-        for terminal in [UnifiedStatus.COMPLETED, UnifiedStatus.RESOLVED, UnifiedStatus.CLOSED]:
+        for terminal in [
+            UnifiedStatus.COMPLETED,
+            UnifiedStatus.RESOLVED,
+            UnifiedStatus.CLOSED,
+        ]:
+            self.add_transition(terminal, UnifiedStatus.CLOSED, "Close", "Close ticket")
             self.add_transition(
-                terminal, UnifiedStatus.CLOSED,
-                "Close", "Close ticket"
+                terminal, UnifiedStatus.REOPENED, "Reopen", "Reopen for more work"
             )
-            self.add_transition(
-                terminal, UnifiedStatus.REOPENED,
-                "Reopen", "Reopen for more work"
-            )
-        
+
         # From REOPENED
         self.add_transition(
-            UnifiedStatus.REOPENED, UnifiedStatus.IN_PROGRESS,
-            "Start Rework", "Begin rework"
+            UnifiedStatus.REOPENED,
+            UnifiedStatus.IN_PROGRESS,
+            "Start Rework",
+            "Begin rework",
         )
-        
+
         # PR-specific transitions
         self.add_transition(
-            UnifiedStatus.DRAFT, UnifiedStatus.READY_FOR_REVIEW,
-            "Mark Ready", "Ready for review"
+            UnifiedStatus.DRAFT,
+            UnifiedStatus.READY_FOR_REVIEW,
+            "Mark Ready",
+            "Ready for review",
         )
         self.add_transition(
-            UnifiedStatus.READY_FOR_REVIEW, UnifiedStatus.IN_REVIEW,
-            "Start Review", "Begin review"
+            UnifiedStatus.READY_FOR_REVIEW,
+            UnifiedStatus.IN_REVIEW,
+            "Start Review",
+            "Begin review",
         )
         self.add_transition(
-            UnifiedStatus.IN_REVIEW, UnifiedStatus.CHANGES_REQUESTED,
-            "Request Changes", "Changes needed"
+            UnifiedStatus.IN_REVIEW,
+            UnifiedStatus.CHANGES_REQUESTED,
+            "Request Changes",
+            "Changes needed",
         )
         self.add_transition(
-            UnifiedStatus.IN_REVIEW, UnifiedStatus.APPROVED,
-            "Approve", "Approve PR"
+            UnifiedStatus.IN_REVIEW, UnifiedStatus.APPROVED, "Approve", "Approve PR"
         )
         self.add_transition(
-            UnifiedStatus.APPROVED, UnifiedStatus.MERGED,
-            "Merge", "Merge PR"
+            UnifiedStatus.APPROVED, UnifiedStatus.MERGED, "Merge", "Merge PR"
         )
         self.add_transition(
-            UnifiedStatus.CHANGES_REQUESTED, UnifiedStatus.READY_FOR_REVIEW,
-            "Resubmit", "Ready for re-review"
+            UnifiedStatus.CHANGES_REQUESTED,
+            UnifiedStatus.READY_FOR_REVIEW,
+            "Resubmit",
+            "Ready for re-review",
         )
-    
+
     def add_transition(
         self,
         from_status: UnifiedStatus,
@@ -547,7 +579,7 @@ class WorkflowStateMachine:
         """Add a valid state transition."""
         if from_status not in self.transitions:
             self.transitions[from_status] = []
-        
+
         transition = StateTransition(
             from_status=from_status,
             to_status=to_status,
@@ -557,20 +589,22 @@ class WorkflowStateMachine:
             requires_resolution=requires_resolution,
             allowed_resolutions=allowed_resolutions or [],
         )
-        
+
         self.transitions[from_status].append(transition)
-    
-    def get_valid_transitions(self, current_status: UnifiedStatus) -> List[StateTransition]:
+
+    def get_valid_transitions(
+        self, current_status: UnifiedStatus
+    ) -> List[StateTransition]:
         """Get all valid transitions from current status."""
         return self.transitions.get(current_status, [])
-    
+
     def is_valid_transition(
         self, from_status: UnifiedStatus, to_status: UnifiedStatus
     ) -> bool:
         """Check if a transition is valid."""
         transitions = self.get_valid_transitions(from_status)
         return any(t.to_status == to_status for t in transitions)
-    
+
     def get_transition(
         self, from_status: UnifiedStatus, to_status: UnifiedStatus
     ) -> Optional[StateTransition]:
@@ -580,7 +614,7 @@ class WorkflowStateMachine:
             if transition.to_status == to_status:
                 return transition
         return None
-    
+
     def validate_transition(
         self,
         from_status: UnifiedStatus,
@@ -589,7 +623,7 @@ class WorkflowStateMachine:
         fields: Optional[Dict[str, any]] = None,
     ) -> Tuple[bool, Optional[str]]:
         """Validate a state transition with all requirements.
-        
+
         Returns:
             Tuple of (is_valid, error_message)
         """
@@ -597,22 +631,22 @@ class WorkflowStateMachine:
         transition = self.get_transition(from_status, to_status)
         if not transition:
             return False, f"Invalid transition from {from_status} to {to_status}"
-        
+
         # Check resolution requirements
         if transition.requires_resolution and not resolution:
             return False, f"Resolution required for transition to {to_status}"
-        
+
         if resolution and transition.allowed_resolutions:
             if resolution not in transition.allowed_resolutions:
                 allowed = ", ".join(r.value for r in transition.allowed_resolutions)
                 return False, f"Invalid resolution. Allowed: {allowed}"
-        
+
         # Check required fields
         if transition.required_fields and fields:
             missing = [f for f in transition.required_fields if not fields.get(f)]
             if missing:
                 return False, f"Missing required fields: {', '.join(missing)}"
-        
+
         return True, None
 
 
@@ -654,15 +688,12 @@ LEGACY_STATUS_MAPPING = {
     "completed": UnifiedStatus.COMPLETED,
     "cancelled": UnifiedStatus.CANCELLED,
     "blocked": UnifiedStatus.BLOCKED,
-    
     # EpicStatus
     "planning": UnifiedStatus.PLANNING,
     "on_hold": UnifiedStatus.ON_HOLD,
-    
     # IssueStatus/BugStatus
     "testing": UnifiedStatus.TESTING,
     "closed": UnifiedStatus.CLOSED,
-    
     # PRStatus
     "draft": UnifiedStatus.DRAFT,
     "ready_for_review": UnifiedStatus.READY_FOR_REVIEW,
@@ -670,7 +701,6 @@ LEGACY_STATUS_MAPPING = {
     "changes_requested": UnifiedStatus.CHANGES_REQUESTED,
     "approved": UnifiedStatus.APPROVED,
     "merged": UnifiedStatus.MERGED,
-    
     # ProjectStatus
     "active": UnifiedStatus.ACTIVE,
     "archived": UnifiedStatus.ARCHIVED,
@@ -679,7 +709,7 @@ LEGACY_STATUS_MAPPING = {
 
 def map_legacy_status(old_status: str) -> UnifiedStatus:
     """Map old status values to unified status.
-    
+
     WHY: This ensures backward compatibility when migrating existing data
     to the new unified status system.
     """
@@ -688,10 +718,10 @@ def map_legacy_status(old_status: str) -> UnifiedStatus:
         return UnifiedStatus(old_status)
     except ValueError:
         pass
-    
+
     # Try legacy mapping
     if old_status in LEGACY_STATUS_MAPPING:
         return LEGACY_STATUS_MAPPING[old_status]
-    
+
     # Default to OPEN for unknown statuses
     return UnifiedStatus.OPEN

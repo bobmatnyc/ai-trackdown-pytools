@@ -28,8 +28,6 @@ from ai_trackdown_pytools.utils.index import update_index_on_file_change
 # from ai_trackdown_pytools.utils.validation import SchemaValidator, ValidationResult
 
 
-
-
 class TaskModel(BaseModel):
     """Task data model."""
 
@@ -215,7 +213,9 @@ class TaskManager:
         """Initialize task manager."""
         self.project_path = Path(project_path)
         self.config = Config.load(project_path=self.project_path)
-        self.tasks_dir = self.project_path / self.config.get("tasks.directory", "tickets")
+        self.tasks_dir = self.project_path / self.config.get(
+            "tasks.directory", "tickets"
+        )
 
         # Ensure tasks directory exists
         self.tasks_dir.mkdir(exist_ok=True)
@@ -332,13 +332,25 @@ class TaskManager:
         """Generate unique task ID based on type."""
         if task_type is None:
             task_type = DEFAULT_TICKET_TYPE.value
-            
+
         # Determine prefix and counter key based on type
         type_config = {
-            TicketType.EPIC.value: {"prefix": TicketPrefix.EPIC.value, "counter_key": "epics.counter"},
-            TicketType.ISSUE.value: {"prefix": TicketPrefix.ISSUE.value, "counter_key": "issues.counter"},
-            TicketType.TASK.value: {"prefix": TicketPrefix.TASK.value, "counter_key": "tasks.counter"},
-            TicketType.PR.value: {"prefix": TicketPrefix.PR.value, "counter_key": "prs.counter"},
+            TicketType.EPIC.value: {
+                "prefix": TicketPrefix.EPIC.value,
+                "counter_key": "epics.counter",
+            },
+            TicketType.ISSUE.value: {
+                "prefix": TicketPrefix.ISSUE.value,
+                "counter_key": "issues.counter",
+            },
+            TicketType.TASK.value: {
+                "prefix": TicketPrefix.TASK.value,
+                "counter_key": "tasks.counter",
+            },
+            TicketType.PR.value: {
+                "prefix": TicketPrefix.PR.value,
+                "counter_key": "prs.counter",
+            },
         }
 
         config = type_config.get(task_type, type_config[TicketType.TASK.value])

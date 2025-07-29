@@ -251,7 +251,15 @@ def list(
 
         writer = csv.writer(sys.stdout)
         writer.writerow(
-            ["ID", "Title", "Status", "Severity", "Assignee", "Environment", "Regression"]
+            [
+                "ID",
+                "Title",
+                "Status",
+                "Severity",
+                "Assignee",
+                "Environment",
+                "Regression",
+            ]
         )
         for bug in bugs:
             writer.writerow(
@@ -372,13 +380,17 @@ def show(
             content += f"\n[bold]Expected Behavior:[/bold]\n{metadata.get('expected_behavior')}\n"
 
         if metadata.get("actual_behavior"):
-            content += f"\n[bold]Actual Behavior:[/bold]\n{metadata.get('actual_behavior')}\n"
+            content += (
+                f"\n[bold]Actual Behavior:[/bold]\n{metadata.get('actual_behavior')}\n"
+            )
 
         if metadata.get("affected_versions"):
             content += f"\n[bold]Affected Versions:[/bold] {', '.join(metadata.get('affected_versions', []))}\n"
 
         if metadata.get("fixed_in_version"):
-            content += f"[bold]Fixed in Version:[/bold] {metadata.get('fixed_in_version')}\n"
+            content += (
+                f"[bold]Fixed in Version:[/bold] {metadata.get('fixed_in_version')}\n"
+            )
 
         console.print(
             Panel(

@@ -10,7 +10,11 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.tree import Tree
 
-from ai_trackdown_pytools.core.constants import PRIORITY_ORDER, TicketPriority, TicketStatus
+from ai_trackdown_pytools.core.constants import (
+    PRIORITY_ORDER,
+    TicketPriority,
+    TicketStatus,
+)
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
 
@@ -224,7 +228,12 @@ def backlog(
                 priority_groups[priority] = []
             priority_groups[priority].append(task)
 
-        for priority in [p.value for p in sorted(TicketPriority, key=lambda x: PRIORITY_ORDER[x], reverse=True)]:
+        for priority in [
+            p.value
+            for p in sorted(
+                TicketPriority, key=lambda x: PRIORITY_ORDER[x], reverse=True
+            )
+        ]:
             if priority in priority_groups:
                 tasks = priority_groups[priority]
                 console.print(

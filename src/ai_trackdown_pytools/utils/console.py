@@ -43,7 +43,9 @@ class Console:
 
         self.rich_console.print(*args, **kwargs)
 
-    def print_panel(self, content: str, title: Optional[str] = None, **kwargs: Any) -> None:
+    def print_panel(
+        self, content: str, title: Optional[str] = None, **kwargs: Any
+    ) -> None:
         """Print a panel, or plain text with title in plain mode."""
         if self.plain_mode:
             if title:

@@ -66,7 +66,9 @@ def add(
         author = os.getenv("USER") or os.getenv("USERNAME") or "Unknown"
 
     # Add the comment
-    success = add_comment_to_item(item_type, item_id, author, content, project_path, force=force)
+    success = add_comment_to_item(
+        item_type, item_id, author, content, project_path, force=force
+    )
 
     if success:
         console.print(
