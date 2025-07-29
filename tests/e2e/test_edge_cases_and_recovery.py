@@ -4,25 +4,19 @@ import json
 import os
 import random
 import shutil
-import signal
-import string
 import tempfile
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import Mock, patch
 
 import pytest
 import yaml
-from rich.console import Console
 from typer.testing import CliRunner
 
 from ai_trackdown_pytools.cli import app
-from ai_trackdown_pytools.core.models import Priority, TaskModel, TaskStatus
-from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
 
 

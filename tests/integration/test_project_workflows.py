@@ -2,11 +2,7 @@
 
 import shutil
 import tempfile
-from datetime import datetime
 from pathlib import Path
-from unittest.mock import patch
-
-import pytest
 
 from ai_trackdown_pytools.core.config import Config
 from ai_trackdown_pytools.core.project import Project

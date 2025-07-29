@@ -1,13 +1,8 @@
 """Comprehensive unit tests for utility modules."""
 
 import os
-import platform
-import subprocess
-import sys
 from pathlib import Path
-from unittest.mock import MagicMock, Mock, mock_open, patch
-
-import pytest
+from unittest.mock import Mock, patch
 
 from ai_trackdown_pytools.utils.editor import EditorUtils
 from ai_trackdown_pytools.utils.health import check_health, check_project_health

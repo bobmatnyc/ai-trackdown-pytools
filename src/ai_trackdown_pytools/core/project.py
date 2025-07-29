@@ -92,7 +92,7 @@ class Project:
         if not project_file.exists():
             raise ProjectError(f"No project file found at {project_file}")
 
-        with open(project_file, "r", encoding="utf-8") as f:
+        with open(project_file, encoding="utf-8") as f:
             project_data = yaml.safe_load(f)
 
         # Handle empty or invalid project file

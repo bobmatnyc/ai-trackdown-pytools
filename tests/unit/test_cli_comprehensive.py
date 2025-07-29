@@ -1,25 +1,15 @@
 """Comprehensive unit tests for CLI entry point module."""
 
-import sys
 from pathlib import Path
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import Mock, patch
 
 import pytest
 import typer
-from click.testing import CliRunner
-from rich.console import Console
 
 from ai_trackdown_pytools import __version__
 from ai_trackdown_pytools.cli import (
     app,
-    config,
-    doctor,
-    edit,
-    health,
-    info,
     main,
-    search,
-    validate,
     version_callback,
 )
 

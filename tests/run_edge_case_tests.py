@@ -14,8 +14,6 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List
 
-import pytest
-
 
 def get_system_info() -> Dict[str, Any]:
     """Get system information for test configuration."""

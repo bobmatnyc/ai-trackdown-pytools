@@ -4,7 +4,7 @@ import re
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 import yaml
 from pydantic import ValidationError
@@ -14,7 +14,7 @@ from ai_trackdown_pytools.core.models import (
     CommentModel,
     get_model_for_type,
 )
-from ai_trackdown_pytools.core.workflow import UnifiedStatus, is_terminal_status
+from ai_trackdown_pytools.core.workflow import is_terminal_status
 
 
 class CommentManager:
@@ -39,7 +39,7 @@ class CommentManager:
         comment rules. This loads and validates the ticket data.
         """
         try:
-            with open(self.file_path, "r", encoding="utf-8") as f:
+            with open(self.file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Extract frontmatter
@@ -125,7 +125,7 @@ class CommentManager:
 
         try:
             # Read the file
-            with open(self.file_path, "r", encoding="utf-8") as f:
+            with open(self.file_path, encoding="utf-8") as f:
                 file_content = f.read()
 
             # Find the end of the main content (before comments section)
@@ -179,7 +179,7 @@ class CommentManager:
         comments = []
 
         try:
-            with open(self.file_path, "r", encoding="utf-8") as f:
+            with open(self.file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Find all comment blocks with enhanced pattern to capture metadata
@@ -268,7 +268,7 @@ class CommentManager:
     def update_frontmatter_comment_count(self) -> bool:
         """Update the comment count in frontmatter."""
         try:
-            with open(self.file_path, "r", encoding="utf-8") as f:
+            with open(self.file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Extract frontmatter

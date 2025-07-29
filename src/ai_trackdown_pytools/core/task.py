@@ -14,10 +14,7 @@ from ai_trackdown_pytools.core.constants import (
     DEFAULT_STATUS,
     DEFAULT_TICKET_TYPE,
     PREFIX_TO_SUBDIR,
-    TYPE_TO_PREFIX,
     TicketPrefix,
-    TicketPriority,
-    TicketStatus,
     TicketSubdir,
     TicketType,
 )
@@ -140,7 +137,7 @@ class Task:
     def load(cls, file_path: Path) -> "Task":
         """Load task from file."""
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Extract frontmatter
@@ -401,7 +398,7 @@ class TaskManager:
     def _load_task_file(self, file_path: Path) -> Optional[TaskModel]:
         """Load task data from file."""
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Extract frontmatter

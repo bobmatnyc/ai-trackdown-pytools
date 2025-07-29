@@ -1,7 +1,6 @@
 """Comprehensive unit tests for models module."""
 
 from datetime import date, datetime
-from typing import List, Optional
 
 import pytest
 from pydantic import ValidationError

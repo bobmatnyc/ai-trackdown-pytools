@@ -65,7 +65,7 @@ class Config:
             config_path = cls.find_config_file()
 
         if config_path and config_path.exists():
-            with open(config_path, "r", encoding="utf-8") as f:
+            with open(config_path, encoding="utf-8") as f:
                 config_data = yaml.safe_load(f) or {}
 
             instance._config = ConfigModel(**config_data)

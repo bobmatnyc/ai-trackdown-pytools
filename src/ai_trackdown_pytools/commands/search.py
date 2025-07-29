@@ -314,7 +314,7 @@ def content(
             files_searched += 1
 
             try:
-                with open(task_file, "r", encoding="utf-8") as f:
+                with open(task_file, encoding="utf-8") as f:
                     lines = f.readlines()
 
                 file_matches = []

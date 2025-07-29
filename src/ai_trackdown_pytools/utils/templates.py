@@ -124,7 +124,7 @@ class TemplateManager:
                     seen_names.add(template_name)
 
                     try:
-                        with open(template_file, "r", encoding="utf-8") as f:
+                        with open(template_file, encoding="utf-8") as f:
                             template_data = yaml.safe_load(f)
 
                         templates.append(
@@ -151,7 +151,7 @@ class TemplateManager:
             template_file = template_dir / template_type / f"{name}.yaml"
             if template_file.exists():
                 try:
-                    with open(template_file, "r", encoding="utf-8") as f:
+                    with open(template_file, encoding="utf-8") as f:
                         return yaml.safe_load(f)
                 except Exception:
                     continue

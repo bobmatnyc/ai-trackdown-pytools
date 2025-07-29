@@ -13,14 +13,11 @@ This test suite focuses on:
 import locale
 import os
 import platform
-import sys
 from pathlib import Path
-from unittest.mock import Mock, patch
 
 import pytest
 
 from ai_trackdown_pytools.core.config import Config
-from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.utils.frontmatter import FrontmatterParser
 from ai_trackdown_pytools.utils.validation import SchemaValidator
 
@@ -577,15 +574,13 @@ class TestEncodingEdgeCases:
             bom_file = temp_dir / f"bom_{encoding_name.lower().replace('-', '_')}.md"
 
             # Create content with BOM
-            content = """---
+            content = f"""---
 title: BOM Test
-encoding: {encoding}
+encoding: {encoding_name}
 ---
 
 Content with BOM.
-""".format(
-                encoding=encoding_name
-            )
+"""
 
             if encoding_name == "UTF-8":
                 # Write UTF-8 with BOM

@@ -5,23 +5,14 @@ import os
 import re
 import shutil
 import tempfile
-import time
-from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
-from unittest.mock import MagicMock, Mock, call, patch
+from unittest.mock import Mock, patch
 
 import pytest
 import yaml
-from rich.console import Console
 from typer.testing import CliRunner
 
 from ai_trackdown_pytools.cli import app
-from ai_trackdown_pytools.core.models import Priority, TaskModel, TaskStatus
-from ai_trackdown_pytools.core.project import Project
-from ai_trackdown_pytools.core.task import TaskManager
-from ai_trackdown_pytools.utils.templates import TemplateManager
-from ai_trackdown_pytools.utils.validation import SchemaValidator
 
 
 @pytest.fixture
@@ -1646,7 +1637,7 @@ class TestAdvancedQueryAndReporting:
                     "--estimate",
                     f"{(i % 8 + 1)}h",
                     "--story-points",
-                    str((i % 5 + 1)),
+                    str(i % 5 + 1),
                 ],
             )
 

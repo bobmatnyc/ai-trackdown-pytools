@@ -3,13 +3,12 @@
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import List, Optional
+from typing import Optional
 
 import typer
 from rich.console import Console
 from rich.panel import Panel
 from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn
-from rich.table import Table
 
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
@@ -46,7 +45,7 @@ def github(
     # Load sync configuration
     sync_config_file = project_path / ".aitrackdown" / "sync.json"
     if sync_config_file.exists():
-        with open(sync_config_file, "r") as f:
+        with open(sync_config_file) as f:
             sync_config = json.load(f)
     else:
         sync_config = {"github": {}, "last_sync": {}}
@@ -313,7 +312,7 @@ def config(
 
     # Load existing config
     if sync_config_file.exists():
-        with open(sync_config_file, "r") as f:
+        with open(sync_config_file) as f:
             sync_config = json.load(f)
     else:
         sync_config = {}
@@ -417,7 +416,7 @@ def import_data(
 
     if source == "github-json":
         # Import from GitHub issues/PRs JSON export
-        with open(import_file, "r") as f:
+        with open(import_file) as f:
             github_data = json.load(f)
 
         if not isinstance(github_data, list):
@@ -458,7 +457,7 @@ def import_data(
         # Import from CSV file
         import csv
 
-        with open(import_file, "r") as f:
+        with open(import_file) as f:
             reader = csv.DictReader(f)
 
             for row in reader:

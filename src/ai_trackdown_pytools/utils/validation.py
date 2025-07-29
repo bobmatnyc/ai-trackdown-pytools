@@ -77,7 +77,7 @@ class SchemaValidator:
         for schema_file in self.schema_dir.glob("*.json"):
             schema_name = schema_file.stem
             try:
-                with open(schema_file, "r", encoding="utf-8") as f:
+                with open(schema_file, encoding="utf-8") as f:
                     self._schemas[schema_name] = json.load(f)
             except (json.JSONDecodeError, FileNotFoundError):
                 continue
@@ -592,7 +592,7 @@ def validate_task_file(file_path: Path) -> Dict[str, Any]:
         warnings.append("Task file should have .md extension")
 
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = f.read()
     except Exception as e:
         return {"valid": False, "errors": [f"Cannot read file: {e}"], "warnings": []}

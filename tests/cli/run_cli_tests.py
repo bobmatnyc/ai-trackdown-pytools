@@ -2,7 +2,6 @@
 """Comprehensive CLI test runner for ai-trackdown-pytools."""
 
 import argparse
-import os
 import sys
 from pathlib import Path
 from typing import List, Optional

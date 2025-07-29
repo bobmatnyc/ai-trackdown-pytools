@@ -1,6 +1,5 @@
 """Enhanced pytest configuration and fixtures."""
 
-import shutil
 import sys
 import tempfile
 from pathlib import Path

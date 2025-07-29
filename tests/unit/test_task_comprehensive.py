@@ -1,13 +1,10 @@
 """Comprehensive unit tests for task management module."""
 
-import json
-import re
 from datetime import datetime, timedelta
 from pathlib import Path
 from unittest.mock import Mock, mock_open, patch
 
 import pytest
-import yaml
 
 from ai_trackdown_pytools.core.task import Task, TaskError, TaskManager, TaskModel
 
@@ -665,7 +662,7 @@ due_date: {due.isoformat()}
         manager = TaskManager(Path("/test/project"))
 
         # Test file read error
-        with patch("builtins.open", side_effect=IOError("File not found")):
+        with patch("builtins.open", side_effect=OSError("File not found")):
             result = manager._load_task_file(Path("/tasks/TSK-0001.md"))
             assert result is None
 

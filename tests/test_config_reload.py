@@ -1,9 +1,7 @@
 """Test configuration reload and cache management functionality."""
 
 import time
-from pathlib import Path
 
-import pytest
 import yaml
 
 from ai_trackdown_pytools.core.config import Config

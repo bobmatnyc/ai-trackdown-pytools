@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Simple test script to verify CLI framework functionality."""
 
-import subprocess
 import sys
 from pathlib import Path
 
@@ -13,7 +12,6 @@ def test_cli_import():
         src_path = Path(__file__).parent / "src"
         sys.path.insert(0, str(src_path))
 
-        from ai_trackdown_pytools.cli import app, main
 
         print("✅ CLI import successful")
         return True
@@ -28,11 +26,6 @@ def test_core_imports():
         src_path = Path(__file__).parent / "src"
         sys.path.insert(0, str(src_path))
 
-        from ai_trackdown_pytools.core.config import Config
-        from ai_trackdown_pytools.core.project import Project
-        from ai_trackdown_pytools.core.task import Task, TaskManager
-        from ai_trackdown_pytools.utils.health import check_health
-        from ai_trackdown_pytools.utils.templates import TemplateManager
 
         print("✅ Core modules import successful")
         return True

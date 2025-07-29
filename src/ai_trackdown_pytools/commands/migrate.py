@@ -327,7 +327,7 @@ def repair(
     if tasks_dir.exists():
         for task_file in tasks_dir.rglob("*.md"):
             try:
-                with open(task_file, "r", encoding="utf-8") as f:
+                with open(task_file, encoding="utf-8") as f:
                     content = f.read()
 
                 # Extract frontmatter
@@ -468,7 +468,7 @@ def repair(
                 if issue["type"] == "missing_fields":
                     # Read file
                     file_path = project_path / issue["file"]
-                    with open(file_path, "r", encoding="utf-8") as f:
+                    with open(file_path, encoding="utf-8") as f:
                         content = f.read()
 
                     parts = content.split("---", 2)
@@ -501,7 +501,7 @@ def repair(
                 elif issue["type"] == "legacy_field":
                     # Read file
                     file_path = project_path / issue["file"]
-                    with open(file_path, "r", encoding="utf-8") as f:
+                    with open(file_path, encoding="utf-8") as f:
                         content = f.read()
 
                     parts = content.split("---", 2)

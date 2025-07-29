@@ -12,12 +12,11 @@ This test suite focuses on:
 import asyncio
 import gc
 import os
-import tempfile
 import threading
 import time
-from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 import psutil
 import pytest
@@ -376,7 +375,7 @@ class TestResourceExhaustionScenarios:
                 file_path.write_text(f"Content {i}")
 
                 try:
-                    file_handle = open(file_path, "r")
+                    file_handle = open(file_path)
                     open_files.append(file_handle)
                 except OSError as e:
                     if "Too many open files" in str(e):

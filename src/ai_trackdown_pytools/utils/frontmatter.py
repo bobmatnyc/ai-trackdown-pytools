@@ -44,7 +44,7 @@ class FrontmatterParser:
             FrontmatterError: If file cannot be read or parsed
         """
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
         except Exception as e:
             raise FrontmatterError(f"Cannot read file {file_path}: {e}")

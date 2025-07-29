@@ -14,14 +14,8 @@ from ai_trackdown_pytools.core.compatibility import (
 )
 from ai_trackdown_pytools.core.models import (
     BugModel,
-    BugStatus,
-    EpicModel,
     EpicStatus,
     IssueModel,
-    IssueStatus,
-    PRModel,
-    ProjectModel,
-    ProjectStatus,
     PRStatus,
     TaskModel,
     TaskStatus,
@@ -31,7 +25,6 @@ from ai_trackdown_pytools.core.workflow import (
     ResolutionType,
     StatusCategory,
     UnifiedStatus,
-    WorkflowStateMachine,
     get_resolution_category,
     get_status_category,
     is_terminal_status,

@@ -23,14 +23,12 @@ from .commands import (
     migrate,
     portfolio,
     pr,
-)
-from .commands import search as search_cmd
-from .commands import (
     status,
     sync,
     task,
     template,
 )
+from .commands import search as search_cmd
 from .commands import validate_typer as validate_cmd
 from .core.config import Config
 from .utils.console import Console, get_console

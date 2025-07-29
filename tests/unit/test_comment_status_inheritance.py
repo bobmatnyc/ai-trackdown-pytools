@@ -7,12 +7,11 @@ This is critical for maintaining data integrity and audit trails.
 
 import shutil
 import tempfile
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 
 import pytest
 
-from ai_trackdown_pytools.core.config import Config
 from ai_trackdown_pytools.core.models import (
     BugModel,
     CommentModel,

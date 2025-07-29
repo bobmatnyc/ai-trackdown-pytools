@@ -17,11 +17,6 @@ import yaml
 
 from ai_trackdown_pytools.core.models import (
     BaseTicketModel,
-    BugModel,
-    EpicModel,
-    IssueModel,
-    PRModel,
-    TaskModel,
 )
 
 # Type variable for ticket models
@@ -97,7 +92,7 @@ def load_ticket(file_path: Union[str, Path], model_class: Type[T]) -> T:
         raise FileNotFoundError(f"Ticket file not found: {file_path}")
 
     # Read YAML file
-    with open(file_path, "r", encoding="utf-8") as f:
+    with open(file_path, encoding="utf-8") as f:
         data = yaml.safe_load(f)
 
     # Parse datetime strings back to datetime objects

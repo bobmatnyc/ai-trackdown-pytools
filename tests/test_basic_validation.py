@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Basic test of the validation system."""
 
-import json
 import sys
 from pathlib import Path
 

@@ -12,7 +12,6 @@ from ai_trackdown_pytools.core.constants import (
     DEFAULT_PRIORITY,
     VALID_STATUSES,
     TicketPriority,
-    TicketStatus,
     TicketType,
 )
 from ai_trackdown_pytools.core.project import Project

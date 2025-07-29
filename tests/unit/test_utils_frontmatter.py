@@ -2,10 +2,7 @@
 
 import tempfile
 from datetime import date, datetime
-from io import StringIO
 from pathlib import Path
-
-import pytest
 
 from ai_trackdown_pytools.utils.frontmatter import (
     FrontmatterError,

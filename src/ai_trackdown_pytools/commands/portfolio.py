@@ -13,7 +13,6 @@ from rich.tree import Tree
 from ai_trackdown_pytools.core.constants import (
     PRIORITY_ORDER,
     TicketPriority,
-    TicketStatus,
 )
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
@@ -446,7 +445,7 @@ def sprint(
 
     # Load existing sprints
     if sprints_file.exists():
-        with open(sprints_file, "r") as f:
+        with open(sprints_file) as f:
             sprints_data = json.load(f)
     else:
         sprints_data = {"sprints": [], "current_sprint": None}

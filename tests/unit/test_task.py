@@ -3,7 +3,6 @@
 import tempfile
 from datetime import date, datetime, timedelta
 from pathlib import Path
-from unittest.mock import Mock, mock_open, patch
 
 import pytest
 

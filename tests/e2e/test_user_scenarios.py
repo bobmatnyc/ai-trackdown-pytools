@@ -1,17 +1,13 @@
 """End-to-end tests for complete user scenarios."""
 
-import json
 import shutil
-import subprocess
 import tempfile
 from pathlib import Path
 from unittest.mock import patch
 
-import pytest
 from typer.testing import CliRunner
 
 from ai_trackdown_pytools.cli import app
-from ai_trackdown_pytools.core.project import Project
 
 
 class TestNewUserWorkflow:
@@ -476,7 +472,6 @@ class TestAdvancedUserScenarios:
                 assert result.exit_code == 0
 
             # Create many tasks across different categories
-            import itertools
 
             priorities = ["low", "medium", "high", "critical"]
             assignees = ["alice", "bob", "charlie", "diana", "eve", "frank"]

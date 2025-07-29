@@ -6,12 +6,9 @@ from typing import List, Optional
 
 import click
 import yaml
-from rich import print as rprint
 from rich.console import Console
-from rich.panel import Panel
 from rich.table import Table
 
-from ai_trackdown_pytools.core.models import get_model_for_type
 from ai_trackdown_pytools.utils.frontmatter import (
     FrontmatterParser,
     StatusWorkflowValidator,

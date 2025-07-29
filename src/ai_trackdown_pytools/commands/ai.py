@@ -50,7 +50,7 @@ def track_tokens(
     # Load existing token data
     token_file = ai_dir / "tokens.json"
     if token_file.exists():
-        with open(token_file, "r") as f:
+        with open(token_file) as f:
             token_data = json.load(f)
     else:
         token_data = {
@@ -153,7 +153,7 @@ def token_stats(
         console.print("[yellow]No token usage data found[/yellow]")
         return
 
-    with open(token_file, "r") as f:
+    with open(token_file) as f:
         token_data = json.load(f)
 
     sessions = token_data.get("sessions", [])

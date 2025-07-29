@@ -4,16 +4,14 @@ import json
 import os
 import tempfile
 from pathlib import Path
-from typing import Any, Dict, List, Optional
-from unittest.mock import MagicMock, Mock, patch
+from typing import Dict, List
+from unittest.mock import Mock, patch
 
 import pytest
-from rich.console import Console
 from typer.testing import CliRunner
 
 from ai_trackdown_pytools.cli import app
 from ai_trackdown_pytools.core.project import Project
-from ai_trackdown_pytools.core.task import TaskManager
 
 
 @pytest.fixture

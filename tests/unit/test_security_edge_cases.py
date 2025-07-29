@@ -13,7 +13,7 @@ import os
 import tempfile
 import time
 from pathlib import Path
-from unittest.mock import mock_open, patch
+from unittest.mock import patch
 
 import pytest
 import yaml
@@ -155,7 +155,6 @@ class TestTemplateInjectionPrevention:
 
     def test_jinja2_injection_prevention(self):
         """Test prevention of Jinja2 template injection."""
-        from jinja2 import Environment, Template, meta
 
         malicious_templates = [
             "{{ config.__class__.__module__ }}",
@@ -237,7 +236,7 @@ class TestTemplateInjectionPrevention:
 
             # Should use safe loader to prevent code execution
             try:
-                with open(malicious_file, "r") as f:
+                with open(malicious_file) as f:
                     # Using safe_load should prevent dangerous deserialization
                     data = yaml.safe_load(f)
 
@@ -310,7 +309,7 @@ i: &i [*h,*h,*h,*h,*h,*h,*h,*h,*h]
         start_memory = self._get_memory_usage()
 
         try:
-            with open(bomb_file, "r") as f:
+            with open(bomb_file) as f:
                 # Should timeout or limit resource usage
                 import signal
 
@@ -350,7 +349,7 @@ i: &i [*h,*h,*h,*h,*h,*h,*h,*h,*h]
         start_time = time.time()
 
         try:
-            with open(bomb_file, "r") as f:
+            with open(bomb_file) as f:
                 data = yaml.safe_load(f)
 
         except yaml.YAMLError:

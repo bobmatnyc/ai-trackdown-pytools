@@ -10,10 +10,6 @@ from unittest.mock import Mock
 import pytest
 
 from ai_trackdown_pytools.core.models import (
-    EpicModel,
-    IssueModel,
-    PRModel,
-    ProjectModel,
     TaskModel,
 )
 from ai_trackdown_pytools.core.project import Project

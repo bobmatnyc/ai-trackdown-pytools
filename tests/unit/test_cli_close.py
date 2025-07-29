@@ -1,9 +1,7 @@
 """Test the close command in the CLI."""
 
-import json
 import os
 from datetime import datetime
-from pathlib import Path
 
 import pytest
 from typer.testing import CliRunner

@@ -2,24 +2,11 @@
 
 import tempfile
 from pathlib import Path
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import patch
 
-import pytest
 from typer.testing import CliRunner
 
 from ai_trackdown_pytools.cli import app
-from ai_trackdown_pytools.commands import (
-    create,
-    epic,
-    init,
-    issue,
-    pr,
-    search,
-    status,
-    task,
-    template,
-    validate_typer,
-)
 from ai_trackdown_pytools.core.project import Project
 
 

@@ -445,12 +445,12 @@ def update(
 
     if success:
         # Build list of what was updated
-        updated_fields = [k for k in updates.keys()]
+        updated_fields = [k for k in updates]
         if metadata_updates:
             # Add metadata fields to the list, but avoid duplicating 'metadata'
             if "metadata" in updated_fields:
                 updated_fields.remove("metadata")
-            updated_fields.extend(k for k in metadata_updates.keys())
+            updated_fields.extend(k for k in metadata_updates)
 
         console.print(
             Panel.fit(
