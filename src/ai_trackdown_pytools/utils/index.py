@@ -1,10 +1,10 @@
 """Index management utilities for AI Trackdown PyTools."""
 
-import json
 import hashlib
+import json
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 import yaml
 
@@ -23,7 +23,7 @@ class IndexManager:
         """Load existing index or create new one."""
         if self.index_path.exists():
             try:
-                with open(self.index_path, "r", encoding="utf-8") as f:
+                with open(self.index_path, encoding="utf-8") as f:
                     data = json.load(f)
                     return data if isinstance(data, dict) else {}
             except Exception:
@@ -59,7 +59,7 @@ class IndexManager:
     def _extract_metadata(self, file_path: Path) -> Optional[Dict[str, Any]]:
         """Extract metadata from a task/issue/epic file."""
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Extract frontmatter

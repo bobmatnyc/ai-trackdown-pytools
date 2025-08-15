@@ -1,8 +1,8 @@
 """Tests for console utilities."""
 
 import os
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
+
 from rich.table import Table
 
 from ai_trackdown_pytools.utils.console import Console, get_console

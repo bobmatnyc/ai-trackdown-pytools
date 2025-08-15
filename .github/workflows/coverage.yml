@@ -23,12 +23,12 @@ jobs:
         fetch-depth: 0  # Full history for better coverage analysis
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
     - name: Cache dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
@@ -39,6 +39,12 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -e .[test]
+
+    - name: Run tests with coverage
+      run: |
+        pytest -v --cov=ai_trackdown_pytools --cov-report=xml --cov-report=json --cov-report=lcov --cov-report=html --cov-report=term-missing
+      env:
+        COVERAGE_CORE: sysmon
 
     - name: Run comprehensive coverage analysis
       run: |
@@ -52,7 +58,7 @@ jobs:
         python scripts/coverage_dashboard.py --format json
 
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         files: ./coverage.xml
         flags: unittests
@@ -73,7 +79,7 @@ jobs:
         python scripts/ci_coverage.py --generate-badges
 
     - name: Archive coverage reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-report-${{ matrix.python-version }}
         path: |
@@ -85,7 +91,7 @@ jobs:
         retention-days: 30
 
     - name: Archive test reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: test-reports-${{ matrix.python-version }}
         path: test-reports/
@@ -207,7 +213,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: "3.11"
 
@@ -217,7 +223,7 @@ jobs:
         pip install -e .[test]
 
     - name: Download coverage artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: coverage-report-3.11
 
@@ -240,7 +246,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: "3.11"
 
@@ -251,7 +257,7 @@ jobs:
         pip install bandit safety
 
     - name: Download coverage artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: coverage-report-3.11
 
@@ -303,7 +309,7 @@ jobs:
         "
 
     - name: Upload security reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: security-reports
         path: |

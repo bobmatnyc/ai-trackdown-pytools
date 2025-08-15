@@ -3,7 +3,7 @@
 import platform
 import sys
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict
 
 from ai_trackdown_pytools.core.config import Config
 from ai_trackdown_pytools.core.project import Project

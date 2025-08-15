@@ -1,19 +1,20 @@
 """Unit tests for Git utilities."""
 
-import pytest
 import tempfile
 from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
+
+import pytest
 
 from ai_trackdown_pytools.utils.git import (
-    GitRepo,
     GitError,
-    get_current_branch,
-    get_repository_status,
-    create_branch,
-    switch_branch,
+    GitRepo,
     commit_changes,
+    create_branch,
+    get_current_branch,
     get_file_status,
+    get_repository_status,
+    switch_branch,
 )
 
 

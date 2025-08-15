@@ -658,7 +658,7 @@ def add_task(
             console.print(
                 Panel.fit(
                     f"""[bold green]Tasks added successfully![/bold green]
-    
+
 [dim]Issue:[/dim] {issue_id}
 [dim]Added tasks:[/dim] {', '.join(added_tasks)}
 [dim]Total subtasks:[/dim] {len(issue.metadata['subtasks'])}""",
@@ -746,7 +746,7 @@ def remove_task(
             console.print(
                 Panel.fit(
                     f"""[bold green]Tasks removed successfully![/bold green]
-    
+
 [dim]Issue:[/dim] {issue_id}
 [dim]Removed tasks:[/dim] {', '.join(removed_tasks)}
 [dim]Remaining subtasks:[/dim] {len(issue.metadata['subtasks'])}""",

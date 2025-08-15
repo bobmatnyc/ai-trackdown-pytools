@@ -1,19 +1,17 @@
 """Unit tests for frontmatter utilities."""
 
-import pytest
 import tempfile
-from datetime import datetime, date
+from datetime import date, datetime
 from pathlib import Path
-from io import StringIO
 
 from ai_trackdown_pytools.utils.frontmatter import (
+    FrontmatterError,
     FrontmatterParser,
     StatusWorkflowValidator,
     ValidationResult,
     parse_ticket_file,
     validate_ticket_data,
     write_ticket_file,
-    FrontmatterError,
 )
 
 

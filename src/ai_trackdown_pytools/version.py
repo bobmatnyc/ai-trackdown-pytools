@@ -1,10 +1,9 @@
 """Version management for AI Trackdown PyTools."""
 
+import os
 import re
+from pathlib import Path
 from typing import NamedTuple, Optional
-
-# Import version from __init__.py to maintain single source of truth
-from . import __version__
 
 
 class Version(NamedTuple):
@@ -71,6 +70,26 @@ class Version(NamedTuple):
         """Convert to release version (remove pre-release)."""
         return Version(self.major, self.minor, self.patch)
 
+
+def _get_version():
+    """Read version from VERSION file."""
+    # Try to find VERSION file in several locations
+    possible_paths = [
+        Path(__file__).parent / "VERSION",  # Packaged install (primary)
+        Path(__file__).parent.parent.parent / "VERSION",  # Development install
+        Path(os.getcwd()) / "VERSION",  # Current directory
+    ]
+
+    for version_path in possible_paths:
+        if version_path.exists():
+            return version_path.read_text().strip()
+
+    # Fallback version if VERSION file not found
+    return "1.2.0"
+
+
+# Get version string
+__version__ = _get_version()
 
 # Current version as Version object
 CURRENT_VERSION = Version.parse(__version__)
@@ -188,7 +207,7 @@ def has_feature(feature_name: str) -> bool:
         return False
 
     feature_version = Version.parse(FEATURES[feature_name])
-    return CURRENT_VERSION >= feature_version
+    return feature_version <= CURRENT_VERSION
 
 
 def get_feature_version(feature_name: str) -> Optional[str]:

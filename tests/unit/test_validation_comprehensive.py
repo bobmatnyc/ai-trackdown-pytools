@@ -2,25 +2,24 @@
 
 import json
 from pathlib import Path
-from unittest.mock import Mock, patch, mock_open
+from unittest.mock import mock_open, patch
 
-import pytest
 import yaml
 
 from ai_trackdown_pytools.utils.validation import (
     SchemaValidator,
     ValidationResult,
-    validate_project_structure,
-    validate_task_file,
-    validate_ticket_file,
-    validate_id_format,
-    validate_relationships,
-    validate_task_data,
+    get_id_pattern_for_type,
     validate_epic_data,
+    validate_id_format,
     validate_issue_data,
     validate_pr_data,
     validate_project_data,
-    get_id_pattern_for_type,
+    validate_project_structure,
+    validate_relationships,
+    validate_task_data,
+    validate_task_file,
+    validate_ticket_file,
 )
 
 

@@ -5,13 +5,13 @@ from pathlib import Path
 from typing import Optional
 
 import typer
+import yaml
 from rich.console import Console
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
-import yaml
 
 app = typer.Typer(help="Migration and upgrade utilities")
 console = Console()
@@ -231,7 +231,7 @@ def schema_upgrade(
                 )
             except Exception as e:
                 console.print(f"[red]Migration failed: {e}[/red]")
-                raise typer.Exit(1)
+                raise typer.Exit(1) from e
 
     # Update project schema version
     project.metadata["schema_version"] = target_version
@@ -327,7 +327,7 @@ def repair(
     if tasks_dir.exists():
         for task_file in tasks_dir.rglob("*.md"):
             try:
-                with open(task_file, "r", encoding="utf-8") as f:
+                with open(task_file, encoding="utf-8") as f:
                     content = f.read()
 
                 # Extract frontmatter
@@ -468,7 +468,7 @@ def repair(
                 if issue["type"] == "missing_fields":
                     # Read file
                     file_path = project_path / issue["file"]
-                    with open(file_path, "r", encoding="utf-8") as f:
+                    with open(file_path, encoding="utf-8") as f:
                         content = f.read()
 
                     parts = content.split("---", 2)
@@ -501,7 +501,7 @@ def repair(
                 elif issue["type"] == "legacy_field":
                     # Read file
                     file_path = project_path / issue["file"]
-                    with open(file_path, "r", encoding="utf-8") as f:
+                    with open(file_path, encoding="utf-8") as f:
                         content = f.read()
 
                     parts = content.split("---", 2)

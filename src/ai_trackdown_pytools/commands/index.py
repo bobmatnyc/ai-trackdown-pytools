@@ -6,8 +6,8 @@ from typing import Optional
 import typer
 from rich.console import Console
 from rich.panel import Panel
-from rich.table import Table
 from rich.progress import Progress, SpinnerColumn, TextColumn
+from rich.table import Table
 
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.utils.index import IndexManager
@@ -54,7 +54,7 @@ def rebuild(
     console.print(
         Panel.fit(
             f"""[bold green]Index rebuilt successfully![/bold green]
-        
+
 [dim]Files indexed:[/dim] {stats['indexed']}
 [dim]Errors:[/dim] {stats['errors']}""",
             title="Index Rebuilt",
@@ -65,7 +65,7 @@ def rebuild(
 
 @app.command()
 def update(
-    verbose: bool = typer.Option(
+    _verbose: bool = typer.Option(
         False,
         "--verbose",
         "-v",
@@ -96,7 +96,7 @@ def update(
         console.print(
             Panel.fit(
                 f"""[bold green]Index updated successfully![/bold green]
-            
+
 [dim]Files added:[/dim] {stats['added']}
 [dim]Files updated:[/dim] {stats['updated']}
 [dim]Files removed:[/dim] {stats['removed']}""",

@@ -2,11 +2,11 @@
 
 import re
 from pathlib import Path
-from typing import Dict, Any, Optional, Tuple, List
+from typing import Any, Dict, List, Optional, Tuple
 
 import yaml
-from yaml.loader import SafeLoader
 from yaml.dumper import SafeDumper
+from yaml.loader import SafeLoader
 
 from ai_trackdown_pytools.utils.validation import SchemaValidator, ValidationResult
 
@@ -44,10 +44,10 @@ class FrontmatterParser:
             FrontmatterError: If file cannot be read or parsed
         """
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
         except Exception as e:
-            raise FrontmatterError(f"Cannot read file {file_path}: {e}")
+            raise FrontmatterError(f"Cannot read file {file_path}: {e}") from e
 
         return self.parse_string(content)
 

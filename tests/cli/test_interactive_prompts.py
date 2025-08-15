@@ -3,13 +3,10 @@
 import os
 import tempfile
 from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
-from io import StringIO
+from unittest.mock import Mock, patch
 
 import pytest
 from typer.testing import CliRunner
-from rich.console import Console
-from rich.prompt import Prompt, Confirm, IntPrompt
 
 from ai_trackdown_pytools.cli import app
 

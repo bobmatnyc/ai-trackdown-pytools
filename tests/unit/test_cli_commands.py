@@ -1,24 +1,12 @@
 """Unit tests for CLI commands using Typer testing."""
 
-import pytest
 import tempfile
 from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import patch
+
 from typer.testing import CliRunner
 
 from ai_trackdown_pytools.cli import app
-from ai_trackdown_pytools.commands import (
-    init,
-    create,
-    status,
-    template,
-    validate_typer,
-    task,
-    epic,
-    issue,
-    pr,
-    search,
-)
 from ai_trackdown_pytools.core.project import Project
 
 

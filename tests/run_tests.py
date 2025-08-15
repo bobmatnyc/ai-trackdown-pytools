@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Test automation script with coverage reporting and comprehensive test execution."""
 
-import sys
-import subprocess
 import argparse
-from pathlib import Path
-from typing import List, Dict, Any, Optional
 import json
+import subprocess
+import sys
 import time
 from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List
 
 
 class TestRunner:

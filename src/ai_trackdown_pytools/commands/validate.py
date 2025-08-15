@@ -2,28 +2,24 @@
 
 import json
 from pathlib import Path
-from typing import Optional, List
+from typing import List, Optional
 
 import click
 import yaml
 from rich.console import Console
 from rich.table import Table
-from rich.panel import Panel
-from rich import print as rprint
 
-from ai_trackdown_pytools.utils.validation import (
-    SchemaValidator,
-    validate_ticket_file,
-    validate_relationships,
-    validate_id_format,
-    ValidationResult,
-)
 from ai_trackdown_pytools.utils.frontmatter import (
     FrontmatterParser,
     StatusWorkflowValidator,
 )
-from ai_trackdown_pytools.core.models import get_model_for_type
-
+from ai_trackdown_pytools.utils.validation import (
+    SchemaValidator,
+    ValidationResult,
+    validate_id_format,
+    validate_relationships,
+    validate_ticket_file,
+)
 
 console = Console()
 
@@ -70,7 +66,7 @@ def file(
 
     except Exception as e:
         console.print(f"[red]Error validating file: {e}[/red]")
-        raise click.ClickException(str(e))
+        raise click.ClickException(str(e)) from e
 
 
 @validate.command()
@@ -177,10 +173,10 @@ def data(data: str, ticket_type: str, input_format: str, output_format: str):
 
     except (json.JSONDecodeError, yaml.YAMLError) as e:
         console.print(f"[red]Error parsing input data: {e}[/red]")
-        raise click.ClickException("Invalid input data format")
+        raise click.ClickException("Invalid input data format") from e
     except Exception as e:
         console.print(f"[red]Error validating data: {e}[/red]")
-        raise click.ClickException(str(e))
+        raise click.ClickException(str(e)) from e
 
 
 @validate.command()

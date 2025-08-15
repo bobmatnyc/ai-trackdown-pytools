@@ -2,7 +2,6 @@
 """Basic test of the validation system."""
 
 import sys
-import json
 from pathlib import Path
 
 # Add src to path

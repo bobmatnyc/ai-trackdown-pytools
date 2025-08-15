@@ -12,9 +12,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import List, Dict, Any
-
-import pytest
+from typing import Any, Dict, List
 
 
 def get_system_info() -> Dict[str, Any]:

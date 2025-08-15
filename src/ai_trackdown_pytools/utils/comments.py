@@ -4,18 +4,22 @@ import re
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Union
+from typing import Any, Dict, List, Optional
 
 import yaml
 from pydantic import ValidationError
 
-from ai_trackdown_pytools.core.models import CommentModel, BaseTicketModel, get_model_for_type
-from ai_trackdown_pytools.core.workflow import is_terminal_status, UnifiedStatus
+from ai_trackdown_pytools.core.models import (
+    BaseTicketModel,
+    CommentModel,
+    get_model_for_type,
+)
+from ai_trackdown_pytools.core.workflow import is_terminal_status
 
 
 class CommentManager:
     """Manager for handling comments on tasks, issues, and epics with status awareness.
-    
+
     WHY: This enhanced manager enforces comment status inheritance rules to ensure
     comments on closed tickets remain read-only and new comments cannot be added
     to terminal state tickets. This maintains data integrity and audit trails.
@@ -27,31 +31,31 @@ class CommentManager:
         self._parent_ticket = None
         self._parent_type = None
         self._parent_id = None
-        
+
     def _load_parent_ticket(self) -> Optional[BaseTicketModel]:
         """Load the parent ticket from file to check its status.
-        
+
         WHY: We need the parent ticket's current status to enforce
         comment rules. This loads and validates the ticket data.
         """
         try:
-            with open(self.file_path, "r", encoding="utf-8") as f:
+            with open(self.file_path, encoding="utf-8") as f:
                 content = f.read()
-            
+
             # Extract frontmatter
             fm_match = re.match(r"^---\s*\n(.*?)\n---\s*\n", content, re.DOTALL)
             if not fm_match:
                 return None
-            
+
             frontmatter = yaml.safe_load(fm_match.group(1))
-            
+
             # Determine ticket type and ID
             ticket_id = frontmatter.get("id")
             if not ticket_id:
                 return None
-            
+
             self._parent_id = ticket_id
-            
+
             # Infer type from ID prefix
             if ticket_id.startswith("TSK-"):
                 self._parent_type = "task"
@@ -67,7 +71,7 @@ class CommentManager:
                 self._parent_type = "project"
             else:
                 return None
-            
+
             # Get the model class and create instance
             model_class = get_model_for_type(self._parent_type)
             if model_class:
@@ -76,10 +80,10 @@ class CommentManager:
                     frontmatter["created_at"] = datetime.now()
                 if "updated_at" not in frontmatter:
                     frontmatter["updated_at"] = frontmatter["created_at"]
-                
+
                 self._parent_ticket = model_class(**frontmatter)
                 return self._parent_ticket
-                
+
         except Exception as e:
             print(f"Error loading parent ticket: {e}")
             return None
@@ -99,28 +103,29 @@ class CommentManager:
 
         Returns:
             True if successful, False otherwise
-            
+
         Raises:
             ValueError: If attempting to comment on a terminal status ticket
         """
         # Check parent ticket status
         if not force:
             parent_ticket = self._load_parent_ticket()
-            if parent_ticket and hasattr(parent_ticket, 'status'):
+            if parent_ticket and hasattr(parent_ticket, "status"):
                 status = parent_ticket.status
                 if isinstance(status, str):
                     from ai_trackdown_pytools.core.workflow import map_legacy_status
+
                     status = map_legacy_status(status)
-                
+
                 if is_terminal_status(status):
                     raise ValueError(
                         f"Cannot add comments to {status.value} tickets. "
                         f"Ticket {self._parent_id} is in a terminal state."
                     )
-        
+
         try:
             # Read the file
-            with open(self.file_path, "r", encoding="utf-8") as f:
+            with open(self.file_path, encoding="utf-8") as f:
                 file_content = f.read()
 
             # Find the end of the main content (before comments section)
@@ -174,7 +179,7 @@ class CommentManager:
         comments = []
 
         try:
-            with open(self.file_path, "r", encoding="utf-8") as f:
+            with open(self.file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Find all comment blocks with enhanced pattern to capture metadata
@@ -205,28 +210,28 @@ class CommentManager:
             print(f"Error reading comments: {e}")
 
         return comments
-    
+
     def get_comments_as_models(self) -> List[CommentModel]:
         """
         Get comments as CommentModel instances with status awareness.
-        
+
         WHY: This provides structured comment data with validation and
         status inheritance logic. Comments are automatically marked as
         read-only if the parent ticket is in a terminal state.
-        
+
         Returns:
             List of CommentModel instances
         """
         raw_comments = self.get_comments()
         parent_ticket = self._load_parent_ticket()
         models = []
-        
+
         for comment_data in raw_comments:
             try:
                 # Generate ID if missing (for legacy comments)
                 if not comment_data.get("id"):
                     comment_data["id"] = f"CMT-{uuid.uuid4().hex[:8]}"
-                
+
                 # Create model with required fields
                 comment = CommentModel(
                     id=comment_data["id"],
@@ -237,22 +242,23 @@ class CommentManager:
                     created_at=comment_data["timestamp"] or datetime.now(),
                     is_system=comment_data["author"] == "system",
                 )
-                
+
                 # Check if should be locked due to parent status
-                if parent_ticket and hasattr(parent_ticket, 'status'):
+                if parent_ticket and hasattr(parent_ticket, "status"):
                     status = parent_ticket.status
                     if isinstance(status, str):
                         from ai_trackdown_pytools.core.workflow import map_legacy_status
+
                         status = map_legacy_status(status)
-                    
+
                     if is_terminal_status(status):
                         comment.lock_due_to_parent_status(status)
-                
+
                 models.append(comment)
-                
+
             except ValidationError as e:
                 print(f"Error creating comment model: {e}")
-                
+
         return models
 
     def count_comments(self) -> int:
@@ -262,7 +268,7 @@ class CommentManager:
     def update_frontmatter_comment_count(self) -> bool:
         """Update the comment count in frontmatter."""
         try:
-            with open(self.file_path, "r", encoding="utf-8") as f:
+            with open(self.file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Extract frontmatter
@@ -295,7 +301,12 @@ class CommentManager:
 
 
 def add_comment_to_item(
-    item_type: str, item_id: str, author: str, content: str, project_path: Path, force: bool = False
+    item_type: str,
+    item_id: str,
+    author: str,
+    content: str,
+    project_path: Path,
+    force: bool = False,
 ) -> bool:
     """
     Add a comment to a task, issue, or epic with status validation.
@@ -314,7 +325,7 @@ def add_comment_to_item(
 
     Returns:
         True if successful, False otherwise
-        
+
     Raises:
         ValueError: If attempting to comment on a terminal status ticket
     """

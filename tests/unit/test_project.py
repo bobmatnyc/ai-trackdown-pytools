@@ -1,12 +1,13 @@
 """Unit tests for project management functionality."""
 
-import pytest
 import tempfile
 from pathlib import Path
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
-from ai_trackdown_pytools.core.project import Project, ProjectError
+import pytest
+
 from ai_trackdown_pytools.core.config import Config
+from ai_trackdown_pytools.core.project import Project, ProjectError
 
 
 class TestProject:

@@ -1,20 +1,19 @@
 """Comprehensive unit tests for models module."""
 
-from datetime import datetime, date
-from typing import List, Optional
+from datetime import date, datetime
 
 import pytest
 from pydantic import ValidationError
 
 from ai_trackdown_pytools.core.models import (
-    TaskModel,
     EpicModel,
     IssueModel,
     PRModel,
     ProjectModel,
+    TaskModel,
     TicketModel,
-    get_model_for_type,
     get_id_pattern_for_type,
+    get_model_for_type,
 )
 
 

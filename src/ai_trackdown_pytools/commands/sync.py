@@ -1,15 +1,14 @@
 """Sync commands for GitHub and other platforms."""
 
-from pathlib import Path
-from typing import List, Optional
 import json
 from datetime import datetime
+from pathlib import Path
+from typing import Optional
 
 import typer
 from rich.console import Console
 from rich.panel import Panel
-from rich.table import Table
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
+from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn
 
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
@@ -46,7 +45,7 @@ def github(
     # Load sync configuration
     sync_config_file = project_path / ".aitrackdown" / "sync.json"
     if sync_config_file.exists():
-        with open(sync_config_file, "r") as f:
+        with open(sync_config_file) as f:
             sync_config = json.load(f)
     else:
         sync_config = {"github": {}, "last_sync": {}}
@@ -81,7 +80,7 @@ def github(
         # Show sync status
         # Check if gh CLI is authenticated
         try:
-            test_gh = GitHubCLI(repo)
+            GitHubCLI(repo)  # Test if gh CLI is authenticated
             gh_auth_status = "Yes (via gh CLI)"
         except GitHubError:
             gh_auth_status = (
@@ -148,7 +147,7 @@ def github(
 
         except GitHubError as e:
             console.print(f"[red]GitHub sync error: {e}[/red]")
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
 
     elif action == "push":
         # Push local changes to GitHub
@@ -279,7 +278,7 @@ def github(
 
         except GitHubError as e:
             console.print(f"[red]GitHub sync error: {e}[/red]")
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
 
     else:
         console.print(f"[red]Unknown action: {action}[/red]")
@@ -313,7 +312,7 @@ def config(
 
     # Load existing config
     if sync_config_file.exists():
-        with open(sync_config_file, "r") as f:
+        with open(sync_config_file) as f:
             sync_config = json.load(f)
     else:
         sync_config = {}
@@ -417,7 +416,7 @@ def import_data(
 
     if source == "github-json":
         # Import from GitHub issues/PRs JSON export
-        with open(import_file, "r") as f:
+        with open(import_file) as f:
             github_data = json.load(f)
 
         if not isinstance(github_data, list):
@@ -458,7 +457,7 @@ def import_data(
         # Import from CSV file
         import csv
 
-        with open(import_file, "r") as f:
+        with open(import_file) as f:
             reader = csv.DictReader(f)
 
             for row in reader:
@@ -488,8 +487,13 @@ def import_data(
         raise typer.Exit(1)
 
     if dry_run:
+        if source == "github-json":
+            item_count = len(github_data)
+        else:
+            with open(import_file) as f:
+                item_count = len(list(csv.DictReader(f)))
         console.print(
-            f"[yellow]DRY RUN: Would import {len(github_data if source == 'github-json' else list(csv.DictReader(open(import_file))))} items[/yellow]"
+            f"[yellow]DRY RUN: Would import {item_count} items[/yellow]"
         )
     else:
         console.print(f"[green]Successfully imported {imported_count} items[/green]")

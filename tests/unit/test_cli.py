@@ -1,6 +1,5 @@
 """Unit tests for CLI functionality."""
 
-import pytest
 from typer.testing import CliRunner
 
 from ai_trackdown_pytools.cli import app

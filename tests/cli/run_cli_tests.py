@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Comprehensive CLI test runner for ai-trackdown-pytools."""
 
-import sys
-import os
-from pathlib import Path
-import pytest
 import argparse
+import sys
+from pathlib import Path
 from typing import List, Optional
+
+import pytest
 
 # Add src to path for testing
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))

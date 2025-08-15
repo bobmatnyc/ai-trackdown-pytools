@@ -1,29 +1,23 @@
 """End-to-end tests for edge cases, error recovery, and resilience."""
 
-import os
 import json
-import tempfile
+import os
+import random
 import shutil
+import tempfile
 import threading
 import time
-import signal
-import random
-import string
-from pathlib import Path
-from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional
-from unittest.mock import patch, Mock, MagicMock
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime
+from pathlib import Path
+from unittest.mock import Mock, patch
 
 import pytest
 import yaml
 from typer.testing import CliRunner
-from rich.console import Console
 
 from ai_trackdown_pytools.cli import app
-from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
-from ai_trackdown_pytools.core.models import TaskModel, TaskStatus, Priority
 
 
 @pytest.fixture

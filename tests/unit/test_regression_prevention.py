@@ -7,18 +7,15 @@ The tests are organized by component and include detailed documentation
 of the original bug and the fix to prevent future regressions.
 """
 
-import json
 import os
 import re
-import tempfile
-import time
-from datetime import datetime, date, timedelta
 from pathlib import Path
-from unittest.mock import patch, Mock, mock_open
+from unittest.mock import Mock, patch
+
 import pytest
 import yaml
 
-from ai_trackdown_pytools.core.config import Config, ConfigModel
+from ai_trackdown_pytools.core.config import Config
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
 from ai_trackdown_pytools.utils.frontmatter import (
@@ -192,7 +189,7 @@ Content with colons: this should work fine.
         assert frontmatter["title"] == "Bug Report: Critical Issue"
         assert "14:30" in frontmatter["description"]
         assert "category:bug" in frontmatter["tags"]
-        assert "https://example.com:8080/path" == frontmatter["url"]
+        assert frontmatter["url"] == "https://example.com:8080/path"
 
     def test_multiline_yaml_description_bug(self, temp_dir: Path):
         """
@@ -277,11 +274,11 @@ Unicode content:
 
         assert result.valid
         assert "测试文件" in frontmatter["title"]
-        assert "José María González" == frontmatter["author"]
+        assert frontmatter["author"] == "José María González"
         assert "🚀🌟" in frontmatter["description"]
         assert "标签" in frontmatter["tags"]
         assert "🏷️" in frontmatter["tags"]
-        assert "中文测试" == frontmatter["metadata"]["chinese"]
+        assert frontmatter["metadata"]["chinese"] == "中文测试"
 
     def test_empty_frontmatter_fields_bug(self, temp_dir: Path):
         """
@@ -531,7 +528,7 @@ Raw HTML: {{ raw_html | safe }}
 
         Fix: Recursion depth limiting and cycle detection.
         """
-        from jinja2 import Environment, DictLoader
+        from jinja2 import DictLoader, Environment
 
         # Templates that could cause infinite recursion
         templates = {

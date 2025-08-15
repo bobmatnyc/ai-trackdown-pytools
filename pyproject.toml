@@ -352,6 +352,8 @@ extend-exclude = '''
 [tool.ruff]
 target-version = "py38"
 line-length = 88
+
+[tool.ruff.lint]
 select = [
     "E",  # pycodestyle errors
     "W",  # pycodestyle warnings
@@ -374,11 +376,18 @@ ignore = [
     "ISC001", # conflicts with formatter
 ]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "tests/**/*" = ["S101", "ARG", "FBT"]
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 known-first-party = ["ai_trackdown_pytools"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+known_first_party = ["ai_trackdown_pytools"]
+src_paths = ["src", "tests"]
+skip_gitignore = true
 
 [tool.mypy]
 python_version = "3.8"

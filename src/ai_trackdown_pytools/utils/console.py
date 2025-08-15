@@ -1,7 +1,8 @@
 """Console output utilities for AI-friendly and plain output modes."""
 
 import os
-from typing import Optional, Any, Dict, List
+from typing import Any, Dict, List, Optional
+
 from rich.console import Console as RichConsole
 from rich.panel import Panel
 from rich.table import Table
@@ -43,7 +44,9 @@ class Console:
 
         self.rich_console.print(*args, **kwargs)
 
-    def print_panel(self, content: str, title: Optional[str] = None, **kwargs: Any) -> None:
+    def print_panel(
+        self, content: str, title: Optional[str] = None, **kwargs: Any
+    ) -> None:
         """Print a panel, or plain text with title in plain mode."""
         if self.plain_mode:
             if title:

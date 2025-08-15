@@ -2,7 +2,6 @@
 
 from pathlib import Path
 
-import pytest
 import yaml
 
 from ai_trackdown_pytools.core.config import Config, ConfigModel
@@ -104,7 +103,7 @@ class TestConfig:
         config.save()
 
         # Reload and verify
-        with open(config_path, "r") as f:
+        with open(config_path) as f:
             saved_data = yaml.safe_load(f)
 
         assert saved_data["project"]["name"] == "saved_project"

@@ -235,9 +235,9 @@ def apply(
 
         try:
             template_vars = json.loads(variables)
-        except json.JSONDecodeError:
+        except json.JSONDecodeError as err:
             console.print("[red]Invalid JSON format for variables[/red]")
-            raise typer.Exit(1)
+            raise typer.Exit(1) from err
 
     # Apply template
     result = template_manager.apply_template(
@@ -321,7 +321,7 @@ def install(
 
     except Exception as e:
         console.print(f"[red]❌ Failed to install templates: {e}[/red]")
-        raise typer.Exit(1)
+        raise typer.Exit(1) from e
 
 
 if __name__ == "__main__":

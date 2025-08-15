@@ -12,32 +12,24 @@ This test suite covers:
 - Regression testing framework to prevent previously fixed bugs from reoccurring
 """
 
-import json
 import os
-import tempfile
 import threading
 import time
-from datetime import datetime, date, timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, Any, List
-from unittest.mock import Mock, patch, mock_open
+from typing import Any, Dict, List
+from unittest.mock import patch
+
 import pytest
 import yaml
 
-from ai_trackdown_pytools.core.config import Config, ConfigModel
-from ai_trackdown_pytools.core.models import (
-    TaskModel,
-    EpicModel,
-    IssueModel,
-    PRModel,
-    ProjectModel,
-)
+from ai_trackdown_pytools.core.config import Config
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
-from ai_trackdown_pytools.utils.frontmatter import FrontmatterParser, FrontmatterError
+from ai_trackdown_pytools.utils.frontmatter import FrontmatterError, FrontmatterParser
 from ai_trackdown_pytools.utils.git import GitUtils
 from ai_trackdown_pytools.utils.templates import TemplateManager
-from ai_trackdown_pytools.utils.validation import SchemaValidator, ValidationResult
+from ai_trackdown_pytools.utils.validation import SchemaValidator
 
 
 class TestBoundaryValues:
@@ -663,7 +655,7 @@ class TestSecurityBoundaries:
         malicious_yaml_file.write_text(malicious_content)
 
         # Should use safe loader
-        with open(malicious_yaml_file, "r") as f:
+        with open(malicious_yaml_file) as f:
             try:
                 data = yaml.safe_load(f)
                 # Should not execute code
@@ -1118,7 +1110,6 @@ def generate_test_data(size: int) -> List[Dict[str, Any]]:
 def simulate_system_load():
     """Simulate system load for stress testing."""
     import threading
-    import time
 
     def cpu_intensive_task():
         """CPU intensive task."""

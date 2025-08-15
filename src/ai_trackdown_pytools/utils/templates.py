@@ -3,7 +3,7 @@
 import shutil
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 import yaml
 from jinja2 import Environment, FileSystemLoader, Template
@@ -38,7 +38,9 @@ class TemplateEngine:
             template = self.env.get_template(template_name)
             return template.render(**variables)
         except Exception as e:
-            raise TemplateError(f"Failed to render template {template_name}: {e}")
+            raise TemplateError(
+                f"Failed to render template {template_name}: {e}"
+            ) from e
 
     def render_string(self, template_string: str, variables: Dict[str, Any]) -> str:
         """Render template string with variables."""
@@ -46,7 +48,7 @@ class TemplateEngine:
             template = Template(template_string)
             return template.render(**variables)
         except Exception as e:
-            raise TemplateError(f"Failed to render template string: {e}")
+            raise TemplateError(f"Failed to render template string: {e}") from e
 
     def validate_template(self, template_string: str) -> bool:
         """Validate template syntax."""
@@ -124,7 +126,7 @@ class TemplateManager:
                     seen_names.add(template_name)
 
                     try:
-                        with open(template_file, "r", encoding="utf-8") as f:
+                        with open(template_file, encoding="utf-8") as f:
                             template_data = yaml.safe_load(f)
 
                         templates.append(
@@ -151,7 +153,7 @@ class TemplateManager:
             template_file = template_dir / template_type / f"{name}.yaml"
             if template_file.exists():
                 try:
-                    with open(template_file, "r", encoding="utf-8") as f:
+                    with open(template_file, encoding="utf-8") as f:
                         return yaml.safe_load(f)
                 except Exception:
                     continue
@@ -373,7 +375,9 @@ def render_template(template_type: str, name: str, variables: Dict[str, Any]) ->
         template = Template(template_data.get("content", ""))
         return template.render(**variables)
     except Exception as e:
-        raise TemplateError(f"Failed to render template {template_type}/{name}: {e}")
+        raise TemplateError(
+            f"Failed to render template {template_type}/{name}: {e}"
+        ) from e
 
 
 def list_templates(template_type: Optional[str] = None) -> List[Dict[str, Any]]:

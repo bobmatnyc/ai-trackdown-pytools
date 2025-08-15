@@ -1,13 +1,13 @@
 """Advanced search and filtering commands."""
 
+import re
 from pathlib import Path
 from typing import List, Optional
-import re
 
 import typer
 from rich.console import Console
-from rich.table import Table
 from rich.panel import Panel
+from rich.table import Table
 
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
@@ -74,7 +74,7 @@ def tasks(
             )
         except re.error as e:
             console.print(f"[red]Invalid regex pattern: {e}[/red]")
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
     else:
         query_lower = query.lower() if not case_sensitive else query
 
@@ -125,11 +125,11 @@ def tasks(
                 after_date = datetime.strptime(created_after, "%Y-%m-%d")
                 if task.created_at.date() < after_date.date():
                     continue
-            except ValueError:
+            except ValueError as err:
                 console.print(
                     f"[red]Invalid date format: {created_after}. Use YYYY-MM-DD[/red]"
                 )
-                raise typer.Exit(1)
+                raise typer.Exit(1) from err
 
         if created_before:
             from datetime import datetime
@@ -138,11 +138,11 @@ def tasks(
                 before_date = datetime.strptime(created_before, "%Y-%m-%d")
                 if task.created_at.date() > before_date.date():
                     continue
-            except ValueError:
+            except ValueError as err:
                 console.print(
                     f"[red]Invalid date format: {created_before}. Use YYYY-MM-DD[/red]"
                 )
-                raise typer.Exit(1)
+                raise typer.Exit(1) from err
 
         # Perform search
         match_found = False
@@ -293,7 +293,7 @@ def content(
             )
         except re.error as e:
             console.print(f"[red]Invalid regex pattern: {e}[/red]")
-            raise typer.Exit(1)
+            raise typer.Exit(1) from e
     else:
         query_search = query if case_sensitive else query.lower()
 
@@ -314,7 +314,7 @@ def content(
             files_searched += 1
 
             try:
-                with open(task_file, "r", encoding="utf-8") as f:
+                with open(task_file, encoding="utf-8") as f:
                     lines = f.readlines()
 
                 file_matches = []
@@ -427,10 +427,10 @@ def filters(
 
     if list_values:
         # Collect all unique values
-        statuses = set(task.status for task in all_tasks)
-        priorities = set(task.priority for task in all_tasks)
-        assignees = set(assignee for task in all_tasks for assignee in task.assignees)
-        tags = set(tag for task in all_tasks for tag in task.tags)
+        statuses = {task.status for task in all_tasks}
+        priorities = {task.priority for task in all_tasks}
+        assignees = {assignee for task in all_tasks for assignee in task.assignees}
+        tags = {tag for task in all_tasks for tag in task.tags}
 
         if field:
             if field == "status":

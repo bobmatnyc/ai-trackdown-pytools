@@ -60,12 +60,16 @@ class Config:
         """Load configuration from file."""
         instance = cls(project_path)
 
+        # Convert string to Path if needed
+        if config_path is not None and not isinstance(config_path, Path):
+            config_path = Path(config_path)
+
         if config_path is None:
             # Try to find config file
             config_path = cls.find_config_file()
 
         if config_path and config_path.exists():
-            with open(config_path, "r", encoding="utf-8") as f:
+            with open(config_path, encoding="utf-8") as f:
                 config_data = yaml.safe_load(f) or {}
 
             instance._config = ConfigModel(**config_data)
@@ -234,3 +238,15 @@ class Config:
     def clear_cache(cls) -> None:
         """Clear all cached configuration instances."""
         cls._instances.clear()
+
+    def __getattr__(self, name: str) -> Any:
+        """Allow direct access to config model attributes."""
+        if hasattr(self._config, name):
+            return getattr(self._config, name)
+        raise AttributeError(f"Config has no attribute '{name}'")
+
+    def update_from_dict(self, data: Dict[str, Any]) -> None:
+        """Update configuration from dictionary."""
+        current_data = self._config.model_dump()
+        current_data.update(data)
+        self._config = ConfigModel(**current_data)

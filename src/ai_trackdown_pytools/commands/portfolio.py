@@ -1,8 +1,8 @@
 """Portfolio and backlog management commands."""
 
+import json
 from pathlib import Path
 from typing import Optional
-import json
 
 import typer
 from rich.console import Console
@@ -10,7 +10,10 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.tree import Tree
 
-from ai_trackdown_pytools.core.constants import PRIORITY_ORDER, TicketPriority, TicketStatus
+from ai_trackdown_pytools.core.constants import (
+    PRIORITY_ORDER,
+    TicketPriority,
+)
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
 
@@ -224,7 +227,12 @@ def backlog(
                 priority_groups[priority] = []
             priority_groups[priority].append(task)
 
-        for priority in [p.value for p in sorted(TicketPriority, key=lambda x: PRIORITY_ORDER[x], reverse=True)]:
+        for priority in [
+            p.value
+            for p in sorted(
+                TicketPriority, key=lambda x: PRIORITY_ORDER[x], reverse=True
+            )
+        ]:
             if priority in priority_groups:
                 tasks = priority_groups[priority]
                 console.print(
@@ -294,7 +302,7 @@ def backlog(
 @app.command()
 def roadmap(
     epic_only: bool = typer.Option(False, "--epics-only", "-e", help="Show epics only"),
-    timeline: Optional[str] = typer.Option(
+    _timeline: Optional[str] = typer.Option(
         None, "--timeline", "-t", help="Timeline filter (quarter, month)"
     ),
     format: str = typer.Option(
@@ -437,7 +445,7 @@ def sprint(
 
     # Load existing sprints
     if sprints_file.exists():
-        with open(sprints_file, "r") as f:
+        with open(sprints_file) as f:
             sprints_data = json.load(f)
     else:
         sprints_data = {"sprints": [], "current_sprint": None}

@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 import yaml
 from pydantic import BaseModel, ConfigDict, field_serializer
@@ -72,14 +72,14 @@ class Project:
                 data_dict = project_data.model_dump()
                 yaml.dump(data_dict, f, default_flow_style=False)
         except Exception as e:
-            raise ProjectError(f"Failed to create project configuration: {e}")
+            raise ProjectError(f"Failed to create project configuration: {e}") from e
 
         # Create default configuration
         config_file = path / ".ai-trackdown" / "config.yaml"
         try:
             Config.create_default(config_file)
         except Exception as e:
-            raise ProjectError(f"Failed to create project configuration: {e}")
+            raise ProjectError(f"Failed to create project configuration: {e}") from e
 
         return cls(path, project_data)
 
@@ -92,7 +92,7 @@ class Project:
         if not project_file.exists():
             raise ProjectError(f"No project file found at {project_file}")
 
-        with open(project_file, "r", encoding="utf-8") as f:
+        with open(project_file, encoding="utf-8") as f:
             project_data = yaml.safe_load(f)
 
         # Handle empty or invalid project file

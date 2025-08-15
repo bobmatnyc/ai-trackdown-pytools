@@ -1,35 +1,24 @@
 """Tests for the comprehensive ticket schema validation system."""
 
-import pytest
 import tempfile
-from datetime import datetime, date
+from datetime import date, datetime
 from pathlib import Path
-from typing import Dict, Any
 
-from ai_trackdown_pytools.utils.validation import (
-    SchemaValidator,
-    ValidationResult,
-    validate_ticket_file,
-    validate_id_format,
-    validate_relationships,
-    validate_task_data,
-    validate_epic_data,
-    validate_issue_data,
-    validate_pr_data,
-    validate_project_data,
+import pytest
+
+from ai_trackdown_pytools.core.models import (
+    EpicModel,
+    TaskModel,
 )
 from ai_trackdown_pytools.utils.frontmatter import (
     FrontmatterParser,
     StatusWorkflowValidator,
-    parse_ticket_file,
-    validate_ticket_data,
 )
-from ai_trackdown_pytools.core.models import (
-    TaskModel,
-    EpicModel,
-    IssueModel,
-    PRModel,
-    ProjectModel,
+from ai_trackdown_pytools.utils.validation import (
+    SchemaValidator,
+    validate_id_format,
+    validate_relationships,
+    validate_task_data,
 )
 
 

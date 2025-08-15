@@ -2,7 +2,7 @@
 
 import json
 import subprocess
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
@@ -61,7 +61,7 @@ class GitHubCLI:
             )
             return result.stdout
         except subprocess.CalledProcessError as e:
-            raise GitHubError(f"GitHub CLI error: {e.stderr}")
+            raise GitHubError(f"GitHub CLI error: {e.stderr}") from e
 
     def create_issue(
         self,

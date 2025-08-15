@@ -1,15 +1,13 @@
 """Comprehensive testing for CLI output formats and error conditions."""
 
+import json
 import os
 import tempfile
-import json
 from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
-from io import StringIO
+from unittest.mock import Mock, patch
 
 import pytest
 from typer.testing import CliRunner
-from rich.console import Console
 
 from ai_trackdown_pytools.cli import app
 
@@ -616,7 +614,7 @@ class TestOutputRedirection:
 
             # Check if file was created (if feature exists)
             if os.path.exists(output_file) and os.path.getsize(output_file) > 0:
-                with open(output_file, "r") as f:
+                with open(output_file) as f:
                     content = f.read()
                     assert len(content) > 0
         finally:

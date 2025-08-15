@@ -1,11 +1,11 @@
 """Test the close command in the CLI."""
 
+import os
+from datetime import datetime
+
 import pytest
 from typer.testing import CliRunner
-from pathlib import Path
-from datetime import datetime
-import json
-import os
+
 from ai_trackdown_pytools.cli import app
 from ai_trackdown_pytools.core.task import TaskManager
 
