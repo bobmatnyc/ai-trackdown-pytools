@@ -5,7 +5,14 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 import yaml
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, ValidationError as PydanticValidationError
+
+from ai_trackdown_pytools.exceptions import (
+    ConfigurationError,
+    FileOperationError,
+    ValidationError as DataValidationError,
+)
+from ai_trackdown_pytools.utils.retry import RetryableFileOperation
 
 
 class ConfigModel(BaseModel):
@@ -144,6 +151,18 @@ class Config:
         """Get global configuration file path."""
         return Path.home() / ".ai-trackdown" / "config.yaml"
 
+    def __getattr__(self, name: str) -> Any:
+        """Provide attribute access to config values."""
+        if name.startswith("_"):
+            # Don't intercept private attributes
+            raise AttributeError(f"'Config' object has no attribute '{name}'")
+        
+        # Check if the attribute exists on the ConfigModel
+        if hasattr(self._config, name):
+            return getattr(self._config, name)
+        
+        raise AttributeError(f"'Config' object has no attribute '{name}'")
+
     def get(self, key: str, default: Any = None) -> Any:
         """Get configuration value using dot notation."""
         keys = key.split(".")
@@ -187,6 +206,13 @@ class Config:
     def to_dict(self) -> Dict[str, Any]:
         """Convert configuration to dictionary."""
         return self._config.model_dump()
+    
+    def update_from_dict(self, data: Dict[str, Any]) -> None:
+        """Update configuration from dictionary."""
+        # Merge with existing config
+        current = self._config.model_dump()
+        current.update(data)
+        self._config = ConfigModel(**current)
 
     @property
     def config_path(self) -> Optional[Path]:

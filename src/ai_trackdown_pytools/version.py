@@ -166,6 +166,8 @@ VERSION_HISTORY = [
     "1.1.1",  # Additional bug fixes
     "1.1.2",  # Bug fixes and improvements
     "1.2.0",  # Major Enhancements and Archive Management
+    "1.3.0",  # Workflow improvements and performance optimizations
+    "1.4.0",  # Project configuration simplification and dependency updates
 ]
 
 
@@ -198,6 +200,12 @@ FEATURES = {
     "pr_comment_management": "1.2.0",
     "enhanced_validation": "1.2.0",
     "improved_performance": "1.2.0",
+    "workflow_improvements": "1.3.0",
+    "performance_optimizations": "1.3.0",
+    "github_sync_enhancements": "1.3.0",
+    "simplified_configuration": "1.4.0",
+    "importlib_metadata_versioning": "1.4.0",
+    "dependency_updates": "1.4.0",
 }
 
 

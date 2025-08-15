@@ -18,7 +18,7 @@ class TestConfigModel:
         assert config.project == {}
         assert config.editor == {"default": "code"}
         assert config.templates == {"directory": "templates"}
-        assert config.tasks == {"directory": "tasks"}
+        assert config.tasks == {"directory": "tickets"}
         assert config.git == {"auto_commit": False}
         assert config.plugins == {}
 

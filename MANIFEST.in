@@ -3,7 +3,6 @@ include CHANGELOG.md
 include CONTRIBUTING.md
 include LICENSE
 include pyproject.toml
-include setup.py
 include VERSION
 
 # Include version file

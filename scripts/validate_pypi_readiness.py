@@ -56,7 +56,17 @@ def check_version_consistency():
     # Read pyproject.toml version
     with open("pyproject.toml", "r") as f:
         data = toml.load(f)
-        pyproject_version = data["project"]["version"]
+        # Check if version is dynamic
+        if "version" in data["project"].get("dynamic", []):
+            # For dynamic versioning, read from VERSION file
+            if Path("VERSION").exists():
+                with open("VERSION", "r") as vf:
+                    pyproject_version = vf.read().strip()
+            else:
+                print("  ❌ Dynamic version configured but VERSION file not found")
+                return False
+        else:
+            pyproject_version = data["project"]["version"]
     
     # Read __init__.py for version
     init_file = Path("src/ai_trackdown_pytools/__init__.py")
@@ -133,7 +143,6 @@ def check_required_files():
         "LICENSE",
         "CHANGELOG.md",
         "pyproject.toml",
-        "setup.py",
         "MANIFEST.in"
     ]
     
@@ -158,7 +167,6 @@ def check_package_metadata():
     
     required_fields = [
         "name",
-        "version",
         "description",
         "authors",
         "readme",
@@ -167,12 +175,26 @@ def check_package_metadata():
         "dependencies"
     ]
     
+    # Add version to required fields only if it's not dynamic
+    dynamic_fields = project.get("dynamic", [])
+    if "version" not in dynamic_fields:
+        required_fields.append("version")
+    
     all_present = True
     for field in required_fields:
         if field in project:
             print(f"  ✅ {field}: Present")
         else:
             print(f"  ❌ {field}: MISSING")
+            all_present = False
+    
+    # Check dynamic version configuration if used
+    if "version" in dynamic_fields:
+        print("  ℹ️  Version is dynamically configured")
+        if Path("VERSION").exists():
+            print("  ✅ VERSION file exists for dynamic versioning")
+        else:
+            print("  ❌ VERSION file missing for dynamic versioning")
             all_present = False
     
     # Check URLs

@@ -1,20 +1,33 @@
-"""Git utilities for AI Trackdown PyTools."""
+"""Git utilities for AI Trackdown PyTools.
+
+This module provides Git integration utilities with proper error handling
+and fallback behavior when GitPython is not available.
+"""
 
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-try:
-    from git import InvalidGitRepositoryError, Repo
+from ai_trackdown_pytools.exceptions import GitOperationError, DependencyError
 
+try:
+    from git import Repo, InvalidGitRepositoryError, GitCommandError
     GIT_AVAILABLE = True
 except ImportError:
     GIT_AVAILABLE = False
+    Repo = None
+    InvalidGitRepositoryError = None
+    GitCommandError = None
 
 
-class GitError(Exception):
-    """Exception raised for git-related errors."""
-
-    pass
+# Keep GitError for backward compatibility but inherit from GitOperationError
+class GitError(GitOperationError):
+    """Exception raised for git-related errors.
+    
+    WHY: Maintained for backward compatibility. New code should use GitOperationError.
+    """
+    
+    def __init__(self, message: str):
+        super().__init__(message)
 
 
 class GitRepo:
@@ -53,16 +66,37 @@ class GitRepo:
             raise GitError(f"Failed to get repository status: {e}") from e
 
     def commit_changes(self, message: str, files: Optional[List[str]] = None) -> None:
-        """Commit changes."""
+        """Commit changes with proper error handling.
+        
+        WHY: Commits can fail due to conflicts, hooks, or permissions.
+        This provides specific guidance for each failure mode.
+        """
         try:
             if files:
                 self.repo.index.add(files)
             else:
+                # Check if there are changes to commit
+                if not self.repo.is_dirty() and not self.repo.untracked_files:
+                    return  # Nothing to commit
                 self.repo.git.add(A=True)
 
             self.repo.index.commit(message)
+        except GitCommandError as e:
+            if "nothing to commit" in str(e):
+                return  # Not an error, just no changes
+            raise GitOperationError(
+                f"Git command failed during commit",
+                operation="commit",
+                repository=self.path,
+                original_error=e
+            )
         except Exception as e:
-            raise GitError(f"Failed to commit changes: {e}") from e
+            raise GitOperationError(
+                f"Failed to commit changes",
+                operation="commit",
+                repository=self.path,
+                original_error=e
+            )
 
     def create_branch(self, branch_name: str) -> None:
         """Create new branch."""

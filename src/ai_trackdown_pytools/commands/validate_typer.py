@@ -40,7 +40,7 @@ def file(
     verbose: bool = typer.Option(
         False, "--verbose", "-v", help="Show detailed validation information"
     ),
-):
+) -> None:
     """Validate a ticket file."""
     try:
         result = validate_ticket_file(file_path, ticket_type)
@@ -72,7 +72,7 @@ def directory(
         "text", help="Output format", click_type=click.Choice(["text", "json", "yaml"])
     ),
     summary_only: bool = typer.Option(False, help="Show only summary statistics"),
-):
+) -> None:
     """Validate all ticket files in a directory."""
     files = list(directory.glob(pattern))
     if not files:
@@ -125,7 +125,7 @@ def data(
     output_format: str = typer.Option(
         "text", help="Output format", click_type=click.Choice(["text", "json", "yaml"])
     ),
-):
+) -> None:
     """Validate ticket data from command line."""
     try:
         # Parse input data
@@ -160,7 +160,7 @@ def data(
 def id_format(
     ticket_id: str = typer.Argument(..., help="Ticket ID to validate"),
     ticket_type: str = typer.Argument(..., help="Type of ticket"),
-):
+) -> None:
     """Validate ticket ID format."""
 
     result = validate_id_format(ticket_id, ticket_type)
@@ -181,7 +181,7 @@ def transition(
     from_status: str = typer.Argument(..., help="Current status"),
     to_status: str = typer.Argument(..., help="Target status"),
     ticket_type: str = typer.Argument(..., help="Type of ticket"),
-):
+) -> None:
     """Validate status transition."""
     workflow_validator = StatusWorkflowValidator()
     result = workflow_validator.validate_status_transition(
@@ -222,7 +222,7 @@ def relationships(
         ..., help="Directory containing tickets", exists=True, file_okay=False
     ),
     pattern: str = typer.Option("**/*.md", help="File pattern to match"),
-):
+) -> None:
     """Validate relationships between tickets in a directory."""
     files = list(directory.glob(pattern))
     if not files:
@@ -275,7 +275,7 @@ def relationships(
 
 
 @app.command()
-def schemas():
+def schemas() -> None:
     """List available validation schemas."""
     validator = SchemaValidator()
     schemas = validator.list_schemas()
@@ -305,7 +305,7 @@ def schemas():
 
 def _display_validation_result(
     result: ValidationResult, source: str, verbose: bool = False
-):
+) -> None:
     """Display validation result in rich format."""
     if result.valid:
         console.print(f"[green]✓ Validation passed[/green] for {source}")
@@ -326,7 +326,7 @@ def _display_validation_result(
         console.print("[dim]No validation issues found[/dim]")
 
 
-def _display_directory_results(results: List[tuple], summary_only: bool = False):
+def _display_directory_results(results: List[tuple], summary_only: bool = False) -> None:
     """Display validation results for multiple files."""
     total_files = len(results)
     valid_files = sum(1 for _, result in results if result.valid)

@@ -14,9 +14,205 @@ from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
 from ai_trackdown_pytools.utils.git import GitUtils
 from ai_trackdown_pytools.utils.github import GitHubCLI, GitHubError
+from ai_trackdown_pytools.utils.sync import (
+    SyncConfig,
+    SyncDirection,
+    get_adapter,
+    list_platforms,
+    AdapterNotFoundError,
+    SyncError,
+)
+from ai_trackdown_pytools.utils.sync.compat import SyncBridge
 
 app = typer.Typer(help="Sync with external platforms (GitHub, GitLab, etc.)")
 console = Console()
+
+# Adapters are self-registered when imported via the sync module
+# No need to manually register them here
+
+
+@app.command(name="platform")
+def sync_platform(
+    platform: str = typer.Argument(..., help="Platform to sync with (use 'list' to see available platforms)"),
+    action: str = typer.Argument(..., help="Action to perform (pull, push, status)"),
+    repo: Optional[str] = typer.Option(
+        None, "--repo", "-r", help="Repository or project identifier"
+    ),
+    token: Optional[str] = typer.Option(None, "--token", "-t", help="Authentication token"),
+    dry_run: bool = typer.Option(
+        False, "--dry-run", "-n", help="Show what would be done without executing"
+    ),
+) -> None:
+    """Sync with external platforms using the adapter system.
+    
+    WHY: This is the new unified sync command that uses the adapter pattern.
+    It maintains backward compatibility while supporting multiple platforms.
+    """
+    # Special case: list available platforms
+    if platform == "list" and action == "platforms":
+        platforms = list_platforms()
+        console.print("[bold blue]Available Platforms:[/bold blue]")
+        for p in platforms:
+            console.print(f"  • {p}")
+        return
+    
+    project_path = Path.cwd()
+    
+    if not Project.exists(project_path):
+        console.print("[red]No AI Trackdown project found[/red]")
+        raise typer.Exit(1)
+    
+    # Ensure sync directory exists
+    sync_dir = project_path / ".aitrackdown"
+    sync_dir.mkdir(exist_ok=True)
+    
+    # Load sync configuration
+    sync_config_file = sync_dir / "sync.json"
+    if sync_config_file.exists():
+        with open(sync_config_file, "r") as f:
+            all_sync_config = json.load(f)
+    else:
+        all_sync_config = {}
+    
+    # Get platform-specific config
+    platform_config = all_sync_config.get(platform, {})
+    
+    # Override with command-line options
+    if repo:
+        platform_config["repository"] = repo
+    if token:
+        platform_config["token"] = token
+    
+    # For GitHub, try to extract repo from git remote if not provided
+    if platform == "github" and not platform_config.get("repository"):
+        git_utils = GitUtils(project_path)
+        if git_utils.is_git_repo():
+            try:
+                remote_url = git_utils.get_remote_url()
+                if remote_url and "github.com" in remote_url:
+                    # Parse GitHub URL
+                    if remote_url.endswith(".git"):
+                        remote_url = remote_url[:-4]
+                    if "github.com/" in remote_url:
+                        repo = remote_url.split("github.com/")[-1]
+                        if repo.startswith("git@"):
+                            repo = repo.split(":")[-1]
+                        platform_config["repository"] = repo
+            except Exception:
+                pass
+    
+    # Validate we have required configuration
+    if not platform_config.get("repository") and platform == "github":
+        console.print(
+            "[red]Could not determine repository. Use --repo owner/repo[/red]"
+        )
+        raise typer.Exit(1)
+    
+    console.print(f"[blue]{platform.title()} repository: {platform_config.get('repository', 'N/A')}[/blue]")
+    
+    task_manager = TaskManager(project_path)
+    bridge = SyncBridge(task_manager)
+    
+    try:
+        if action == "status":
+            # Show sync status
+            last_sync = all_sync_config.get("last_sync", {}).get(platform, "Never")
+            
+            # Count platform-specific items
+            all_tasks = task_manager.list_tasks()
+            platform_items = [
+                t for t in all_tasks
+                if t.metadata and t.metadata.get("platform") == platform
+            ]
+            
+            console.print(
+                Panel.fit(
+                    f"""[bold blue]{platform.title()} Sync Status[/bold blue]
+
+[dim]Repository:[/dim] {platform_config.get('repository', 'Not configured')}
+[dim]Last sync:[/dim] {last_sync}
+[dim]Platform items:[/dim] {len(platform_items)}
+[dim]Total local items:[/dim] {len(all_tasks)}
+
+[dim]Configuration:[/dim]
+• Repository: {platform_config.get('repository', 'Not set')}
+• Auth: {'Configured' if platform_config.get('token') or platform == 'github' else 'Not configured'}""",
+                    title=f"{platform.title()} Sync Status",
+                    border_style="blue",
+                )
+            )
+        
+        elif action == "pull":
+            # Pull items from platform
+            console.print(f"[blue]Pulling from {platform} repository: {platform_config.get('repository')}[/blue]")
+            
+            if dry_run:
+                console.print(
+                    f"[yellow]DRY RUN: Would fetch items from {platform}[/yellow]"
+                )
+            
+            # Use the sync bridge for backward compatibility
+            created, updated = bridge.pull_from_platform(
+                platform, platform_config, dry_run
+            )
+            
+            if not dry_run:
+                # Update sync metadata
+                all_sync_config.setdefault("last_sync", {})
+                all_sync_config["last_sync"][platform] = datetime.now().isoformat()
+                with open(sync_config_file, "w") as f:
+                    json.dump(all_sync_config, f, indent=2)
+            
+            console.print(f"[green]Successfully synced from {platform}:[/green]")
+            console.print(f"• Items created: {created}")
+            console.print(f"• Items updated: {updated}")
+        
+        elif action == "push":
+            # Push items to platform
+            console.print(f"[blue]Pushing to {platform} repository: {platform_config.get('repository')}[/blue]")
+            
+            if dry_run:
+                console.print(
+                    f"[yellow]DRY RUN: Would push items to {platform}[/yellow]"
+                )
+            
+            # Use the sync bridge
+            created, updated, errors = bridge.push_to_platform(
+                platform, platform_config, dry_run
+            )
+            
+            if not dry_run:
+                # Update sync metadata
+                all_sync_config.setdefault("last_sync", {})
+                all_sync_config["last_sync"][platform] = datetime.now().isoformat()
+                with open(sync_config_file, "w") as f:
+                    json.dump(all_sync_config, f, indent=2)
+            
+            console.print(f"[green]Successfully pushed to {platform}:[/green]")
+            console.print(f"• Items created: {created}")
+            console.print(f"• Items updated: {updated}")
+            
+            if errors:
+                console.print(
+                    f"\n[yellow]Warnings ({len(errors)} items failed):[/yellow]"
+                )
+                for error in errors[:5]:  # Show first 5 errors
+                    console.print(f"  • {error}")
+                if len(errors) > 5:
+                    console.print(f"  • ... and {len(errors) - 5} more errors")
+        
+        else:
+            console.print(f"[red]Unknown action: {action}[/red]")
+            console.print("Valid actions: status, pull, push")
+            raise typer.Exit(1)
+    
+    except AdapterNotFoundError as e:
+        console.print(f"[red]Platform not supported: {platform}[/red]")
+        console.print("Use 'aitrackdown sync list platforms' to see available platforms")
+        raise typer.Exit(1)
+    except SyncError as e:
+        console.print(f"[red]Sync error: {e}[/red]")
+        raise typer.Exit(1)
 
 
 @app.command()
@@ -73,6 +269,13 @@ def github(
         raise typer.Exit(1)
 
     console.print(f"[blue]GitHub repository: {repo}[/blue]")
+    
+    # DEPRECATED: This command is maintained for backward compatibility
+    # Use 'aitrackdown sync platform github <action>' instead
+    console.print(
+        "[yellow]Note: This command is deprecated. "
+        "Use 'aitrackdown sync platform github <action>' instead[/yellow]"
+    )
 
     task_manager = TaskManager(project_path)
 
@@ -287,8 +490,26 @@ def github(
 
 
 @app.command()
+def list_available() -> None:
+    """List available sync platforms.
+    
+    WHY: Provides a convenient way to discover which platforms are supported
+    without having to know the special 'list platforms' syntax.
+    """
+    platforms = list_platforms()
+    
+    console.print(Panel.fit(
+        "[bold blue]Available Sync Platforms[/bold blue]\n\n" +
+        "\n".join([f"• {p}" for p in platforms]) +
+        "\n\n[dim]Use 'aitrackdown sync platform <name> status' to check platform status[/dim]",
+        title="Sync Platforms",
+        border_style="blue"
+    ))
+
+
+@app.command()
 def config(
-    platform: str = typer.Argument(..., help="Platform to configure (github, gitlab)"),
+    platform: str = typer.Argument(..., help="Platform to configure"),
     key: Optional[str] = typer.Option(None, "--key", "-k", help="Configuration key"),
     value: Optional[str] = typer.Option(
         None, "--value", "-v", help="Configuration value"
@@ -326,6 +547,10 @@ def config(
 
         if not platform_config:
             console.print(f"[yellow]No configuration found for {platform}[/yellow]")
+            # Show available platforms
+            platforms = list_platforms()
+            if platform not in platforms:
+                console.print(f"\n[dim]Available platforms: {', '.join(platforms)}[/dim]")
             return
 
         console.print(
@@ -344,16 +569,44 @@ def config(
 
     if not key:
         console.print(f"[yellow]Available {platform} configuration keys:[/yellow]")
-        if platform == "github":
-            console.print("• token - GitHub personal access token")
-            console.print("• repo - Default repository (owner/repo)")
-            console.print(
-                "• api_url - GitHub API URL (default: https://api.github.com)"
-            )
-        elif platform == "gitlab":
-            console.print("• token - GitLab access token")
-            console.print("• project_id - GitLab project ID")
-            console.print("• api_url - GitLab API URL")
+        
+        # Platform-specific configuration help
+        config_help = {
+            "github": [
+                ("repository", "GitHub repository (owner/repo)"),
+                ("token", "GitHub personal access token (optional if using gh CLI)"),
+                ("api_url", "GitHub API URL (default: https://api.github.com)"),
+            ],
+            "gitlab": [
+                ("repository", "GitLab project path or ID"),
+                ("token", "GitLab access token"),
+                ("api_url", "GitLab API URL"),
+            ],
+            "clickup": [
+                ("workspace_id", "ClickUp workspace ID"),
+                ("token", "ClickUp API token"),
+                ("list_id", "Default list ID for tasks"),
+            ],
+            "linear": [
+                ("team_id", "Linear team ID"),
+                ("token", "Linear API key"),
+            ],
+            "jira": [
+                ("server", "JIRA server URL"),
+                ("project_key", "JIRA project key"),
+                ("username", "JIRA username"),
+                ("token", "JIRA API token"),
+            ],
+        }
+        
+        if platform in config_help:
+            for key_name, description in config_help[platform]:
+                console.print(f"• {key_name} - {description}")
+        else:
+            # Generic configuration for unknown platforms
+            console.print("• repository - Repository or project identifier")
+            console.print("• token - Authentication token")
+            console.print("• api_url - API endpoint URL")
 
         console.print(
             f"\nUse: aitrackdown sync config {platform} --key <key> --value <value>"
@@ -624,6 +877,38 @@ def export(
     console.print(
         f"[green]Exported {len(filtered_tasks)} tasks to {output_path}[/green]"
     )
+
+
+# Add convenience commands for backward compatibility
+@app.command(name="pull")
+def pull_shortcut(
+    platform: str = typer.Argument("github", help="Platform to pull from"),
+    repo: Optional[str] = typer.Option(None, "--repo", "-r", help="Repository identifier"),
+    token: Optional[str] = typer.Option(None, "--token", "-t", help="Authentication token"),
+    dry_run: bool = typer.Option(False, "--dry-run", "-n", help="Show what would be done"),
+) -> None:
+    """Shortcut for 'sync platform <platform> pull'."""
+    sync_platform(platform, "pull", repo, token, dry_run)
+
+
+@app.command(name="push")
+def push_shortcut(
+    platform: str = typer.Argument("github", help="Platform to push to"),
+    repo: Optional[str] = typer.Option(None, "--repo", "-r", help="Repository identifier"),
+    token: Optional[str] = typer.Option(None, "--token", "-t", help="Authentication token"),
+    dry_run: bool = typer.Option(False, "--dry-run", "-n", help="Show what would be done"),
+) -> None:
+    """Shortcut for 'sync platform <platform> push'."""
+    sync_platform(platform, "push", repo, token, dry_run)
+
+
+@app.command(name="status")
+def status_shortcut(
+    platform: str = typer.Argument("github", help="Platform to check status"),
+    repo: Optional[str] = typer.Option(None, "--repo", "-r", help="Repository identifier"),
+) -> None:
+    """Shortcut for 'sync platform <platform> status'."""
+    sync_platform(platform, "status", repo, None, False)
 
 
 if __name__ == "__main__":

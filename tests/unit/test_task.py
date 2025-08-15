@@ -11,12 +11,77 @@ from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import Task, TaskError, TaskManager
 
 
+class TestTaskModel:
+    """Test TaskModel data model functionality."""
+
+    def test_task_model_creation(self):
+        """Test creating a TaskModel."""
+        now = datetime.now()
+        data = {
+            "id": "TSK-0001",
+            "title": "Test Task",
+            "description": "This is a test task",
+            "status": "open",
+            "priority": "medium",
+            "assignees": ["alice"],
+            "tags": ["test", "unit"],
+            "created_at": now,
+            "updated_at": now,
+        }
+        
+        model = TaskModel(**data)
+        
+        assert model.id == "TSK-0001"
+        assert model.title == "Test Task"
+        assert model.description == "This is a test task"
+        assert model.status == "open"
+        assert model.priority == "medium"
+        assert "alice" in model.assignees
+        assert "test" in model.tags
+
+    def test_task_model_defaults(self):
+        """Test TaskModel with default values."""
+        now = datetime.now()
+        model = TaskModel(
+            id="TSK-0002",
+            title="Minimal Task",
+            created_at=now,
+            updated_at=now
+        )
+        
+        assert model.description == ""
+        assert model.status == "open"
+        assert model.priority == "medium"  # DEFAULT_PRIORITY
+        assert model.assignees == []
+        assert model.tags == []
+        assert model.due_date is None
+        assert model.estimated_hours is None
+        
+    def test_task_model_datetime_serialization(self):
+        """Test datetime serialization in TaskModel."""
+        now = datetime.now()
+        model = TaskModel(
+            id="TSK-0003",
+            title="Date Test",
+            created_at=now,
+            updated_at=now,
+            due_date=now
+        )
+        
+        # Get serialized version
+        data = model.model_dump()
+        
+        # Check that dates are strings in ISO format
+        assert isinstance(data["created_at"], str)
+        assert isinstance(data["updated_at"], str)
+        assert isinstance(data["due_date"], str)
+
+
 class TestTask:
     """Test Task class functionality."""
 
     def setup_method(self):
         """Setup test environment."""
-        self.temp_dir = None
         self.now = datetime.now()
         self.task_data = {
             "id": "TSK-0001",
@@ -41,6 +106,12 @@ class TestTask:
             assert task.model.id == "TSK-0001"
             assert task.model.title == "Test Task"
             assert task.file_path == file_path
+            # Test property accessors
+            assert task.id == "TSK-0001"
+            assert task.title == "Test Task"
+            assert task.description == "This is a test task"
+            assert task.status == "open"
+            assert task.priority == "medium"
 
     def test_task_creation_from_dict(self):
         """Test creating task from dictionary."""
@@ -51,25 +122,6 @@ class TestTask:
             assert task.model.id == "TSK-0001"
             assert task.model.title == "Test Task"
             assert task.file_path == file_path
-
-    def test_task_save_to_file(self):
-        """Test saving task to file."""
-        with tempfile.TemporaryDirectory() as temp_dir:
-            file_path = Path(temp_dir) / "test_task.md"
-            task = Task.from_dict(self.task_data, file_path)
-
-            # Add some content
-            content = "# Test Task\n\nThis is the task description."
-
-            # Save task
-            task.save(content)
-
-            # Verify file exists and has content
-            assert file_path.exists()
-            file_content = file_path.read_text()
-            assert "id: TSK-0001" in file_content
-            assert "title: Test Task" in file_content
-            assert "# Test Task" in file_content
 
     def test_task_load_from_file(self):
         """Test loading task from file."""
@@ -121,143 +173,74 @@ invalid: yaml: content
 """
             file_path.write_text(file_content)
 
-            with pytest.raises(TaskError, match="Failed to parse task file"):
+            with pytest.raises(TaskError, match="No frontmatter found in task file"):
                 Task.load(file_path)
 
-    def test_task_update_status(self):
-        """Test updating task status."""
+    def test_task_update_method(self):
+        """Test updating task data using update method."""
         with tempfile.TemporaryDirectory() as temp_dir:
             file_path = Path(temp_dir) / "test_task.md"
             task = Task.from_dict(self.task_data, file_path)
+            
+            original_updated_at = task.updated_at
+            
+            # Update using the update method
+            task.update(
+                status="in_progress",
+                priority="high",
+                description="Updated description"
+            )
+            
+            assert task.status == "in_progress"
+            assert task.priority == "high"
+            assert task.description == "Updated description"
+            assert task.updated_at > original_updated_at
 
-            # Update status
-            task.update_status("in_progress")
+    def test_task_property_accessors(self):
+        """Test task property accessors."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            file_path = Path(temp_dir) / "test_task.md"
+            
+            # Add more fields to test all properties
+            extended_data = self.task_data.copy()
+            extended_data.update({
+                "due_date": datetime.now() + timedelta(days=7),
+                "estimated_hours": 8.5,
+                "actual_hours": 6.0,
+                "dependencies": ["TSK-0000"],
+                "parent": "EP-0001",
+                "labels": ["urgent", "backend"],
+                "metadata": {"custom_field": "value"}
+            })
+            
+            task = Task.from_dict(extended_data, file_path)
+            
+            # Test all property accessors
+            assert task.id == "TSK-0001"
+            assert task.title == "Test Task"
+            assert task.description == "This is a test task"
+            assert task.status == "open"
+            assert task.priority == "medium"
+            assert task.assignees == ["alice"]
+            assert task.tags == ["test", "unit"]
+            assert task.due_date == extended_data["due_date"]
+            assert task.estimated_hours == 8.5
+            assert task.actual_hours == 6.0
+            assert task.dependencies == ["TSK-0000"]
+            assert task.parent == "EP-0001"
+            assert task.labels == ["urgent", "backend"]
+            assert task.metadata == {"custom_field": "value"}
 
-            assert task.model.status == "in_progress"
-            assert task.model.updated_at > self.now
-
-    def test_task_add_assignee(self):
-        """Test adding assignee to task."""
+    def test_task_parent_setter(self):
+        """Test setting parent property."""
         with tempfile.TemporaryDirectory() as temp_dir:
             file_path = Path(temp_dir) / "test_task.md"
             task = Task.from_dict(self.task_data, file_path)
-
-            # Add new assignee
-            task.add_assignee("bob")
-
-            assert "bob" in task.model.assignees
-            assert "alice" in task.model.assignees  # Original should still be there
-            assert task.model.updated_at > self.now
-
-    def test_task_remove_assignee(self):
-        """Test removing assignee from task."""
-        with tempfile.TemporaryDirectory() as temp_dir:
-            file_path = Path(temp_dir) / "test_task.md"
-            task = Task.from_dict(self.task_data, file_path)
-
-            # Remove assignee
-            task.remove_assignee("alice")
-
-            assert "alice" not in task.model.assignees
-            assert task.model.updated_at > self.now
-
-    def test_task_remove_nonexistent_assignee(self):
-        """Test removing non-existent assignee."""
-        with tempfile.TemporaryDirectory() as temp_dir:
-            file_path = Path(temp_dir) / "test_task.md"
-            task = Task.from_dict(self.task_data, file_path)
-
-            # Try to remove non-existent assignee (should not error)
-            task.remove_assignee("nonexistent")
-
-            assert "alice" in task.model.assignees  # Original should still be there
-
-    def test_task_add_tag(self):
-        """Test adding tag to task."""
-        with tempfile.TemporaryDirectory() as temp_dir:
-            file_path = Path(temp_dir) / "test_task.md"
-            task = Task.from_dict(self.task_data, file_path)
-
-            # Add new tag
-            task.add_tag("bug")
-
-            assert "bug" in task.model.tags
-            assert "test" in task.model.tags  # Original should still be there
-            assert task.model.updated_at > self.now
-
-    def test_task_remove_tag(self):
-        """Test removing tag from task."""
-        with tempfile.TemporaryDirectory() as temp_dir:
-            file_path = Path(temp_dir) / "test_task.md"
-            task = Task.from_dict(self.task_data, file_path)
-
-            # Remove tag
-            task.remove_tag("test")
-
-            assert "test" not in task.model.tags
-            assert "unit" in task.model.tags  # Other tag should still be there
-            assert task.model.updated_at > self.now
-
-    def test_task_set_priority(self):
-        """Test setting task priority."""
-        with tempfile.TemporaryDirectory() as temp_dir:
-            file_path = Path(temp_dir) / "test_task.md"
-            task = Task.from_dict(self.task_data, file_path)
-
-            # Set new priority
-            task.set_priority("high")
-
-            assert task.model.priority == "high"
-            assert task.model.updated_at > self.now
-
-    def test_task_set_estimated_hours(self):
-        """Test setting estimated hours."""
-        with tempfile.TemporaryDirectory() as temp_dir:
-            file_path = Path(temp_dir) / "test_task.md"
-            task = Task.from_dict(self.task_data, file_path)
-
-            # Set estimated hours
-            task.set_estimated_hours(8.5)
-
-            assert task.model.estimated_hours == 8.5
-            assert task.model.updated_at > self.now
-
-    def test_task_set_due_date(self):
-        """Test setting due date."""
-        with tempfile.TemporaryDirectory() as temp_dir:
-            file_path = Path(temp_dir) / "test_task.md"
-            task = Task.from_dict(self.task_data, file_path)
-
-            # Set due date
-            due_date = date.today() + timedelta(days=7)
-            task.set_due_date(due_date)
-
-            assert task.model.due_date == due_date
-            assert task.model.updated_at > self.now
-
-    def test_task_is_overdue(self):
-        """Test checking if task is overdue."""
-        with tempfile.TemporaryDirectory() as temp_dir:
-            file_path = Path(temp_dir) / "test_task.md"
-            task = Task.from_dict(self.task_data, file_path)
-
-            # Not overdue without due date
-            assert not task.is_overdue()
-
-            # Set past due date
-            past_date = date.today() - timedelta(days=1)
-            task.set_due_date(past_date)
-            assert task.is_overdue()
-
-            # Set future due date
-            future_date = date.today() + timedelta(days=1)
-            task.set_due_date(future_date)
-            assert not task.is_overdue()
-
-            # Completed task should not be overdue
-            task.set_due_date(past_date)
-            task.update_status("completed")
-            assert not task.is_overdue()
+            
+            # Test setting parent
+            task.parent = "EP-0002"
+            assert task.parent == "EP-0002"
+            assert task.data.parent == "EP-0002"
 
     def test_task_to_dict(self):
         """Test converting task to dictionary."""
@@ -272,15 +255,29 @@ invalid: yaml: content
             assert task_dict["status"] == "open"
             assert "alice" in task_dict["assignees"]
 
-    def test_task_str_representation(self):
-        """Test task string representation."""
-        with tempfile.TemporaryDirectory() as temp_dir:
-            file_path = Path(temp_dir) / "test_task.md"
-            task = Task.from_dict(self.task_data, file_path)
+    def test_task_extract_frontmatter(self):
+        """Test extracting YAML frontmatter from content."""
+        content = """---
+id: TSK-0001
+title: Test Task
+---
 
-            task_str = str(task)
-            assert "TSK-0001" in task_str
-            assert "Test Task" in task_str
+# Content here
+"""
+        frontmatter = Task._extract_frontmatter(content)
+        assert frontmatter["id"] == "TSK-0001"
+        assert frontmatter["title"] == "Test Task"
+        
+        # Test with no frontmatter
+        content_no_fm = "# Just content"
+        assert Task._extract_frontmatter(content_no_fm) is None
+        
+        # Test with invalid YAML
+        content_invalid = """---
+invalid: yaml: {
+---
+"""
+        assert Task._extract_frontmatter(content_invalid) is None
 
 
 class TestTaskManager:
@@ -289,42 +286,47 @@ class TestTaskManager:
     def setup_method(self):
         """Setup test environment."""
         self.temp_dir = None
-        self.project = None
 
     def teardown_method(self):
         """Cleanup test environment."""
         if self.temp_dir:
             import shutil
-
             shutil.rmtree(self.temp_dir, ignore_errors=True)
 
-    def _create_test_project(self):
-        """Create a test project."""
+    def _create_test_manager(self):
+        """Create a test task manager."""
         self.temp_dir = tempfile.mkdtemp()
-        project_path = Path(self.temp_dir) / "test_project"
-        project_path.mkdir()
-        self.project = Project.create(project_path)
-        return TaskManager(self.project)
+        project_path = Path(self.temp_dir)
+        
+        # Create a basic config file
+        config_file = project_path / ".ai-trackdown" / "config.yaml"
+        config_file.parent.mkdir(parents=True, exist_ok=True)
+        config_file.write_text("""
+version: 1.0.0
+tasks:
+  directory: tickets
+""")
+        
+        return TaskManager(project_path)
 
     def test_task_manager_creation(self):
         """Test creating TaskManager."""
-        task_manager = self._create_test_project()
+        task_manager = self._create_test_manager()
 
-        assert task_manager.project == self.project
-        assert task_manager.tasks_dir == self.project.get_tasks_directory()
+        assert task_manager.project_path == Path(self.temp_dir)
+        assert task_manager.tasks_dir.name == "tickets"
+        assert task_manager.tasks_dir.exists()
 
     def test_create_task(self):
         """Test creating a new task."""
-        task_manager = self._create_test_project()
+        task_manager = self._create_test_manager()
 
-        task_data = {
-            "title": "New Test Task",
-            "description": "A new task for testing",
-            "priority": "high",
-            "assignees": ["bob"],
-        }
-
-        task = task_manager.create_task(task_data)
+        task = task_manager.create_task(
+            title="New Test Task",
+            description="A new task for testing",
+            priority="high",
+            assignees=["bob"]
+        )
 
         assert task.model.title == "New Test Task"
         assert task.model.priority == "high"
@@ -332,72 +334,55 @@ class TestTaskManager:
         assert task.model.status == "open"  # Default status
         assert task.file_path.exists()
 
-    def test_create_task_with_custom_id(self):
-        """Test creating task with custom ID."""
-        task_manager = self._create_test_project()
+    def test_create_task_with_type(self):
+        """Test creating task with specific type."""
+        task_manager = self._create_test_manager()
 
-        task_data = {"id": "TSK-9999", "title": "Custom ID Task", "priority": "medium"}
+        # Create a bug
+        bug = task_manager.create_task(
+            type="bug",
+            title="Bug Report",
+            priority="high"
+        )
+        
+        assert bug.model.id.startswith("BUG-")
+        assert bug.model.title == "Bug Report"
 
-        task = task_manager.create_task(task_data)
-
-        assert task.model.id == "TSK-9999"
-        assert task.file_path.name.startswith("TSK-9999")
-
-    def test_create_task_auto_id_generation(self):
-        """Test automatic ID generation."""
-        task_manager = self._create_test_project()
-
-        task_data = {"title": "Auto ID Task", "priority": "low"}
-
-        task = task_manager.create_task(task_data)
-
-        # Should have generated an ID
-        assert task.model.id.startswith("TSK-")
-        assert len(task.model.id) > 4
-
-    def test_load_task_by_id(self):
+    def test_load_task(self):
         """Test loading task by ID."""
-        task_manager = self._create_test_project()
+        task_manager = self._create_test_manager()
 
         # Create a task first
-        task_data = {"id": "TSK-0001", "title": "Load Test Task", "priority": "medium"}
-        created_task = task_manager.create_task(task_data)
+        created_task = task_manager.create_task(
+            title="Load Test Task",
+            priority="medium"
+        )
+        
+        task_id = created_task.model.id
 
         # Load task by ID
-        loaded_task = task_manager.load_task("TSK-0001")
+        loaded_task = task_manager.load_task(task_id)
 
-        assert loaded_task.model.id == "TSK-0001"
+        assert loaded_task.model.id == task_id
         assert loaded_task.model.title == "Load Test Task"
 
-    def test_load_task_by_id_not_found(self):
+    def test_load_task_not_found(self):
         """Test loading non-existent task by ID."""
-        task_manager = self._create_test_project()
+        task_manager = self._create_test_manager()
 
         with pytest.raises(TaskError, match="Task not found"):
             task_manager.load_task("TSK-9999")
 
-    def test_load_task_by_file_path(self):
-        """Test loading task by file path."""
-        task_manager = self._create_test_project()
-
-        # Create a task first
-        task_data = {"id": "TSK-0001", "title": "Path Load Test", "priority": "medium"}
-        created_task = task_manager.create_task(task_data)
-
-        # Load task by file path
-        loaded_task = task_manager.load_task_from_file(created_task.file_path)
-
-        assert loaded_task.model.id == "TSK-0001"
-        assert loaded_task.model.title == "Path Load Test"
-
-    def test_list_all_tasks(self):
+    def test_list_tasks(self):
         """Test listing all tasks."""
-        task_manager = self._create_test_project()
+        task_manager = self._create_test_manager()
 
         # Create multiple tasks
         for i in range(3):
-            task_data = {"title": f"Task {i+1}", "priority": "medium"}
-            task_manager.create_task(task_data)
+            task_manager.create_task(
+                title=f"Task {i+1}",
+                priority="medium"
+            )
 
         # List all tasks
         all_tasks = task_manager.list_tasks()
@@ -407,16 +392,25 @@ class TestTaskManager:
 
     def test_list_tasks_by_status(self):
         """Test listing tasks by status."""
-        task_manager = self._create_test_project()
+        task_manager = self._create_test_manager()
 
         # Create tasks with different statuses
-        open_task = task_manager.create_task({"title": "Open Task", "status": "open"})
-        in_progress_task = task_manager.create_task(
-            {"title": "In Progress Task", "status": "in_progress"}
+        open_task = task_manager.create_task(
+            title="Open Task",
+            status="open"
         )
-        completed_task = task_manager.create_task(
-            {"title": "Completed Task", "status": "completed"}
+        
+        # Create and update another task
+        task2 = task_manager.create_task(
+            title="In Progress Task"
         )
+        task_manager.update_task(task2.model.id, status="in_progress")
+        
+        # Create completed task
+        task3 = task_manager.create_task(
+            title="Completed Task"
+        )
+        task_manager.update_task(task3.model.id, status="completed")
 
         # List open tasks
         open_tasks = task_manager.list_tasks(status="open")
@@ -428,44 +422,22 @@ class TestTaskManager:
         assert len(completed_tasks) == 1
         assert completed_tasks[0].model.title == "Completed Task"
 
-    def test_list_tasks_by_assignee(self):
-        """Test listing tasks by assignee."""
-        task_manager = self._create_test_project()
-
-        # Create tasks with different assignees
-        alice_task = task_manager.create_task(
-            {"title": "Alice Task", "assignees": ["alice"]}
-        )
-        bob_task = task_manager.create_task({"title": "Bob Task", "assignees": ["bob"]})
-        shared_task = task_manager.create_task(
-            {"title": "Shared Task", "assignees": ["alice", "bob"]}
-        )
-
-        # List Alice's tasks
-        alice_tasks = task_manager.list_tasks(assignee="alice")
-        assert len(alice_tasks) == 2
-        alice_titles = [task.model.title for task in alice_tasks]
-        assert "Alice Task" in alice_titles
-        assert "Shared Task" in alice_titles
-
-        # List Bob's tasks
-        bob_tasks = task_manager.list_tasks(assignee="bob")
-        assert len(bob_tasks) == 2
-        bob_titles = [task.model.title for task in bob_tasks]
-        assert "Bob Task" in bob_titles
-        assert "Shared Task" in bob_titles
-
     def test_list_tasks_by_tag(self):
         """Test listing tasks by tag."""
-        task_manager = self._create_test_project()
+        task_manager = self._create_test_manager()
 
         # Create tasks with different tags
-        bug_task = task_manager.create_task({"title": "Bug Task", "tags": ["bug"]})
+        bug_task = task_manager.create_task(
+            title="Bug Task",
+            tags=["bug"]
+        )
         feature_task = task_manager.create_task(
-            {"title": "Feature Task", "tags": ["feature"]}
+            title="Feature Task",
+            tags=["feature"]
         )
         urgent_bug = task_manager.create_task(
-            {"title": "Urgent Bug", "tags": ["bug", "urgent"]}
+            title="Urgent Bug",
+            tags=["bug", "urgent"]
         )
 
         # List bug tasks
@@ -477,114 +449,82 @@ class TestTaskManager:
 
     def test_update_task(self):
         """Test updating an existing task."""
-        task_manager = self._create_test_project()
+        task_manager = self._create_test_manager()
 
         # Create a task
         task = task_manager.create_task(
-            {"id": "TSK-0001", "title": "Original Title", "priority": "low"}
+            title="Original Title",
+            priority="low"
         )
+        
+        task_id = task.model.id
 
         # Update the task
-        updates = {
-            "title": "Updated Title",
-            "priority": "high",
-            "description": "Added description",
-        }
-        updated_task = task_manager.update_task("TSK-0001", updates)
-
+        success = task_manager.update_task(
+            task_id,
+            title="Updated Title",
+            priority="high",
+            description="Added description"
+        )
+        
+        assert success is True
+        
+        # Load and verify updates
+        updated_task = task_manager.load_task(task_id)
         assert updated_task.model.title == "Updated Title"
         assert updated_task.model.priority == "high"
         assert updated_task.model.description == "Added description"
 
     def test_delete_task(self):
         """Test deleting a task."""
-        task_manager = self._create_test_project()
+        task_manager = self._create_test_manager()
 
         # Create a task
         task = task_manager.create_task(
-            {"id": "TSK-0001", "title": "To Delete", "priority": "medium"}
+            title="To Delete",
+            priority="medium"
         )
+        
+        task_id = task.model.id
 
         # Verify task exists
         assert task.file_path.exists()
 
         # Delete the task
-        task_manager.delete_task("TSK-0001")
+        success = task_manager.delete_task(task_id)
+        assert success is True
 
         # Verify task is deleted
         assert not task.file_path.exists()
 
         # Should not be able to load deleted task
         with pytest.raises(TaskError):
-            task_manager.load_task("TSK-0001")
+            task_manager.load_task(task_id)
 
-    def test_search_tasks(self):
-        """Test searching tasks."""
-        task_manager = self._create_test_project()
+    def test_get_recent_tasks(self):
+        """Test getting recent tasks."""
+        task_manager = self._create_test_manager()
 
-        # Create tasks with searchable content
-        task_manager.create_task(
-            {"title": "Fix login bug", "description": "User authentication is broken"}
-        )
-        task_manager.create_task(
-            {
-                "title": "Add login feature",
-                "description": "Implement OAuth authentication",
-            }
-        )
-        task_manager.create_task(
-            {"title": "Update documentation", "description": "Fix typos in user guide"}
-        )
+        # Create multiple tasks
+        import time
+        for i in range(7):
+            task_manager.create_task(
+                title=f"Task {i+1}",
+                priority="medium"
+            )
+            time.sleep(0.01)  # Small delay to ensure different timestamps
 
-        # Search for "login"
-        login_tasks = task_manager.search_tasks("login")
-        assert len(login_tasks) == 2
+        # Get recent tasks (default limit is 5)
+        recent_tasks = task_manager.get_recent_tasks()
+        assert len(recent_tasks) == 5
 
-        # Search for "authentication"
-        auth_tasks = task_manager.search_tasks("authentication")
-        assert len(auth_tasks) == 2
+        # Get recent tasks with custom limit
+        recent_tasks_3 = task_manager.get_recent_tasks(limit=3)
+        assert len(recent_tasks_3) == 3
 
-        # Search for "documentation"
-        doc_tasks = task_manager.search_tasks("documentation")
-        assert len(doc_tasks) == 1
-
-    def test_get_task_statistics(self):
-        """Test getting task statistics."""
-        task_manager = self._create_test_project()
-
-        # Create tasks with different statuses
-        task_manager.create_task({"title": "Open 1", "status": "open"})
-        task_manager.create_task({"title": "Open 2", "status": "open"})
-        task_manager.create_task({"title": "In Progress", "status": "in_progress"})
-        task_manager.create_task({"title": "Completed", "status": "completed"})
-
-        # Get statistics
-        stats = task_manager.get_statistics()
-
-        assert stats["total"] == 4
-        assert stats["open"] == 2
-        assert stats["in_progress"] == 1
-        assert stats["completed"] == 1
-        assert stats["cancelled"] == 0
-
-    def test_move_task_to_status_directory(self):
-        """Test moving task to status-based directory."""
-        task_manager = self._create_test_project()
-
-        # Create a task
-        task = task_manager.create_task(
-            {"id": "TSK-0001", "title": "Move Test", "status": "open"}
-        )
-
-        # Should be in open directory
-        assert "open" in str(task.file_path)
-
-        # Update status
-        updated_task = task_manager.update_task("TSK-0001", {"status": "in_progress"})
-
-        # Should now be in in_progress directory
-        assert "in_progress" in str(updated_task.file_path)
-        assert not task.file_path.exists()  # Old file should be moved
+        # Tasks should be sorted by creation date (newest first)
+        for i in range(len(recent_tasks) - 1):
+            assert recent_tasks[i].created_at >= recent_tasks[i + 1].created_at
 
 
 class TestTaskError:

@@ -7,6 +7,7 @@ This section contains technical documentation for developers working on the AI T
 - [Contributing Guide](./CONTRIBUTING.md) - How to contribute to the project
 - [Testing Guide](./CLI_TESTING_GUIDE.md) - Running and writing tests
 - [PyPI Publishing](./PYPI_MANUAL_PUBLISHING_GUIDE.md) - Release procedures
+- [Sync Adapter Developer Guide](./sync-adapter-developer-guide.md) - Creating new sync adapters
 
 ## Documentation Sections
 
@@ -14,6 +15,20 @@ This section contains technical documentation for developers working on the AI T
 - [Contributing](./CONTRIBUTING.md) - Development environment setup and guidelines
 - [CI/CD Automation](./CI_CD_AUTOMATION.md) - Continuous integration setup
 - [GitHub Actions Setup](./GITHUB_ACTIONS_SETUP.md) - Workflow configuration
+
+### Sync Adapter Development
+- [Sync Adapter Developer Guide](./sync-adapter-developer-guide.md) - Complete guide for creating new adapters
+- [Sync Adapter API Reference](./sync-adapter-api-reference.md) - Detailed API documentation
+- [Sync Adapter Implementation Guide](./sync-adapter-implementation-guide.md) - Original implementation guide
+- [Linear Adapter Implementation](./linear-adapter-implementation.md) - Linear adapter details
+
+#### Platform-Specific Documentation
+- [Sync API Research](./sync-api-research.md) - Platform API research
+- [Sync Research Summary](./sync-research-summary.md) - Research findings
+- [ClickUp Adapter](./sync-adapters/clickup-adapter.md) - ClickUp implementation
+- [JIRA Adapter Guide](./sync-adapters/jira-adapter-guide.md) - JIRA implementation
+- [JIRA Implementation Summary](./sync-adapters/jira-implementation-summary.md) - JIRA details
+- [QA Test Results](./sync-adapters/qa-test-results.md) - Adapter testing results
 
 ### Testing
 - [CLI Testing Guide](./CLI_TESTING_GUIDE.md) - Comprehensive testing procedures
@@ -49,6 +64,13 @@ This section contains technical documentation for developers working on the AI T
 
 ### Architecture
 - [Description](./DESCRIPTION.md) - Project architecture overview
+
+### Schema and Migration
+- [Schema Migration v1.3.1](./SCHEMA_MIGRATION_v1.3.1.md) - Schema migration guide
+- [Ticket Structure Migration](./TICKET_STRUCTURE_MIGRATION.md) - Ticket migration details
+
+### CLI Development
+- [CLI Standardization Note](./CLI_STANDARDIZATION_NOTE.md) - CLI standards
 
 ## Development Tools
 

@@ -18,8 +18,13 @@ from ai_trackdown_pytools.core.constants import (
     TicketSubdir,
     TicketType,
 )
-from ai_trackdown_pytools.core.exceptions import TaskError
 from ai_trackdown_pytools.utils.index import update_index_on_file_change
+from ai_trackdown_pytools.exceptions import (
+    TaskError,
+    FileOperationError,
+    ValidationError as DataValidationError,
+)
+from ai_trackdown_pytools.utils.retry import RetryableFileOperation, FILE_RETRY
 
 # from ai_trackdown_pytools.core.models import TaskModel as NewTaskModel, get_model_for_type
 # from ai_trackdown_pytools.utils.validation import SchemaValidator, ValidationResult
@@ -229,6 +234,10 @@ class Task:
         return self.data.dependencies
 
     @property
+    def labels(self) -> List[str]:
+        return self.data.labels
+    
+    @property
     def metadata(self) -> Dict[str, Any]:
         return self.data.metadata
 
@@ -240,17 +249,49 @@ class Task:
 
     @classmethod
     def load(cls, file_path: Path) -> "Task":
-        """Load task from file."""
+        """Load task from file with proper error handling.
+        
+        WHY: File operations can fail for various reasons. This method provides
+        clear error messages and recovery suggestions for common failure modes.
+        """
+        if not file_path.exists():
+            raise TaskError(
+                f"Task file not found: {file_path.name}",
+                task_file=file_path,
+                operation="load"
+            )
+
         try:
-            with open(file_path, encoding="utf-8") as f:
+            # Use retryable file operation for better reliability
+            with RetryableFileOperation(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
+        except (IOError, OSError) as e:
+            raise FileOperationError(
+                f"Failed to read task file: {file_path.name}",
+                file_path=file_path,
+                operation="read",
+                original_error=e
+            )
 
-            # Extract frontmatter
+        # Extract frontmatter
+        try:
             frontmatter = cls._extract_frontmatter(content)
-            if not frontmatter:
-                raise TaskError(f"Failed to parse task file: {file_path}")
+        except yaml.YAMLError as e:
+            raise DataValidationError(
+                f"Invalid YAML in task file: {file_path.name}",
+                schema_name="task",
+                field_errors={"yaml": str(e)}
+            )
+        
+        if not frontmatter:
+            raise TaskError(
+                f"No frontmatter found in task file",
+                task_file=file_path,
+                operation="parse"
+            )
 
-            # Convert datetime strings back to datetime objects if needed
+        # Convert datetime strings back to datetime objects if needed
+        try:
             if "created_at" in frontmatter:
                 if isinstance(frontmatter["created_at"], str):
                     frontmatter["created_at"] = datetime.fromisoformat(
@@ -266,12 +307,23 @@ class Task:
                     frontmatter["due_date"] = datetime.fromisoformat(
                         frontmatter["due_date"]
                     )
+        except (ValueError, TypeError) as e:
+            raise DataValidationError(
+                f"Invalid date format in task file",
+                schema_name="task",
+                field_errors={"date": str(e)}
+            )
 
+        try:
             task_data = TaskModel(**frontmatter)
             return cls(task_data, file_path)
-
         except Exception as e:
-            raise TaskError(f"Failed to parse task file: {e}") from e
+            raise DataValidationError(
+                f"Failed to create task from file data",
+                schema_name="task",
+                data=frontmatter,
+                field_errors={"validation": str(e)}
+            )
 
     @staticmethod
     def _extract_frontmatter(content: str) -> Optional[Dict[str, Any]]:
@@ -287,7 +339,8 @@ class Task:
 
         try:
             return yaml.safe_load(match.group(1))
-        except yaml.YAMLError:
+        except yaml.YAMLError as e:
+            # Return None to trigger proper error handling in caller
             return None
 
     @parent.setter
@@ -306,10 +359,6 @@ class Task:
     def to_dict(self) -> Dict[str, Any]:
         """Convert task to dictionary."""
         return self.data.model_dump()
-
-    def __str__(self) -> str:
-        """String representation of task."""
-        return f"Task({self.data.id}: {self.data.title})"
 
 
 class TaskManager:
@@ -383,14 +432,42 @@ class TaskManager:
         return Task(task_data, task_file)
 
     def load_task(self, task_id: str) -> Task:
-        """Load task by ID."""
+        """Load task by ID with proper error handling.
+        
+        WHY: Task loading can fail for multiple reasons. This method provides
+        specific error messages for each failure mode to help users diagnose issues.
+        """
         task_file = self._find_task_file(task_id)
         if not task_file:
-            raise TaskError(f"Task not found: {task_id}")
+            raise TaskError(
+                f"Task not found: {task_id}",
+                task_id=task_id,
+                operation="locate"
+            )
 
-        task_data = self._load_task_file(task_file)
+        try:
+            task_data = self._load_task_file(task_file)
+        except yaml.YAMLError as e:
+            raise DataValidationError(
+                f"Invalid YAML in task file",
+                schema_name="task",
+                field_errors={"yaml": str(e)}
+            )
+        except (IOError, OSError) as e:
+            raise FileOperationError(
+                f"Failed to read task file",
+                file_path=task_file,
+                operation="read",
+                original_error=e
+            )
+        
         if not task_data:
-            raise TaskError(f"Failed to parse task file: {task_file}")
+            raise TaskError(
+                f"Empty or invalid task file",
+                task_id=task_id,
+                task_file=task_file,
+                operation="parse"
+            )
 
         return Task(task_data, task_file)
 
@@ -458,22 +535,11 @@ class TaskManager:
 
         # Determine prefix and counter key based on type
         type_config = {
-            TicketType.EPIC.value: {
-                "prefix": TicketPrefix.EPIC.value,
-                "counter_key": "epics.counter",
-            },
-            TicketType.ISSUE.value: {
-                "prefix": TicketPrefix.ISSUE.value,
-                "counter_key": "issues.counter",
-            },
-            TicketType.TASK.value: {
-                "prefix": TicketPrefix.TASK.value,
-                "counter_key": "tasks.counter",
-            },
-            TicketType.PR.value: {
-                "prefix": TicketPrefix.PR.value,
-                "counter_key": "prs.counter",
-            },
+            TicketType.EPIC.value: {"prefix": TicketPrefix.EPIC.value, "counter_key": "epics.counter"},
+            TicketType.ISSUE.value: {"prefix": TicketPrefix.ISSUE.value, "counter_key": "issues.counter"},
+            TicketType.BUG.value: {"prefix": TicketPrefix.BUG.value, "counter_key": "bugs.counter"},
+            TicketType.TASK.value: {"prefix": TicketPrefix.TASK.value, "counter_key": "tasks.counter"},
+            TicketType.PR.value: {"prefix": TicketPrefix.PR.value, "counter_key": "prs.counter"},
         }
 
         config = type_config.get(task_type, type_config[TicketType.TASK.value])
@@ -602,5 +668,6 @@ _Add any additional notes or context here._
 
         try:
             return yaml.safe_load(match.group(1))
-        except yaml.YAMLError:
+        except yaml.YAMLError as e:
+            # Return None to trigger proper error handling in caller
             return None
