@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.3] - 2025-08-16
+
+### Fixed
+- Resolved linting issues and merge conflict artifacts from workflow refactor
+- Fixed undefined imports and variables in CLI module
+- Removed duplicate method definitions in core modules
+- Improved exception chaining for better error handling
+- Fixed test imports and improved test reliability
+
+### Changed
+- Major codebase cleanup and reorganization
+- Removed temporary test workspaces and outdated documentation
+- Reorganized coverage reports into tests/coverage directory
+- Consolidated documentation structure for better maintainability
+- Streamlined project structure by removing accumulated temporary files
+
+### Removed
+- Obsolete development documentation and duplicate files
+- Temporary backup files and old release notes
+- Unused test workspaces and example configurations
+
+## [1.5.2] - 2025-08-16
+
+### Fixed
+- Resolved critical linting errors preventing clean release
+- Fixed merge conflict artifacts from unified workflow states feature
+- Cleaned up unused imports and variables
+- Updated VERSION file synchronization
+- Fixed black configuration for Python version compatibility
+
 ## [1.5.1] - 2025-07-28
 
 ### Fixed
