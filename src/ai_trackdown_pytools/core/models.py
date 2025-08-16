@@ -301,7 +301,9 @@ class BaseTicketModel(BaseModel):
                 "from_status": (
                     old_status.value
                     if isinstance(old_status, Enum)
-                    else str(old_status) if old_status else None
+                    else str(old_status)
+                    if old_status
+                    else None
                 ),
                 "to_status": new_unified.value,
                 "timestamp": datetime.now().isoformat(),
@@ -689,9 +691,9 @@ class PRModel(BaseTicketModel):
     closes_issues: List[str] = Field(
         default_factory=list, description="Issues closed by this PR"
     )
-    commits: List[Annotated[str, StringConstraints(pattern=r"^[a-f0-9]{7,40}$")]] = (
-        Field(default_factory=list, description="Commit SHAs")
-    )
+    commits: List[
+        Annotated[str, StringConstraints(pattern=r"^[a-f0-9]{7,40}$")]
+    ] = Field(default_factory=list, description="Commit SHAs")
     files_changed: List[str] = Field(default_factory=list, description="Files changed")
     lines_added: Optional[Annotated[int, Field(ge=0)]] = Field(
         None, description="Lines added"

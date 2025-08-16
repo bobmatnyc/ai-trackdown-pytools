@@ -7,11 +7,7 @@ import pytest
 import typer
 
 from ai_trackdown_pytools import __version__
-from ai_trackdown_pytools.cli import (
-    app,
-    main,
-    version_callback,
-)
+from ai_trackdown_pytools.cli import app, main, version_callback
 
 
 class TestCLIMain:

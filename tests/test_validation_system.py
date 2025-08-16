@@ -6,10 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from ai_trackdown_pytools.core.models import (
-    EpicModel,
-    TaskModel,
-)
+from ai_trackdown_pytools.core.models import EpicModel, TaskModel
 from ai_trackdown_pytools.utils.frontmatter import (
     FrontmatterParser,
     StatusWorkflowValidator,

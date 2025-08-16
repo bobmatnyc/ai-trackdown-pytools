@@ -1,0 +1,12 @@
+# Optional dependencies for sync adapters
+# Install with: pip install -r requirements-sync.txt
+# Or install package with extras: pip install ai-trackdown-pytools[sync]
+
+# HTTP client for async operations
+aiohttp>=3.9.0,<4.0.0
+
+# GraphQL client for Linear
+gql[aiohttp]>=3.4.0,<4.0.0
+
+# Jira client
+jira>=3.5.0,<4.0.0

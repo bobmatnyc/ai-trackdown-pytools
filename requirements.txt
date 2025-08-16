@@ -1,0 +1,24 @@
+# Core dependencies for ai-trackdown-pytools
+# Generated from pyproject.toml
+# Install with: pip install -r requirements.txt
+
+# Core CLI framework (Typer includes Click internally)
+typer>=0.9.0,<1.0.0
+
+# Data validation and serialization
+pydantic>=2.0.0,<3.0.0
+pyyaml>=6.0,<7.0
+jsonschema>=4.17.0,<5.0.0
+toml>=0.10.2,<1.0.0
+
+# Git integration (updated for security)
+gitpython>=3.1.40,<4.0.0
+
+# Terminal output and formatting
+rich>=13.0.0,<14.0.0
+
+# Template engine
+jinja2>=3.1.0,<4.0.0
+
+# Path pattern matching
+pathspec>=0.11.0,<1.0.0

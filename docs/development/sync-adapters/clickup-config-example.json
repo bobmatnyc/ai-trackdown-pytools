@@ -1,0 +1,24 @@
+{
+  "platform": "clickup",
+  "direction": "bidirectional",
+  "auth_config": {
+    "api_token": "pk_12345678_ABCDEFGHIJKLMNOPQRSTUVWXYZ123456",
+    "list_id": "123456789",
+    "space_id": "12345678",
+    "team_id": "1234567"
+  },
+  "sync_tags": true,
+  "sync_assignees": true,
+  "sync_comments": false,
+  "label_mapping": {
+    "bug": "issue",
+    "enhancement": "feature",
+    "documentation": "docs"
+  },
+  "status_mapping": {
+    "open": "to do",
+    "in_progress": "in progress",
+    "completed": "done",
+    "cancelled": "closed"
+  }
+}

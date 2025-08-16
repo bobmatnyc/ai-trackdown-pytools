@@ -326,7 +326,9 @@ def _display_validation_result(
         console.print("[dim]No validation issues found[/dim]")
 
 
-def _display_directory_results(results: List[tuple], summary_only: bool = False) -> None:
+def _display_directory_results(
+    results: List[tuple], summary_only: bool = False
+) -> None:
     """Display validation results for multiple files."""
     total_files = len(results)
     valid_files = sum(1 for _, result in results if result.valid)

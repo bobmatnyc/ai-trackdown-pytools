@@ -240,7 +240,6 @@ class TestCompleteTicketLifecycle:
             ) as mock_exists, patch(
                 "ai_trackdown_pytools.core.task.TaskManager"
             ) as mock_task_mgr:
-
                 mock_exists.return_value = True
 
                 # Mock search results
@@ -302,7 +301,6 @@ class TestCompleteTicketLifecycle:
             ) as mock_task_mgr, patch(
                 "ai_trackdown_pytools.utils.git.GitUtils"
             ) as mock_git:
-
                 mock_exists.return_value = True
                 mock_project = Mock(
                     name="E2E Test Project", description="End-to-end testing project"
@@ -323,7 +321,6 @@ class TestCompleteTicketLifecycle:
             ) as mock_exists, patch(
                 "ai_trackdown_pytools.utils.validation.validate_project_structure"
             ) as mock_validate:
-
                 mock_exists.return_value = True
                 mock_validate.return_value = {
                     "valid": True,
@@ -748,7 +745,6 @@ fields:
             ) as mock_exists, patch(
                 "ai_trackdown_pytools.utils.validation.validate_project_structure"
             ) as mock_validate:
-
                 mock_exists.return_value = True
                 mock_validate.return_value = {
                     "valid": True,
@@ -768,7 +764,6 @@ fields:
             ) as mock_task_mgr, patch(
                 "ai_trackdown_pytools.utils.validation.validate_task_file"
             ) as mock_validate_task:
-
                 mock_exists.return_value = True
                 mock_tasks = [
                     Mock(id="TSK-001", file_path="/path/to/task1.md"),
@@ -790,7 +785,6 @@ fields:
             ) as mock_load, patch(
                 "ai_trackdown_pytools.utils.validation.SchemaValidator"
             ) as mock_validator_class:
-
                 mock_config = Mock()
                 mock_config.to_dict.return_value = {"project": {"name": "Test"}}
                 mock_load.return_value = mock_config
@@ -812,7 +806,6 @@ fields:
             ) as mock_exists, patch(
                 "ai_trackdown_pytools.utils.validation.validate_project_structure"
             ) as mock_validate:
-
                 mock_exists.return_value = True
                 mock_validate.return_value = {
                     "valid": False,
@@ -835,7 +828,6 @@ fields:
             ) as mock_config, patch(
                 "ai_trackdown_pytools.utils.git.GitUtils"
             ) as mock_git:
-
                 mock_health.return_value = {
                     "overall": True,
                     "checks": {"dependencies": {"status": True, "message": "OK"}},
@@ -953,7 +945,6 @@ class TestConcurrentOperations:
             ) as mock_exists, patch(
                 "ai_trackdown_pytools.core.task.TaskManager"
             ) as mock_task_mgr:
-
                 mock_exists.return_value = True
                 mock_tasks = [
                     Mock(
@@ -1017,7 +1008,6 @@ class TestConcurrentOperations:
             ) as mock_exists, patch(
                 "ai_trackdown_pytools.core.task.TaskManager"
             ) as mock_task_mgr:
-
                 mock_exists.return_value = True
                 mock_tasks = [
                     Mock(

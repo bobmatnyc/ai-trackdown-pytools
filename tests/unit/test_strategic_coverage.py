@@ -266,10 +266,7 @@ Test content"""
 
     def test_git_module_coverage(self):
         """Test git module for coverage."""
-        from ai_trackdown_pytools.utils.git import (
-            get_current_branch,
-            is_git_repo,
-        )
+        from ai_trackdown_pytools.utils.git import get_current_branch, is_git_repo
 
         with tempfile.TemporaryDirectory() as tmpdir:
             # Test non-git directory

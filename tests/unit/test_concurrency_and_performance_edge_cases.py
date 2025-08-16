@@ -629,7 +629,6 @@ content: |
 
         template_manager = TemplateManager()
         with patch.object(template_manager, "_template_dirs", [temp_dir / "templates"]):
-
             processing_count = 0
             processing_errors = []
 

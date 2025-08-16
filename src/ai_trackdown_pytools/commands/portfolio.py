@@ -10,10 +10,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.tree import Tree
 
-from ai_trackdown_pytools.core.constants import (
-    PRIORITY_ORDER,
-    TicketPriority,
-)
+from ai_trackdown_pytools.core.constants import PRIORITY_ORDER, TicketPriority
 from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import TaskManager
 
@@ -369,7 +366,9 @@ def roadmap(
                         status_icon = (
                             "✅"
                             if subtask.status == "completed"
-                            else "🔄" if subtask.status == "in_progress" else "⭕"
+                            else "🔄"
+                            if subtask.status == "in_progress"
+                            else "⭕"
                         )
                         subtasks_node.add(f"{status_icon} {subtask.title[:40]}...")
 

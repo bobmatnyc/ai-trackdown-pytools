@@ -322,7 +322,7 @@ def show(
         raise typer.Exit(1)
 
     task_manager = TaskManager(project_path)
-    bug = task_manager.get_task(bug_id)
+    bug = task_manager.load_task(bug_id)
 
     if not bug:
         console.print(f"[red]Bug {bug_id} not found[/red]")
@@ -435,7 +435,7 @@ def update(
         raise typer.Exit(1)
 
     task_manager = TaskManager(project_path)
-    bug = task_manager.get_task(bug_id)
+    bug = task_manager.load_task(bug_id)
 
     if not bug:
         console.print(f"[red]Bug {bug_id} not found[/red]")
@@ -523,7 +523,7 @@ def close(
         raise typer.Exit(1)
 
     task_manager = TaskManager(project_path)
-    bug = task_manager.get_task(bug_id)
+    bug = task_manager.load_task(bug_id)
 
     if not bug:
         console.print(f"[red]Bug {bug_id} not found[/red]")
@@ -532,7 +532,7 @@ def close(
     # Prepare updates
     updates = {
         "status": "closed",
-        "metadata": bug.get("metadata", {}),
+        "metadata": bug.metadata.copy(),
     }
 
     updates["metadata"]["resolution"] = resolution
@@ -543,7 +543,7 @@ def close(
     if notes:
         updates["metadata"]["resolution_notes"] = notes
 
-    success = task_manager.update_task(bug_id, updates)
+    success = task_manager.update_task(bug_id, **updates)
     if success:
         console.print(
             Panel(

@@ -9,9 +9,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from ai_trackdown_pytools.core.models import (
-    TaskModel,
-)
+from ai_trackdown_pytools.core.models import TaskModel
 from ai_trackdown_pytools.core.project import Project
 
 

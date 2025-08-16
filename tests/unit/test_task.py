@@ -1,13 +1,12 @@
 """Unit tests for task management functionality."""
 
 import tempfile
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
 
 from ai_trackdown_pytools.core.models import TaskModel
-from ai_trackdown_pytools.core.project import Project
 from ai_trackdown_pytools.core.task import Task, TaskError, TaskManager
 
 
@@ -28,9 +27,9 @@ class TestTaskModel:
             "created_at": now,
             "updated_at": now,
         }
-        
+
         model = TaskModel(**data)
-        
+
         assert model.id == "TSK-0001"
         assert model.title == "Test Task"
         assert model.description == "This is a test task"
@@ -43,12 +42,9 @@ class TestTaskModel:
         """Test TaskModel with default values."""
         now = datetime.now()
         model = TaskModel(
-            id="TSK-0002",
-            title="Minimal Task",
-            created_at=now,
-            updated_at=now
+            id="TSK-0002", title="Minimal Task", created_at=now, updated_at=now
         )
-        
+
         assert model.description == ""
         assert model.status == "open"
         assert model.priority == "medium"  # DEFAULT_PRIORITY
@@ -56,7 +52,7 @@ class TestTaskModel:
         assert model.tags == []
         assert model.due_date is None
         assert model.estimated_hours is None
-        
+
     def test_task_model_datetime_serialization(self):
         """Test datetime serialization in TaskModel."""
         now = datetime.now()
@@ -65,12 +61,12 @@ class TestTaskModel:
             title="Date Test",
             created_at=now,
             updated_at=now,
-            due_date=now
+            due_date=now,
         )
-        
+
         # Get serialized version
         data = model.model_dump()
-        
+
         # Check that dates are strings in ISO format
         assert isinstance(data["created_at"], str)
         assert isinstance(data["updated_at"], str)
@@ -181,16 +177,14 @@ invalid: yaml: content
         with tempfile.TemporaryDirectory() as temp_dir:
             file_path = Path(temp_dir) / "test_task.md"
             task = Task.from_dict(self.task_data, file_path)
-            
+
             original_updated_at = task.updated_at
-            
+
             # Update using the update method
             task.update(
-                status="in_progress",
-                priority="high",
-                description="Updated description"
+                status="in_progress", priority="high", description="Updated description"
             )
-            
+
             assert task.status == "in_progress"
             assert task.priority == "high"
             assert task.description == "Updated description"
@@ -200,21 +194,23 @@ invalid: yaml: content
         """Test task property accessors."""
         with tempfile.TemporaryDirectory() as temp_dir:
             file_path = Path(temp_dir) / "test_task.md"
-            
+
             # Add more fields to test all properties
             extended_data = self.task_data.copy()
-            extended_data.update({
-                "due_date": datetime.now() + timedelta(days=7),
-                "estimated_hours": 8.5,
-                "actual_hours": 6.0,
-                "dependencies": ["TSK-0000"],
-                "parent": "EP-0001",
-                "labels": ["urgent", "backend"],
-                "metadata": {"custom_field": "value"}
-            })
-            
+            extended_data.update(
+                {
+                    "due_date": datetime.now() + timedelta(days=7),
+                    "estimated_hours": 8.5,
+                    "actual_hours": 6.0,
+                    "dependencies": ["TSK-0000"],
+                    "parent": "EP-0001",
+                    "labels": ["urgent", "backend"],
+                    "metadata": {"custom_field": "value"},
+                }
+            )
+
             task = Task.from_dict(extended_data, file_path)
-            
+
             # Test all property accessors
             assert task.id == "TSK-0001"
             assert task.title == "Test Task"
@@ -236,7 +232,7 @@ invalid: yaml: content
         with tempfile.TemporaryDirectory() as temp_dir:
             file_path = Path(temp_dir) / "test_task.md"
             task = Task.from_dict(self.task_data, file_path)
-            
+
             # Test setting parent
             task.parent = "EP-0002"
             assert task.parent == "EP-0002"
@@ -267,11 +263,11 @@ title: Test Task
         frontmatter = Task._extract_frontmatter(content)
         assert frontmatter["id"] == "TSK-0001"
         assert frontmatter["title"] == "Test Task"
-        
+
         # Test with no frontmatter
         content_no_fm = "# Just content"
         assert Task._extract_frontmatter(content_no_fm) is None
-        
+
         # Test with invalid YAML
         content_invalid = """---
 invalid: yaml: {
@@ -291,22 +287,25 @@ class TestTaskManager:
         """Cleanup test environment."""
         if self.temp_dir:
             import shutil
+
             shutil.rmtree(self.temp_dir, ignore_errors=True)
 
     def _create_test_manager(self):
         """Create a test task manager."""
         self.temp_dir = tempfile.mkdtemp()
         project_path = Path(self.temp_dir)
-        
+
         # Create a basic config file
         config_file = project_path / ".ai-trackdown" / "config.yaml"
         config_file.parent.mkdir(parents=True, exist_ok=True)
-        config_file.write_text("""
+        config_file.write_text(
+            """
 version: 1.0.0
 tasks:
   directory: tickets
-""")
-        
+"""
+        )
+
         return TaskManager(project_path)
 
     def test_task_manager_creation(self):
@@ -325,7 +324,7 @@ tasks:
             title="New Test Task",
             description="A new task for testing",
             priority="high",
-            assignees=["bob"]
+            assignees=["bob"],
         )
 
         assert task.model.title == "New Test Task"
@@ -339,12 +338,8 @@ tasks:
         task_manager = self._create_test_manager()
 
         # Create a bug
-        bug = task_manager.create_task(
-            type="bug",
-            title="Bug Report",
-            priority="high"
-        )
-        
+        bug = task_manager.create_task(type="bug", title="Bug Report", priority="high")
+
         assert bug.model.id.startswith("BUG-")
         assert bug.model.title == "Bug Report"
 
@@ -354,10 +349,9 @@ tasks:
 
         # Create a task first
         created_task = task_manager.create_task(
-            title="Load Test Task",
-            priority="medium"
+            title="Load Test Task", priority="medium"
         )
-        
+
         task_id = created_task.model.id
 
         # Load task by ID
@@ -379,10 +373,7 @@ tasks:
 
         # Create multiple tasks
         for i in range(3):
-            task_manager.create_task(
-                title=f"Task {i+1}",
-                priority="medium"
-            )
+            task_manager.create_task(title=f"Task {i+1}", priority="medium")
 
         # List all tasks
         all_tasks = task_manager.list_tasks()
@@ -395,21 +386,14 @@ tasks:
         task_manager = self._create_test_manager()
 
         # Create tasks with different statuses
-        open_task = task_manager.create_task(
-            title="Open Task",
-            status="open"
-        )
-        
+        open_task = task_manager.create_task(title="Open Task", status="open")
+
         # Create and update another task
-        task2 = task_manager.create_task(
-            title="In Progress Task"
-        )
+        task2 = task_manager.create_task(title="In Progress Task")
         task_manager.update_task(task2.model.id, status="in_progress")
-        
+
         # Create completed task
-        task3 = task_manager.create_task(
-            title="Completed Task"
-        )
+        task3 = task_manager.create_task(title="Completed Task")
         task_manager.update_task(task3.model.id, status="completed")
 
         # List open tasks
@@ -427,17 +411,10 @@ tasks:
         task_manager = self._create_test_manager()
 
         # Create tasks with different tags
-        bug_task = task_manager.create_task(
-            title="Bug Task",
-            tags=["bug"]
-        )
-        feature_task = task_manager.create_task(
-            title="Feature Task",
-            tags=["feature"]
-        )
+        bug_task = task_manager.create_task(title="Bug Task", tags=["bug"])
+        feature_task = task_manager.create_task(title="Feature Task", tags=["feature"])
         urgent_bug = task_manager.create_task(
-            title="Urgent Bug",
-            tags=["bug", "urgent"]
+            title="Urgent Bug", tags=["bug", "urgent"]
         )
 
         # List bug tasks
@@ -452,11 +429,8 @@ tasks:
         task_manager = self._create_test_manager()
 
         # Create a task
-        task = task_manager.create_task(
-            title="Original Title",
-            priority="low"
-        )
-        
+        task = task_manager.create_task(title="Original Title", priority="low")
+
         task_id = task.model.id
 
         # Update the task
@@ -464,11 +438,11 @@ tasks:
             task_id,
             title="Updated Title",
             priority="high",
-            description="Added description"
+            description="Added description",
         )
-        
+
         assert success is True
-        
+
         # Load and verify updates
         updated_task = task_manager.load_task(task_id)
         assert updated_task.model.title == "Updated Title"
@@ -480,11 +454,8 @@ tasks:
         task_manager = self._create_test_manager()
 
         # Create a task
-        task = task_manager.create_task(
-            title="To Delete",
-            priority="medium"
-        )
-        
+        task = task_manager.create_task(title="To Delete", priority="medium")
+
         task_id = task.model.id
 
         # Verify task exists
@@ -507,11 +478,9 @@ tasks:
 
         # Create multiple tasks
         import time
+
         for i in range(7):
-            task_manager.create_task(
-                title=f"Task {i+1}",
-                priority="medium"
-            )
+            task_manager.create_task(title=f"Task {i+1}", priority="medium")
             time.sleep(0.01)  # Small delay to ensure different timestamps
 
         # Get recent tasks (default limit is 5)

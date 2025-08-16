@@ -15,9 +15,7 @@ from typing import Type, TypeVar, Union
 
 import yaml
 
-from ai_trackdown_pytools.core.models import (
-    BaseTicketModel,
-)
+from ai_trackdown_pytools.core.models import BaseTicketModel
 
 # Type variable for ticket models
 T = TypeVar("T", bound=BaseTicketModel)

@@ -17,6 +17,7 @@ This section contains technical documentation for developers working on the AI T
 - [GitHub Actions Setup](./GITHUB_ACTIONS_SETUP.md) - Workflow configuration
 
 ### Sync Adapter Development
+- [Sync Adapter Documentation Summary](./sync-adapter-documentation-summary.md) - Complete documentation overview
 - [Sync Adapter Developer Guide](./sync-adapter-developer-guide.md) - Complete guide for creating new adapters
 - [Sync Adapter API Reference](./sync-adapter-api-reference.md) - Detailed API documentation
 - [Sync Adapter Implementation Guide](./sync-adapter-implementation-guide.md) - Original implementation guide

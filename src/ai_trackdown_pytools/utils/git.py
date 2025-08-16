@@ -7,10 +7,11 @@ and fallback behavior when GitPython is not available.
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from ai_trackdown_pytools.exceptions import GitOperationError, DependencyError
+from ai_trackdown_pytools.exceptions import GitOperationError
 
 try:
-    from git import Repo, InvalidGitRepositoryError, GitCommandError
+    from git import GitCommandError, InvalidGitRepositoryError, Repo
+
     GIT_AVAILABLE = True
 except ImportError:
     GIT_AVAILABLE = False
@@ -22,10 +23,10 @@ except ImportError:
 # Keep GitError for backward compatibility but inherit from GitOperationError
 class GitError(GitOperationError):
     """Exception raised for git-related errors.
-    
+
     WHY: Maintained for backward compatibility. New code should use GitOperationError.
     """
-    
+
     def __init__(self, message: str):
         super().__init__(message)
 
@@ -67,7 +68,7 @@ class GitRepo:
 
     def commit_changes(self, message: str, files: Optional[List[str]] = None) -> None:
         """Commit changes with proper error handling.
-        
+
         WHY: Commits can fail due to conflicts, hooks, or permissions.
         This provides specific guidance for each failure mode.
         """
@@ -85,17 +86,17 @@ class GitRepo:
             if "nothing to commit" in str(e):
                 return  # Not an error, just no changes
             raise GitOperationError(
-                f"Git command failed during commit",
+                "Git command failed during commit",
                 operation="commit",
                 repository=self.path,
-                original_error=e
+                original_error=e,
             )
         except Exception as e:
             raise GitOperationError(
-                f"Failed to commit changes",
+                "Failed to commit changes",
                 operation="commit",
                 repository=self.path,
-                original_error=e
+                original_error=e,
             )
 
     def create_branch(self, branch_name: str) -> None:
