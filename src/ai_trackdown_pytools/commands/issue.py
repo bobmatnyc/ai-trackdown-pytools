@@ -9,7 +9,7 @@ from rich.panel import Panel
 from rich.table import Table
 
 from ai_trackdown_pytools.core.project import Project
-from ai_trackdown_pytools.core.task import TaskManager
+from ai_trackdown_pytools.core.task import TicketManager
 from ai_trackdown_pytools.utils.templates import TemplateManager
 
 app = typer.Typer(help="Issue tracking and management")
@@ -72,7 +72,7 @@ def create(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
+    ticket_manager = TicketManager(project_path)
 
     if not title:
         from rich.prompt import Prompt
@@ -115,7 +115,7 @@ def create(
             issue_data.update(template_data)
             console.print(f"[green]Applied template: {template}[/green]")
 
-    new_issue = task_manager.create_task(type="issue", **issue_data)
+    new_issue = ticket_manager.create_task(type="issue", **issue_data)
 
     console.print(
         Panel.fit(
@@ -163,8 +163,8 @@ def list(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    all_tasks = task_manager.list_tasks()
+    ticket_manager = TicketManager(project_path)
+    all_tasks = ticket_manager.list_tasks()
 
     # Filter issues
     issues = [task for task in all_tasks if "issue" in task.tags]
@@ -246,8 +246,8 @@ def show(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    issue = task_manager.load_task(issue_id)
+    ticket_manager = TicketManager(project_path)
+    issue = ticket_manager.load_task(issue_id)
 
     if not issue or "issue" not in issue.tags:
         console.print(f"[red]Issue '{issue_id}' not found[/red]")
@@ -335,8 +335,8 @@ def update(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    issue = task_manager.load_task(issue_id)
+    ticket_manager = TicketManager(project_path)
+    issue = ticket_manager.load_task(issue_id)
 
     if not issue or "issue" not in issue.tags:
         console.print(f"[red]Issue '{issue_id}' not found[/red]")
@@ -385,7 +385,7 @@ def update(
     if epic is not None:
         if epic:  # If epic is specified (not empty string)
             # Validate epic exists
-            epic_task = task_manager.load_task(epic)
+            epic_task = ticket_manager.load_task(epic)
             if not epic_task or "epic" not in epic_task.tags:
                 console.print(f"[red]Epic '{epic}' not found[/red]")
                 raise typer.Exit(1)
@@ -393,33 +393,33 @@ def update(
             # Remove from old epic if linked
             old_epic_id = issue.metadata.get("epic")
             if old_epic_id and old_epic_id != epic:
-                old_epic = task_manager.load_task(old_epic_id)
+                old_epic = ticket_manager.load_task(old_epic_id)
                 if old_epic:
                     subtasks = old_epic.metadata.get("subtasks", [])
                     if issue_id in subtasks:
                         subtasks.remove(issue_id)
                         old_epic.metadata["subtasks"] = subtasks
-                        task_manager.save_task(old_epic)
+                        ticket_manager.save_task(old_epic)
 
             # Add to new epic
             subtasks = epic_task.metadata.get("subtasks", [])
             if issue_id not in subtasks:
                 subtasks.append(issue_id)
                 epic_task.metadata["subtasks"] = subtasks
-                task_manager.save_task(epic_task)
+                ticket_manager.save_task(epic_task)
 
             metadata_updates["epic"] = epic
         else:  # If epic is empty string, remove epic link
             # Remove from old epic if linked
             old_epic_id = issue.metadata.get("epic")
             if old_epic_id:
-                old_epic = task_manager.load_task(old_epic_id)
+                old_epic = ticket_manager.load_task(old_epic_id)
                 if old_epic:
                     subtasks = old_epic.metadata.get("subtasks", [])
                     if issue_id in subtasks:
                         subtasks.remove(issue_id)
                         old_epic.metadata["subtasks"] = subtasks
-                        task_manager.save_task(old_epic)
+                        ticket_manager.save_task(old_epic)
 
             metadata_updates["epic"] = None
 
@@ -433,7 +433,7 @@ def update(
         updates["metadata"] = issue.metadata
 
     # Apply updates
-    success = task_manager.update_task(issue_id, **updates)
+    success = ticket_manager.update_task(issue_id, **updates)
 
     if success:
         console.print(
@@ -470,8 +470,8 @@ def resolve(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    issue = task_manager.load_task(issue_id)
+    ticket_manager = TicketManager(project_path)
+    issue = ticket_manager.load_task(issue_id)
 
     if not issue or "issue" not in issue.tags:
         console.print(f"[red]Issue '{issue_id}' not found[/red]")
@@ -488,7 +488,7 @@ def resolve(
 
     status = "completed" if resolution_type == "fixed" else "cancelled"
 
-    success = task_manager.update_task(issue_id, status=status, metadata=issue.metadata)
+    success = ticket_manager.update_task(issue_id, status=status, metadata=issue.metadata)
 
     if success:
         console.print(
@@ -522,8 +522,8 @@ def close(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    issue = task_manager.load_task(issue_id)
+    ticket_manager = TicketManager(project_path)
+    issue = ticket_manager.load_task(issue_id)
 
     if not issue or "issue" not in issue.tags:
         console.print(f"[red]Issue '{issue_id}' not found[/red]")
@@ -534,7 +534,7 @@ def close(
         issue.metadata["close_reason"] = reason
     issue.metadata["closed_at"] = issue.updated_at.isoformat()
 
-    success = task_manager.update_task(
+    success = ticket_manager.update_task(
         issue_id, status="completed", metadata=issue.metadata
     )
 
@@ -561,8 +561,8 @@ def reopen(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    issue = task_manager.load_task(issue_id)
+    ticket_manager = TicketManager(project_path)
+    issue = ticket_manager.load_task(issue_id)
 
     if not issue or "issue" not in issue.tags:
         console.print(f"[red]Issue '{issue_id}' not found[/red]")
@@ -583,7 +583,7 @@ def reopen(
     if "resolution_type" in issue.metadata:
         del issue.metadata["resolution_type"]
 
-    success = task_manager.update_task(issue_id, status="open", metadata=issue.metadata)
+    success = ticket_manager.update_task(issue_id, status="open", metadata=issue.metadata)
 
     if success:
         console.print(f"[green]Issue {issue_id} reopened successfully[/green]")
@@ -606,10 +606,10 @@ def add_task(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
+    ticket_manager = TicketManager(project_path)
 
     # Load and validate issue
-    issue = task_manager.load_task(issue_id)
+    issue = ticket_manager.load_task(issue_id)
     if not issue or "issue" not in issue.tags:
         console.print(f"[red]Issue '{issue_id}' not found[/red]")
         raise typer.Exit(1)
@@ -625,7 +625,7 @@ def add_task(
     # Process each task
     for task_id in task_ids:
         try:
-            task = task_manager.load_task(task_id)
+            task = ticket_manager.load_task(task_id)
         except Exception:
             console.print(
                 f"[yellow]Warning: Task '{task_id}' not found, skipping[/yellow]"
@@ -642,7 +642,7 @@ def add_task(
 
         # Update task's parent field
         task.parent = issue_id
-        if task_manager.update_task(task_id, parent=issue_id):
+        if ticket_manager.update_task(task_id, parent=issue_id):
             # Add task to issue's subtasks
             issue.metadata["subtasks"].append(task_id)
             added_tasks.append(task_id)
@@ -652,7 +652,7 @@ def add_task(
 
     # Update issue with new subtasks list
     if added_tasks:
-        success = task_manager.update_task(issue_id, metadata=issue.metadata)
+        success = ticket_manager.update_task(issue_id, metadata=issue.metadata)
 
         if success:
             console.print(
@@ -688,10 +688,10 @@ def remove_task(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
+    ticket_manager = TicketManager(project_path)
 
     # Load and validate issue
-    issue = task_manager.load_task(issue_id)
+    issue = ticket_manager.load_task(issue_id)
     if not issue or "issue" not in issue.tags:
         console.print(f"[red]Issue '{issue_id}' not found[/red]")
         raise typer.Exit(1)
@@ -718,7 +718,7 @@ def remove_task(
 
         # Load task to update its parent field
         try:
-            task = task_manager.load_task(task_id)
+            task = ticket_manager.load_task(task_id)
         except Exception:
             console.print(
                 f"[yellow]Warning: Task '{task_id}' not found in database[/yellow]"
@@ -730,7 +730,7 @@ def remove_task(
 
         # Clear task's parent field
         task.parent = None
-        if task_manager.update_task(task_id, parent=None):
+        if ticket_manager.update_task(task_id, parent=None):
             # Remove task from issue's subtasks
             issue.metadata["subtasks"].remove(task_id)
             removed_tasks.append(task_id)
@@ -740,7 +740,7 @@ def remove_task(
 
     # Update issue with new subtasks list
     if removed_tasks:
-        success = task_manager.update_task(issue_id, metadata=issue.metadata)
+        success = ticket_manager.update_task(issue_id, metadata=issue.metadata)
 
         if success:
             console.print(

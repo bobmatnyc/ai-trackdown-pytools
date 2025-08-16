@@ -17,58 +17,25 @@ This section contains technical documentation for developers working on the AI T
 - [GitHub Actions Setup](./GITHUB_ACTIONS_SETUP.md) - Workflow configuration
 
 ### Sync Adapter Development
-- [Sync Adapter Documentation Summary](./sync-adapter-documentation-summary.md) - Complete documentation overview
 - [Sync Adapter Developer Guide](./sync-adapter-developer-guide.md) - Complete guide for creating new adapters
-- [Sync Adapter API Reference](./sync-adapter-api-reference.md) - Detailed API documentation
-- [Sync Adapter Implementation Guide](./sync-adapter-implementation-guide.md) - Original implementation guide
-- [Linear Adapter Implementation](./linear-adapter-implementation.md) - Linear adapter details
-
-#### Platform-Specific Documentation
-- [Sync API Research](./sync-api-research.md) - Platform API research
-- [Sync Research Summary](./sync-research-summary.md) - Research findings
-- [ClickUp Adapter](./sync-adapters/clickup-adapter.md) - ClickUp implementation
-- [JIRA Adapter Guide](./sync-adapters/jira-adapter-guide.md) - JIRA implementation
-- [JIRA Implementation Summary](./sync-adapters/jira-implementation-summary.md) - JIRA details
-- [QA Test Results](./sync-adapters/qa-test-results.md) - Adapter testing results
 
 ### Testing
 - [CLI Testing Guide](./CLI_TESTING_GUIDE.md) - Comprehensive testing procedures
 - [Test Coverage](./COVERAGE.md) - Coverage requirements and reports
 - [Coverage System Implementation](./COVERAGE_SYSTEM_IMPLEMENTATION.md) - Coverage tooling details
-- [Test Suite Summary](./TEST_SUITE_SUMMARY.md) - Overview of test organization
-- [E2E Test Suite](./E2E_TEST_SUITE_SUMMARY.md) - End-to-end testing details
-- [Edge Case Testing](./EDGE_CASE_TESTING_SUMMARY.md) - Edge case coverage
-- [Test Coverage Analysis](./TEST_COVERAGE_ANALYSIS_REPORT.md) - Detailed coverage analysis
-- [Test Report](./TEST_REPORT.md) - Latest test results
-- [CLI Test Suite Delivery](./CLI_TEST_SUITE_DELIVERY.md) - Test delivery procedures
-- [Comprehensive Test Suite](./COMPREHENSIVE_TEST_SUITE_DELIVERABLE.md) - Full test documentation
 
 ### Release Management
 - [PyPI Manual Publishing Guide](./PYPI_MANUAL_PUBLISHING_GUIDE.md) - Step-by-step publishing
-- [PyPI Manual Upload Guide](./PYPI_MANUAL_UPLOAD_GUIDE.md) - Upload procedures
-- [PyPI Publication Ready](./PYPI_PUBLICATION_READY.md) - Pre-publication checklist
-- [PyPI Publication Summary](./PYPI_PUBLICATION_SUMMARY.md) - Publication overview
-- [PyPI Publishing Summary](./PYPI_PUBLISHING_SUMMARY.md) - Publishing details
-- [PyPI Release Checklist](./PYPI_RELEASE_CHECKLIST.md) - Release requirements
-- [PyPI Upload Instructions](./PYPI_UPLOAD_INSTRUCTIONS.md) - Upload commands
 - [Semantic Versioning](./SEMANTIC_VERSIONING_IMPLEMENTATION.md) - Version management
-- [Version Bump Summary](./VERSION_BUMP_SUMMARY.md) - Version update procedures
 
 ### Quality Assurance
 - [Validation](./VALIDATION.md) - Code validation procedures
-- [Schema Compatibility Report](./SCHEMA_COMPATIBILITY_REPORT.md) - Schema validation
 
 ### Security
 - [Secure Token Usage Guide](./SECURE_TOKEN_USAGE_GUIDE.md) - API key management
-- [Security Assessment Report](./SECURITY_ASSESSMENT_REPORT.md) - Security analysis
-- [Security Token Validation](./SECURITY_TOKEN_VALIDATION_REPORT.md) - Token validation
 
 ### Architecture
 - [Description](./DESCRIPTION.md) - Project architecture overview
-
-### Schema and Migration
-- [Schema Migration v1.3.1](./SCHEMA_MIGRATION_v1.3.1.md) - Schema migration guide
-- [Ticket Structure Migration](./TICKET_STRUCTURE_MIGRATION.md) - Ticket migration details
 
 ### CLI Development
 - [CLI Standardization Note](./CLI_STANDARDIZATION_NOTE.md) - CLI standards
@@ -87,3 +54,7 @@ Key scripts in `scripts/` directory:
 - Minimum 80% test coverage
 - Black formatting enforced
 - Type hints required for all public functions
+
+## Current Version
+
+The project is currently at version 1.5.2 with comprehensive CLI functionality and sync adapters for GitHub, ClickUp, and Linear platforms.

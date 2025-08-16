@@ -10,7 +10,7 @@ from rich.panel import Panel
 from rich.table import Table
 
 from ai_trackdown_pytools.core.project import Project
-from ai_trackdown_pytools.core.task import TaskManager
+from ai_trackdown_pytools.core.task import TicketManager
 
 app = typer.Typer(help="Advanced search and filtering capabilities")
 console = Console()
@@ -63,8 +63,8 @@ def tasks(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    all_tasks = task_manager.list_tasks()
+    ticket_manager = TicketManager(project_path)
+    all_tasks = ticket_manager.list_tasks()
 
     # Prepare search query
     if regex:
@@ -418,8 +418,8 @@ def filters(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    all_tasks = task_manager.list_tasks()
+    ticket_manager = TicketManager(project_path)
+    all_tasks = ticket_manager.list_tasks()
 
     if not all_tasks:
         console.print("[yellow]No tasks found[/yellow]")

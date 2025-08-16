@@ -37,7 +37,7 @@ class TestInteractiveTaskCreation:
     """Test interactive task creation prompts."""
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     @patch("rich.prompt.Prompt.ask")
     def test_interactive_basic_prompts(
         self, mock_prompt, mock_create, mock_exists, interactive_runner
@@ -66,7 +66,7 @@ class TestInteractiveTaskCreation:
         assert mock_prompt.call_count >= 3  # At minimum: title, description, priority
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     @patch("rich.prompt.Prompt.ask")
     @patch("rich.prompt.Confirm.ask")
     def test_interactive_with_confirmations(
@@ -103,7 +103,7 @@ class TestInteractiveTaskCreation:
         # These options might not exist, but test the pattern
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     @patch("rich.prompt.Prompt.ask")
     def test_interactive_with_validation(
         self, mock_prompt, mock_create, mock_exists, interactive_runner
@@ -129,7 +129,7 @@ class TestInteractiveTaskCreation:
         # Validation options might not exist yet
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     @patch("rich.prompt.Prompt.ask")
     @patch("rich.prompt.IntPrompt.ask")
     def test_interactive_with_different_prompt_types(
@@ -164,7 +164,7 @@ class TestInteractiveEpicCreation:
     """Test interactive epic creation prompts."""
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     @patch("rich.prompt.Prompt.ask")
     def test_interactive_epic_creation(
         self, mock_prompt, mock_create, mock_exists, interactive_runner
@@ -189,7 +189,7 @@ class TestInteractiveEpicCreation:
         assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     @patch("rich.prompt.Prompt.ask")
     @patch("rich.prompt.Confirm.ask")
     def test_interactive_epic_with_task_creation(
@@ -234,7 +234,7 @@ class TestInteractiveIssueCreation:
     """Test interactive issue creation prompts."""
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     @patch("rich.prompt.Prompt.ask")
     def test_interactive_bug_report(
         self, mock_prompt, mock_create, mock_exists, interactive_runner
@@ -265,7 +265,7 @@ class TestInteractiveIssueCreation:
         assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     @patch("rich.prompt.Prompt.ask")
     def test_interactive_feature_request(
         self, mock_prompt, mock_create, mock_exists, interactive_runner
@@ -299,7 +299,7 @@ class TestInteractiveTemplateSelection:
     @patch("ai_trackdown_pytools.utils.templates.TemplateManager.list_templates")
     @patch("ai_trackdown_pytools.utils.templates.TemplateManager.get_template")
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     @patch("rich.prompt.Prompt.ask")
     def test_interactive_template_selection(
         self,
@@ -458,7 +458,7 @@ class TestInteractiveSearch:
     """Test interactive search and filtering."""
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     @patch("rich.prompt.Prompt.ask")
     @patch("rich.prompt.Confirm.ask")
     def test_interactive_search_builder(
@@ -515,7 +515,7 @@ class TestInteractiveSearch:
         result = interactive_runner.invoke(app, ["search", "--interactive"])
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     @patch("rich.prompt.Prompt.ask")
     def test_interactive_search_refinement(
         self, mock_prompt, mock_task_mgr, mock_exists, interactive_runner
@@ -558,7 +558,7 @@ class TestInteractiveReporting:
     """Test interactive report generation."""
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     @patch("rich.prompt.Prompt.ask")
     @patch("rich.prompt.Confirm.ask")
     def test_interactive_status_report(
@@ -646,7 +646,7 @@ class TestInteractiveValidation:
         )
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     @patch("ai_trackdown_pytools.utils.validation.validate_task_file")
     @patch("rich.prompt.Confirm.ask")
     def test_interactive_task_validation(
@@ -748,7 +748,7 @@ class TestRichUIElements:
     """Test Rich UI elements and formatting."""
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_table_formatting_options(
         self, mock_task_mgr, mock_exists, interactive_runner
     ):
@@ -812,7 +812,7 @@ class TestRichUIElements:
             assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_progress_bars(self, mock_task_mgr, mock_exists, interactive_runner):
         """Test progress bar display in long operations."""
         mock_exists.return_value = True
@@ -828,7 +828,7 @@ class TestRichUIElements:
         # Progress option might not exist yet
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_color_themes(self, mock_task_mgr, mock_exists, interactive_runner):
         """Test different color themes."""
         mock_exists.return_value = True

@@ -6,7 +6,7 @@ from unittest.mock import Mock, mock_open, patch
 
 import pytest
 
-from ai_trackdown_pytools.core.task import Task, TaskError, TaskManager, TaskModel
+from ai_trackdown_pytools.core.task import Task, TaskError, TicketManager, TaskModel
 
 
 class TestTaskModel:
@@ -280,17 +280,17 @@ invalid: yaml {{
         assert result is None
 
 
-class TestTaskManager:
-    """Test TaskManager functionality."""
+class TestTicketManager:
+    """Test TicketManager functionality."""
 
-    def test_task_manager_initialization(self):
-        """Test TaskManager initialization."""
+    def test_ticket_manager_initialization(self):
+        """Test TicketManager initialization."""
         with patch("ai_trackdown_pytools.core.config.Config") as mock_config_class:
             mock_config = Mock()
             mock_config_class.load.return_value = mock_config
 
             project_path = Path("/test/project")
-            manager = TaskManager(project_path)
+            manager = TicketManager(project_path)
 
             assert manager.project_path == project_path
             assert manager.tasks_dir == project_path / "tasks"
@@ -298,9 +298,9 @@ class TestTaskManager:
 
     @patch("pathlib.Path.mkdir")
     def test_task_manager_creates_tasks_dir(self, mock_mkdir):
-        """Test TaskManager creates tasks directory."""
+        """Test TicketManager creates tasks directory."""
         with patch("ai_trackdown_pytools.core.config.Config.load"):
-            TaskManager(Path("/test/project"))
+            TicketManager(Path("/test/project"))
 
             mock_mkdir.assert_called_once_with(exist_ok=True)
 
@@ -314,7 +314,7 @@ class TestTaskManager:
         }.get(key, default)
         mock_config_class.load.return_value = mock_config
 
-        manager = TaskManager(Path("/test/project"))
+        manager = TicketManager(Path("/test/project"))
 
         with patch.object(manager, "_find_task_file", return_value=None):
             with patch.object(manager, "_save_task_file") as mock_save:
@@ -342,7 +342,7 @@ class TestTaskManager:
         }.get(key, default)
         mock_config_class.load.return_value = mock_config
 
-        manager = TaskManager(Path("/test/project"))
+        manager = TicketManager(Path("/test/project"))
 
         due_date = datetime.now() + timedelta(days=7)
 
@@ -381,7 +381,7 @@ class TestTaskManager:
         }.get(key, default)
         mock_config_load.return_value = mock_config
 
-        manager = TaskManager(Path("/test/project"))
+        manager = TicketManager(Path("/test/project"))
 
         # Mock existing files
         with patch.object(manager, "_find_task_file") as mock_find:
@@ -399,7 +399,7 @@ class TestTaskManager:
     @patch("ai_trackdown_pytools.core.config.Config.load")
     def test_get_task_file_path(self, mock_config_load):
         """Test getting task file path."""
-        manager = TaskManager(Path("/test/project"))
+        manager = TicketManager(Path("/test/project"))
 
         # Test with hyphenated ID
         path = manager._get_task_file_path("TSK-0001")
@@ -412,7 +412,7 @@ class TestTaskManager:
     @patch("ai_trackdown_pytools.core.config.Config.load")
     def test_find_task_file(self, mock_config_load):
         """Test finding task file."""
-        manager = TaskManager(Path("/test/project"))
+        manager = TicketManager(Path("/test/project"))
 
         with patch.object(manager.tasks_dir, "rglob") as mock_rglob:
             mock_rglob.return_value = [
@@ -432,7 +432,7 @@ class TestTaskManager:
     @patch("ai_trackdown_pytools.core.config.Config.load")
     def test_load_task_success(self, mock_config_load):
         """Test loading task successfully."""
-        manager = TaskManager(Path("/test/project"))
+        manager = TicketManager(Path("/test/project"))
 
         task_path = Path("/test/project/tasks/TSK-0001.md")
 
@@ -450,7 +450,7 @@ class TestTaskManager:
     @patch("ai_trackdown_pytools.core.config.Config.load")
     def test_load_task_not_found(self, mock_config_load):
         """Test loading non-existent task."""
-        manager = TaskManager(Path("/test/project"))
+        manager = TicketManager(Path("/test/project"))
 
         with patch.object(manager, "_find_task_file", return_value=None):
             with pytest.raises(TaskError) as exc_info:
@@ -461,7 +461,7 @@ class TestTaskManager:
     @patch("ai_trackdown_pytools.core.config.Config.load")
     def test_list_tasks(self, mock_config_load):
         """Test listing tasks."""
-        manager = TaskManager(Path("/test/project"))
+        manager = TicketManager(Path("/test/project"))
 
         now = datetime.now()
 
@@ -514,7 +514,7 @@ class TestTaskManager:
     @patch("ai_trackdown_pytools.core.config.Config.load")
     def test_get_recent_tasks(self, mock_config_load):
         """Test getting recent tasks."""
-        manager = TaskManager(Path("/test/project"))
+        manager = TicketManager(Path("/test/project"))
 
         now = datetime.now()
         tasks_data = []
@@ -539,7 +539,7 @@ class TestTaskManager:
     @patch("ai_trackdown_pytools.core.config.Config.load")
     def test_update_task(self, mock_config_load):
         """Test updating task."""
-        manager = TaskManager(Path("/test/project"))
+        manager = TicketManager(Path("/test/project"))
 
         mock_task = Mock()
 
@@ -558,7 +558,7 @@ class TestTaskManager:
     @patch("ai_trackdown_pytools.core.config.Config.load")
     def test_update_task_not_found(self, mock_config_load):
         """Test updating non-existent task."""
-        manager = TaskManager(Path("/test/project"))
+        manager = TicketManager(Path("/test/project"))
 
         with patch.object(manager, "load_task", return_value=None):
             result = manager.update_task("TSK-9999", title="Updated")
@@ -568,7 +568,7 @@ class TestTaskManager:
     @patch("ai_trackdown_pytools.core.config.Config.load")
     def test_delete_task_success(self, mock_config_load):
         """Test deleting task."""
-        manager = TaskManager(Path("/test/project"))
+        manager = TicketManager(Path("/test/project"))
 
         task_path = Path("/test/project/tasks/TSK-0001.md")
         mock_unlink = Mock()
@@ -583,7 +583,7 @@ class TestTaskManager:
     @patch("ai_trackdown_pytools.core.config.Config.load")
     def test_delete_task_not_found(self, mock_config_load):
         """Test deleting non-existent task."""
-        manager = TaskManager(Path("/test/project"))
+        manager = TicketManager(Path("/test/project"))
 
         with patch.object(manager, "_find_task_file", return_value=None):
             result = manager.delete_task("TSK-9999")
@@ -593,7 +593,7 @@ class TestTaskManager:
     @patch("ai_trackdown_pytools.core.config.Config.load")
     def test_save_task_file(self, mock_config_load):
         """Test saving task file."""
-        manager = TaskManager(Path("/test/project"))
+        manager = TicketManager(Path("/test/project"))
 
         now = datetime.now()
         task_data = TaskModel(
@@ -636,7 +636,7 @@ class TestTaskManager:
     @patch("ai_trackdown_pytools.core.config.Config.load")
     def test_load_task_file_datetime_parsing(self, mock_config_load):
         """Test loading task file with datetime parsing."""
-        manager = TaskManager(Path("/test/project"))
+        manager = TicketManager(Path("/test/project"))
 
         now = datetime.now()
         due = now + timedelta(days=7)
@@ -659,7 +659,7 @@ due_date: {due.isoformat()}
     @patch("ai_trackdown_pytools.core.config.Config.load")
     def test_load_task_file_error_handling(self, mock_config_load):
         """Test loading task file with errors."""
-        manager = TaskManager(Path("/test/project"))
+        manager = TicketManager(Path("/test/project"))
 
         # Test file read error
         with patch("builtins.open", side_effect=OSError("File not found")):

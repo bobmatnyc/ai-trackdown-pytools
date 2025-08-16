@@ -25,7 +25,7 @@ import yaml
 
 from ai_trackdown_pytools.core.config import Config
 from ai_trackdown_pytools.core.project import Project
-from ai_trackdown_pytools.core.task import TaskManager
+from ai_trackdown_pytools.core.task import TicketManager
 from ai_trackdown_pytools.utils.frontmatter import FrontmatterError, FrontmatterParser
 from ai_trackdown_pytools.utils.git import GitUtils
 from ai_trackdown_pytools.utils.templates import TemplateManager
@@ -358,7 +358,7 @@ class TestConcurrencyAndRaceConditions:
 
     def test_concurrent_task_creation(self, temp_project: Project):
         """Test concurrent task creation."""
-        task_manager = TaskManager(temp_project)
+        ticket_manager = TicketManager(temp_project)
         created_tasks = []
         errors = []
 
@@ -370,7 +370,7 @@ class TestConcurrencyAndRaceConditions:
                     "priority": "medium",
                     "assignees": [f"user{task_id}"],
                 }
-                task = task_manager.create_task(task_data)
+                task = ticket_manager.create_task(task_data)
                 created_tasks.append(task)
             except Exception as e:
                 errors.append(e)

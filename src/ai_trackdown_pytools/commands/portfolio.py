@@ -12,7 +12,7 @@ from rich.tree import Tree
 
 from ai_trackdown_pytools.core.constants import PRIORITY_ORDER, TicketPriority
 from ai_trackdown_pytools.core.project import Project
-from ai_trackdown_pytools.core.task import TaskManager
+from ai_trackdown_pytools.core.task import TicketManager
 
 app = typer.Typer(help="Portfolio and backlog management")
 console = Console()
@@ -34,8 +34,8 @@ def overview(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    all_tasks = task_manager.list_tasks()
+    ticket_manager = TicketManager(project_path)
+    all_tasks = ticket_manager.list_tasks()
 
     if not show_completed:
         all_tasks = [t for t in all_tasks if t.status != "completed"]
@@ -66,8 +66,8 @@ def overview(
             completed = sum(
                 1
                 for st_id in subtasks
-                if task_manager.load_task(st_id)
-                and task_manager.load_task(st_id).status == "completed"
+                if ticket_manager.load_task(st_id)
+                and ticket_manager.load_task(st_id).status == "completed"
             )
             progress = int((completed / len(subtasks)) * 100)
         else:
@@ -184,8 +184,8 @@ def backlog(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    all_tasks = task_manager.list_tasks()
+    ticket_manager = TicketManager(project_path)
+    all_tasks = ticket_manager.list_tasks()
 
     # Filter to open tasks only
     open_tasks = [
@@ -313,8 +313,8 @@ def roadmap(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    all_tasks = task_manager.list_tasks()
+    ticket_manager = TicketManager(project_path)
+    all_tasks = ticket_manager.list_tasks()
 
     # Get epics and their subtasks
     epics = [t for t in all_tasks if "epic" in t.tags]
@@ -340,8 +340,8 @@ def roadmap(
                 completed = sum(
                     1
                     for st_id in subtasks
-                    if task_manager.load_task(st_id)
-                    and task_manager.load_task(st_id).status == "completed"
+                    if ticket_manager.load_task(st_id)
+                    and ticket_manager.load_task(st_id).status == "completed"
                 )
                 progress = int((completed / len(subtasks)) * 100)
             else:
@@ -361,7 +361,7 @@ def roadmap(
                 subtasks_node = epic_node.add(f"[dim]Subtasks ({len(subtasks)}):[/dim]")
 
                 for subtask_id in subtasks[:10]:  # Limit to first 10 subtasks
-                    subtask = task_manager.load_task(subtask_id)
+                    subtask = ticket_manager.load_task(subtask_id)
                     if subtask:
                         status_icon = (
                             "✅"
@@ -393,8 +393,8 @@ def roadmap(
                 completed = sum(
                     1
                     for st_id in subtasks
-                    if task_manager.load_task(st_id)
-                    and task_manager.load_task(st_id).status == "completed"
+                    if ticket_manager.load_task(st_id)
+                    and ticket_manager.load_task(st_id).status == "completed"
                 )
                 progress = int((completed / len(subtasks)) * 100)
             else:
@@ -449,7 +449,7 @@ def sprint(
     else:
         sprints_data = {"sprints": [], "current_sprint": None}
 
-    task_manager = TaskManager(project_path)
+    ticket_manager = TicketManager(project_path)
 
     if action == "create":
         if not sprint_name:
@@ -535,7 +535,7 @@ def sprint(
         # Get sprint tasks
         sprint_tasks = []
         for task_id in sprint.get("tasks", []):
-            task = task_manager.load_task(task_id)
+            task = ticket_manager.load_task(task_id)
             if task:
                 sprint_tasks.append(task)
 

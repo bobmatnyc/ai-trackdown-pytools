@@ -62,7 +62,7 @@ class TestCompleteTicketLifecycle:
 
             # Step 2: Create an Epic
             with patch(
-                "ai_trackdown_pytools.core.task.TaskManager.create_task"
+                "ai_trackdown_pytools.core.task.TicketManager.create_task"
             ) as mock_create_epic:
                 mock_epic = Mock(id="EP-001", title="E2E Test Epic", type="epic")
                 mock_create_epic.return_value = mock_epic
@@ -88,7 +88,7 @@ class TestCompleteTicketLifecycle:
 
             # Step 3: Create an Issue associated with the Epic
             with patch(
-                "ai_trackdown_pytools.core.task.TaskManager.create_task"
+                "ai_trackdown_pytools.core.task.TicketManager.create_task"
             ) as mock_create_issue:
                 mock_issue = Mock(id="ISS-001", title="E2E Test Issue", type="issue")
                 mock_create_issue.return_value = mock_issue
@@ -124,7 +124,7 @@ class TestCompleteTicketLifecycle:
 
             for i, title in enumerate(task_titles, 1):
                 with patch(
-                    "ai_trackdown_pytools.core.task.TaskManager.create_task"
+                    "ai_trackdown_pytools.core.task.TicketManager.create_task"
                 ) as mock_create_task:
                     mock_task = Mock(id=f"TSK-{i:03d}", title=title, type="task")
                     mock_create_task.return_value = mock_task
@@ -158,7 +158,7 @@ class TestCompleteTicketLifecycle:
 
             # Step 5: Create a subtask
             with patch(
-                "ai_trackdown_pytools.core.task.TaskManager.create_task"
+                "ai_trackdown_pytools.core.task.TicketManager.create_task"
             ) as mock_create_subtask:
                 mock_subtask = Mock(
                     id="TSK-005", title="Subtask for testing", type="task"
@@ -199,7 +199,7 @@ class TestCompleteTicketLifecycle:
 
             for task_id, status in status_updates:
                 with patch(
-                    "ai_trackdown_pytools.core.task.TaskManager.update_task"
+                    "ai_trackdown_pytools.core.task.TicketManager.update_task"
                 ) as mock_update:
                     result = e2e_runner.invoke(
                         app, ["task", "update", task_id, "--status", status]
@@ -218,7 +218,7 @@ class TestCompleteTicketLifecycle:
 
             for task_id, comment in comment_data:
                 with patch(
-                    "ai_trackdown_pytools.core.task.TaskManager.add_comment"
+                    "ai_trackdown_pytools.core.task.TicketManager.add_comment"
                 ) as mock_comment:
                     result = e2e_runner.invoke(
                         app,
@@ -238,7 +238,7 @@ class TestCompleteTicketLifecycle:
             with patch(
                 "ai_trackdown_pytools.core.project.Project.exists"
             ) as mock_exists, patch(
-                "ai_trackdown_pytools.core.task.TaskManager"
+                "ai_trackdown_pytools.core.task.TicketManager"
             ) as mock_task_mgr:
                 mock_exists.return_value = True
 
@@ -297,7 +297,7 @@ class TestCompleteTicketLifecycle:
             ) as mock_exists, patch(
                 "ai_trackdown_pytools.core.project.Project.load"
             ) as mock_load, patch(
-                "ai_trackdown_pytools.core.task.TaskManager"
+                "ai_trackdown_pytools.core.task.TicketManager"
             ) as mock_task_mgr, patch(
                 "ai_trackdown_pytools.utils.git.GitUtils"
             ) as mock_git:
@@ -384,7 +384,7 @@ class TestCompleteTicketLifecycle:
 
             for i, (title, project, priority) in enumerate(epic_data, 1):
                 with patch(
-                    "ai_trackdown_pytools.core.task.TaskManager.create_task"
+                    "ai_trackdown_pytools.core.task.TicketManager.create_task"
                 ) as mock_create:
                     mock_epic = Mock(id=f"EP-{i:03d}", title=title, type="epic")
                     mock_create.return_value = mock_epic
@@ -409,7 +409,7 @@ class TestCompleteTicketLifecycle:
 
             # Step 3: Create backlog items
             with patch(
-                "ai_trackdown_pytools.core.task.TaskManager.list_tasks"
+                "ai_trackdown_pytools.core.task.TicketManager.list_tasks"
             ) as mock_list:
                 mock_backlog_items = [
                     Mock(
@@ -436,7 +436,7 @@ class TestCompleteTicketLifecycle:
 
             for cmd in prioritization_commands:
                 with patch(
-                    "ai_trackdown_pytools.core.task.TaskManager.update_task"
+                    "ai_trackdown_pytools.core.task.TicketManager.update_task"
                 ) as mock_update:
                     result = e2e_runner.invoke(app, cmd)
                     # These commands might not exist yet
@@ -620,7 +620,7 @@ fields:
 
             # Step 3: Apply template to create tasks
             with patch(
-                "ai_trackdown_pytools.core.task.TaskManager.create_task"
+                "ai_trackdown_pytools.core.task.TicketManager.create_task"
             ) as mock_create:
                 mock_task = Mock(id="TSK-TEMPLATE-001", title="Template Generated Task")
                 mock_create.return_value = mock_task
@@ -681,7 +681,7 @@ fields:
 
             # Step 2: Generate task from AI prompt
             with patch(
-                "ai_trackdown_pytools.core.task.TaskManager.create_task"
+                "ai_trackdown_pytools.core.task.TicketManager.create_task"
             ) as mock_create:
                 mock_task = Mock(id="AI-TSK-001", title="AI Generated Task")
                 mock_create.return_value = mock_task
@@ -760,7 +760,7 @@ fields:
             with patch(
                 "ai_trackdown_pytools.core.project.Project.exists"
             ) as mock_exists, patch(
-                "ai_trackdown_pytools.core.task.TaskManager"
+                "ai_trackdown_pytools.core.task.TicketManager"
             ) as mock_task_mgr, patch(
                 "ai_trackdown_pytools.utils.validation.validate_task_file"
             ) as mock_validate_task:
@@ -919,7 +919,7 @@ class TestConcurrentOperations:
 
             for i, (title, assignee) in enumerate(task_data, 1):
                 with patch(
-                    "ai_trackdown_pytools.core.task.TaskManager.create_task"
+                    "ai_trackdown_pytools.core.task.TicketManager.create_task"
                 ) as mock_create:
                     mock_task = Mock(id=f"CONCURRENT-{i:03d}", title=title)
                     mock_create.return_value = mock_task
@@ -943,7 +943,7 @@ class TestConcurrentOperations:
             with patch(
                 "ai_trackdown_pytools.core.project.Project.exists"
             ) as mock_exists, patch(
-                "ai_trackdown_pytools.core.task.TaskManager"
+                "ai_trackdown_pytools.core.task.TicketManager"
             ) as mock_task_mgr:
                 mock_exists.return_value = True
                 mock_tasks = [
@@ -981,7 +981,7 @@ class TestConcurrentOperations:
         try:
             # Create large number of tasks
             with patch(
-                "ai_trackdown_pytools.core.task.TaskManager.create_task"
+                "ai_trackdown_pytools.core.task.TicketManager.create_task"
             ) as mock_create:
                 for i in range(1, 101):  # 100 tasks
                     mock_task = Mock(id=f"SCALE-{i:03d}", title=f"Scale Test Task {i}")
@@ -1006,7 +1006,7 @@ class TestConcurrentOperations:
             with patch(
                 "ai_trackdown_pytools.core.project.Project.exists"
             ) as mock_exists, patch(
-                "ai_trackdown_pytools.core.task.TaskManager"
+                "ai_trackdown_pytools.core.task.TicketManager"
             ) as mock_task_mgr:
                 mock_exists.return_value = True
                 mock_tasks = [
@@ -1092,7 +1092,7 @@ class TestErrorRecovery:
 
             for i, (title, should_succeed) in enumerate(batch_tasks, 1):
                 with patch(
-                    "ai_trackdown_pytools.core.task.TaskManager.create_task"
+                    "ai_trackdown_pytools.core.task.TicketManager.create_task"
                 ) as mock_create:
                     if should_succeed:
                         mock_task = Mock(id=f"RECOVERY-{i:03d}", title=title)

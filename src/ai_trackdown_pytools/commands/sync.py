@@ -11,7 +11,7 @@ from rich.panel import Panel
 from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn
 
 from ai_trackdown_pytools.core.project import Project
-from ai_trackdown_pytools.core.task import TaskManager
+from ai_trackdown_pytools.core.task import TicketManager
 from ai_trackdown_pytools.utils.git import GitUtils
 from ai_trackdown_pytools.utils.github import GitHubCLI, GitHubError
 from ai_trackdown_pytools.utils.sync import (
@@ -113,8 +113,8 @@ def sync_platform(
         f"[blue]{platform.title()} repository: {platform_config.get('repository', 'N/A')}[/blue]"
     )
 
-    task_manager = TaskManager(project_path)
-    bridge = SyncBridge(task_manager)
+    ticket_manager = TicketManager(project_path)
+    bridge = SyncBridge(ticket_manager)
 
     try:
         if action == "status":
@@ -122,7 +122,7 @@ def sync_platform(
             last_sync = all_sync_config.get("last_sync", {}).get(platform, "Never")
 
             # Count platform-specific items
-            all_tasks = task_manager.list_tasks()
+            all_tasks = ticket_manager.list_tasks()
             platform_items = [
                 t
                 for t in all_tasks
@@ -287,7 +287,7 @@ def github(
         "Use 'aitrackdown sync platform github <action>' instead[/yellow]"
     )
 
-    task_manager = TaskManager(project_path)
+    ticket_manager = TicketManager(project_path)
 
     if action == "status":
         # Show sync status
@@ -309,8 +309,8 @@ def github(
 [dim]Token configured:[/dim] {gh_auth_status}
 
 [dim]Local counts:[/dim]
-• Issues: {len([t for t in task_manager.list_tasks() if 'issue' in t.tags])}
-• PRs: {len([t for t in task_manager.list_tasks() if 'pull-request' in t.tags])}""",
+• Issues: {len([t for t in ticket_manager.list_tasks() if 'issue' in t.tags])}
+• PRs: {len([t for t in ticket_manager.list_tasks() if 'pull-request' in t.tags])}""",
                 title="Sync Status",
                 border_style="blue",
             )
@@ -370,7 +370,7 @@ def github(
             gh = GitHubCLI(repo)
 
             # Find unsynced items
-            all_tasks = task_manager.list_tasks()
+            all_tasks = ticket_manager.list_tasks()
             issues = [t for t in all_tasks if "issue" in t.tags]
             prs = [t for t in all_tasks if "pull-request" in t.tags]
 
@@ -414,7 +414,7 @@ def github(
                                 github_issue = gh.sync_issue_to_github(issue)
 
                                 # Update local task with GitHub metadata
-                                task_manager.update_task(
+                                ticket_manager.update_task(
                                     issue.id,
                                     metadata={
                                         **issue.metadata,
@@ -452,7 +452,7 @@ def github(
                                 github_pr = gh.sync_pr_to_github(pr)
 
                                 # Update local task with GitHub metadata
-                                task_manager.update_task(
+                                ticket_manager.update_task(
                                     pr.id,
                                     metadata={
                                         **pr.metadata,
@@ -678,7 +678,7 @@ def import_data(
         console.print(f"[red]Import file not found: {file_path}[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
+    ticket_manager = TicketManager(project_path)
     imported_count = 0
 
     if source == "github-json":
@@ -717,7 +717,7 @@ def import_data(
             if dry_run:
                 console.print(f"Would import: {title} ({item_type})")
             else:
-                task_manager.create_task(**task_data)
+                ticket_manager.create_task(**task_data)
                 imported_count += 1
 
     elif source == "csv":
@@ -745,7 +745,7 @@ def import_data(
                 if dry_run:
                     console.print(f"Would import: {title} ({task_type})")
                 else:
-                    task_manager.create_task(**task_data)
+                    ticket_manager.create_task(**task_data)
                     imported_count += 1
 
     else:
@@ -784,8 +784,8 @@ def export(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    all_tasks = task_manager.list_tasks()
+    ticket_manager = TicketManager(project_path)
+    all_tasks = ticket_manager.list_tasks()
 
     # Apply filters
     filtered_tasks = all_tasks

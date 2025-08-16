@@ -266,7 +266,7 @@ class TestEditCommand:
     """Test edit command functionality."""
 
     @patch("ai_trackdown_pytools.core.project.Project")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     @patch("ai_trackdown_pytools.utils.editor.EditorUtils")
     def test_edit_task_success(
         self, mock_editor, mock_task_manager_class, mock_project, runner
@@ -304,7 +304,7 @@ class TestEditCommand:
         assert "No AI Trackdown project found" in result.output
 
     @patch("ai_trackdown_pytools.core.project.Project")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_edit_task_not_found(self, mock_task_manager_class, mock_project, runner):
         """Test edit command when task doesn't exist."""
         mock_project.exists.return_value = True
@@ -323,7 +323,7 @@ class TestSearchCommand:
     """Test search command functionality."""
 
     @patch("ai_trackdown_pytools.core.project.Project")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_search_with_results(self, mock_task_manager_class, mock_project, runner):
         """Test search command finds matching tasks."""
         mock_project.exists.return_value = True
@@ -355,7 +355,7 @@ class TestSearchCommand:
         assert "TSK-0002" in result.output
 
     @patch("ai_trackdown_pytools.core.project.Project")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_search_with_filters(self, mock_task_manager_class, mock_project, runner):
         """Test search command with status and type filters."""
         mock_project.exists.return_value = True
@@ -388,7 +388,7 @@ class TestSearchCommand:
         assert "TSK-0002" not in result.output  # Filtered out
 
     @patch("ai_trackdown_pytools.core.project.Project")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_search_no_results(self, mock_task_manager_class, mock_project, runner):
         """Test search command with no matching results."""
         mock_project.exists.return_value = True
@@ -447,7 +447,7 @@ class TestValidateCommand:
         assert "Invalid config file" in result.output
 
     @patch("ai_trackdown_pytools.core.project.Project")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     @patch("ai_trackdown_pytools.utils.validation.validate_task_file")
     def test_validate_tasks(
         self, mock_validate_task, mock_task_manager_class, mock_project, runner

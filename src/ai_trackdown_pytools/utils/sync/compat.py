@@ -10,7 +10,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Tuple
 
 from ai_trackdown_pytools.core.models import TicketModel
-from ai_trackdown_pytools.core.task import TaskManager
+from ai_trackdown_pytools.core.task import TicketManager
 
 from .base import SyncConfig, SyncDirection, SyncResult
 from .exceptions import SyncError
@@ -25,13 +25,13 @@ class SyncBridge:
     This allows us to migrate gradually without breaking existing code.
     """
 
-    def __init__(self, task_manager: TaskManager):
+    def __init__(self, ticket_manager: TicketManager):
         """Initialize the sync bridge.
 
         Args:
-            task_manager: TaskManager instance for local operations
+            ticket_manager: TicketManager instance for local operations
         """
-        self.task_manager = task_manager
+        self.ticket_manager = ticket_manager
         self._loop = None
 
     def _get_loop(self):
@@ -133,7 +133,7 @@ class SyncBridge:
             await adapter.authenticate()
 
             # Get existing items to check for updates
-            existing_tasks = self.task_manager.list_tasks()
+            existing_tasks = self.ticket_manager.list_tasks()
             existing_by_remote_id = {}
 
             for task in existing_tasks:
@@ -159,7 +159,7 @@ class SyncBridge:
                     if existing:
                         # Update existing item
                         if not dry_run:
-                            self.task_manager.update_task(
+                            self.ticket_manager.update_task(
                                 existing.id,
                                 title=item.title,
                                 description=item.description,
@@ -173,7 +173,7 @@ class SyncBridge:
                     else:
                         # Create new item
                         if not dry_run:
-                            created = self.task_manager.create_task(
+                            created = self.ticket_manager.create_task(
                                 title=item.title,
                                 description=item.description,
                                 status=item.status.value,
@@ -212,7 +212,7 @@ class SyncBridge:
             await adapter.authenticate()
 
             # Get items to push
-            all_tasks = self.task_manager.list_tasks()
+            all_tasks = self.ticket_manager.list_tasks()
 
             # Filter items that need to be pushed
             for task in all_tasks:
@@ -236,7 +236,7 @@ class SyncBridge:
                         mapping = await adapter.push_item(item)
 
                         # Update local task with mapping
-                        self.task_manager.update_task(
+                        self.ticket_manager.update_task(
                             task.id,
                             metadata={
                                 **task.metadata,

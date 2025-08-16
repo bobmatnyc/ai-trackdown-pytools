@@ -11,7 +11,7 @@ from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
 from ai_trackdown_pytools.core.project import Project
-from ai_trackdown_pytools.core.task import TaskManager
+from ai_trackdown_pytools.core.task import TicketManager
 
 app = typer.Typer(help="Migration and upgrade utilities")
 console = Console()
@@ -243,8 +243,8 @@ def schema_upgrade(
 
 def _migrate_1_0_to_1_1(project_path: Path) -> None:
     """Migrate from schema 1.0.0 to 1.1.0 - Add task dependencies."""
-    task_manager = TaskManager(project_path)
-    tasks = task_manager.list_tasks()
+    ticket_manager = TicketManager(project_path)
+    tasks = ticket_manager.list_tasks()
 
     for task in tasks:
         # Add dependency tracking metadata
@@ -255,13 +255,13 @@ def _migrate_1_0_to_1_1(project_path: Path) -> None:
         if "blocks" not in task.metadata:
             task.metadata["blocks"] = []
 
-        task_manager.save_task(task)
+        ticket_manager.save_task(task)
 
 
 def _migrate_1_1_to_1_2(project_path: Path) -> None:
     """Migrate from schema 1.1.0 to 1.2.0 - Add epic tracking."""
-    task_manager = TaskManager(project_path)
-    tasks = task_manager.list_tasks()
+    ticket_manager = TicketManager(project_path)
+    tasks = ticket_manager.list_tasks()
 
     for task in tasks:
         # Add epic tracking metadata
@@ -274,13 +274,13 @@ def _migrate_1_1_to_1_2(project_path: Path) -> None:
         if "epic" in task.tags and task.metadata["epic"] is None:
             task.metadata["type"] = "epic"
 
-        task_manager.save_task(task)
+        ticket_manager.save_task(task)
 
 
 def _migrate_1_2_to_1_3(project_path: Path) -> None:
     """Migrate from schema 1.2.0 to 1.3.0 - Add PR integration."""
-    task_manager = TaskManager(project_path)
-    tasks = task_manager.list_tasks()
+    ticket_manager = TicketManager(project_path)
+    tasks = ticket_manager.list_tasks()
 
     for task in tasks:
         # Add PR integration metadata
@@ -293,7 +293,7 @@ def _migrate_1_2_to_1_3(project_path: Path) -> None:
         if "pull-request" in task.tags:
             task.metadata["type"] = "pull_request"
 
-        task_manager.save_task(task)
+        ticket_manager.save_task(task)
 
 
 @app.command()
@@ -312,8 +312,8 @@ def repair(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    tasks = task_manager.list_tasks()
+    ticket_manager = TicketManager(project_path)
+    tasks = ticket_manager.list_tasks()
 
     issues_found = []
 
@@ -527,7 +527,7 @@ def repair(
 
                 elif issue.get("task_id"):
                     # Handle orphaned references
-                    task = task_manager.load_task(issue["task_id"])
+                    task = ticket_manager.load_task(issue["task_id"])
                     if not task:
                         continue
 
@@ -555,7 +555,7 @@ def repair(
                             f"  ✅ Removed orphaned block reference from {task.id}"
                         )
 
-                    task_manager.save_task(task)
+                    ticket_manager.save_task(task)
                     fixed_count += 1
 
             except Exception as e:

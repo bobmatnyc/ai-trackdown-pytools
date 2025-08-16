@@ -9,7 +9,7 @@ from rich.panel import Panel
 from rich.table import Table
 
 from ai_trackdown_pytools.core.project import Project
-from ai_trackdown_pytools.core.task import TaskManager
+from ai_trackdown_pytools.core.task import TicketManager
 from ai_trackdown_pytools.utils.git import GitUtils
 from ai_trackdown_pytools.utils.templates import TemplateManager
 
@@ -110,7 +110,7 @@ def create(
         pr_tags.append("draft")
 
     # Create PR task
-    task_manager = TaskManager(project_path)
+    ticket_manager = TicketManager(project_path)
 
     pr_data = {
         "type": "pr",
@@ -148,7 +148,7 @@ def create(
     except Exception:
         pass  # Git diff may fail if branches don't exist
 
-    new_pr = task_manager.create_task(**pr_data)
+    new_pr = ticket_manager.create_task(**pr_data)
 
     console.print(
         Panel.fit(
@@ -202,8 +202,8 @@ def list(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    all_tasks = task_manager.list_tasks()
+    ticket_manager = TicketManager(project_path)
+    all_tasks = ticket_manager.list_tasks()
 
     # Filter PRs
     prs = [task for task in all_tasks if "pull-request" in task.tags]
@@ -279,8 +279,8 @@ def show(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    pr = task_manager.load_task(pr_id)
+    ticket_manager = TicketManager(project_path)
+    pr = ticket_manager.load_task(pr_id)
 
     if not pr or "pull-request" not in pr.tags:
         console.print(f"[red]Pull request '{pr_id}' not found[/red]")
@@ -383,8 +383,8 @@ def update(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    pr = task_manager.load_task(pr_id)
+    ticket_manager = TicketManager(project_path)
+    pr = ticket_manager.load_task(pr_id)
 
     if not pr or "pull-request" not in pr.tags:
         console.print(f"[red]Pull request '{pr_id}' not found[/red]")
@@ -441,7 +441,7 @@ def update(
         updates["metadata"] = pr.metadata
 
     # Apply updates
-    success = task_manager.update_task(pr_id, **updates)
+    success = ticket_manager.update_task(pr_id, **updates)
 
     if success:
         # Build list of what was updated
@@ -487,8 +487,8 @@ def review(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    pr = task_manager.load_task(pr_id)
+    ticket_manager = TicketManager(project_path)
+    pr = ticket_manager.load_task(pr_id)
 
     if not pr or "pull-request" not in pr.tags:
         console.print(f"[red]Pull request '{pr_id}' not found[/red]")
@@ -535,7 +535,7 @@ def review(
         console.print(f"[blue]Comment added to PR {pr_id} by {reviewer}[/blue]")
 
     # Save changes
-    task_manager.update_task(pr_id, metadata=pr.metadata)
+    ticket_manager.update_task(pr_id, metadata=pr.metadata)
 
     if message:
         console.print(f"[dim]Message: {message}[/dim]")
@@ -558,8 +558,8 @@ def merge(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    pr = task_manager.load_task(pr_id)
+    ticket_manager = TicketManager(project_path)
+    pr = ticket_manager.load_task(pr_id)
 
     if not pr or "pull-request" not in pr.tags:
         console.print(f"[red]Pull request '{pr_id}' not found[/red]")
@@ -583,13 +583,13 @@ def merge(
 
     # Close any related issues
     if pr.metadata.get("closes"):
-        related_issue = task_manager.load_task(pr.metadata.get("closes"))
+        related_issue = ticket_manager.load_task(pr.metadata.get("closes"))
         if related_issue:
-            task_manager.update_task(related_issue.id, status="completed")
+            ticket_manager.update_task(related_issue.id, status="completed")
             console.print(f"[green]Closed related issue: {related_issue.id}[/green]")
 
     # Update PR task
-    success = task_manager.update_task(pr_id, status="completed", metadata=pr.metadata)
+    success = ticket_manager.update_task(pr_id, status="completed", metadata=pr.metadata)
 
     if success:
         console.print(
@@ -624,8 +624,8 @@ def close(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    pr = task_manager.load_task(pr_id)
+    ticket_manager = TicketManager(project_path)
+    pr = ticket_manager.load_task(pr_id)
 
     if not pr or "pull-request" not in pr.tags:
         console.print(f"[red]Pull request '{pr_id}' not found[/red]")
@@ -640,7 +640,7 @@ def close(
         }
     )
 
-    success = task_manager.update_task(pr_id, status="cancelled", metadata=pr.metadata)
+    success = ticket_manager.update_task(pr_id, status="cancelled", metadata=pr.metadata)
 
     if success:
         console.print(f"[yellow]Pull request {pr_id} closed[/yellow]")

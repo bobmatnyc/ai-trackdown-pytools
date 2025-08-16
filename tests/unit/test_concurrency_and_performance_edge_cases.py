@@ -23,7 +23,7 @@ import pytest
 
 from ai_trackdown_pytools.core.config import Config
 from ai_trackdown_pytools.core.project import Project
-from ai_trackdown_pytools.core.task import TaskManager
+from ai_trackdown_pytools.core.task import TicketManager
 from ai_trackdown_pytools.utils.frontmatter import FrontmatterParser
 from ai_trackdown_pytools.utils.templates import TemplateManager
 from ai_trackdown_pytools.utils.validation import SchemaValidator
@@ -88,7 +88,7 @@ class TestConcurrencyEdgeCases:
 
     def test_concurrent_task_creation(self, temp_project: Project):
         """Test concurrent task creation."""
-        task_manager = TaskManager(temp_project)
+        ticket_manager = TicketManager(temp_project)
 
         created_tasks = []
         creation_errors = []
@@ -106,7 +106,7 @@ class TestConcurrencyEdgeCases:
                         "tags": [f"batch_{batch_id}", f"task_{i}"],
                     }
 
-                    task = task_manager.create_task(task_data)
+                    task = ticket_manager.create_task(task_data)
                     batch_tasks.append(task)
 
                     # Small delay to test race conditions

@@ -7,7 +7,7 @@ import pytest
 from typer.testing import CliRunner
 
 from ai_trackdown_pytools.cli import app
-from ai_trackdown_pytools.core.task import TaskManager
+from ai_trackdown_pytools.core.task import TicketManager
 
 runner = CliRunner()
 
@@ -46,7 +46,7 @@ def project_with_tickets(tmp_path):
             ("pr", "Add user profiles", "PR-0001"),
         ]
 
-        task_manager = TaskManager(project_dir)
+        ticket_manager = TicketManager(project_dir)
 
         created_tickets = {}
         for ticket_type, title, _ in tickets:
@@ -57,7 +57,7 @@ def project_with_tickets(tmp_path):
             }
             if ticket_type == "pr":
                 kwargs["branch"] = "feature/test"
-            task = task_manager.create_task(**kwargs)
+            task = ticket_manager.create_task(**kwargs)
             created_tickets[ticket_type] = task.id
 
         return project_dir, created_tickets
@@ -76,8 +76,8 @@ def test_close_task(project_with_tickets):
         assert f"Closed task {task_id}" in result.output
 
         # Verify the task was closed
-        task_manager = TaskManager(project_dir)
-        task = task_manager.load_task(task_id)
+        ticket_manager = TicketManager(project_dir)
+        task = ticket_manager.load_task(task_id)
         assert task.status == "completed"
         assert "closed_at" in task.metadata
 
@@ -99,8 +99,8 @@ def test_close_issue(project_with_tickets):
         assert f"Closed issue {issue_id}" in result.output
 
         # Verify the issue was closed
-        task_manager = TaskManager(project_dir)
-        issue = task_manager.load_task(issue_id)
+        ticket_manager = TicketManager(project_dir)
+        issue = ticket_manager.load_task(issue_id)
         assert issue.status == "completed"
         assert "closed_at" in issue.metadata
 
@@ -118,8 +118,8 @@ def test_close_epic(project_with_tickets):
         assert f"Closed epic {epic_id}" in result.output
 
         # Verify the epic was closed
-        task_manager = TaskManager(project_dir)
-        epic = task_manager.load_task(epic_id)
+        ticket_manager = TicketManager(project_dir)
+        epic = ticket_manager.load_task(epic_id)
         assert epic.status == "completed"
         assert "closed_at" in epic.metadata
 
@@ -137,8 +137,8 @@ def test_close_pr(project_with_tickets):
         assert f"Closed pr {pr_id}" in result.output
 
         # Verify the PR was closed
-        task_manager = TaskManager(project_dir)
-        pr = task_manager.load_task(pr_id)
+        ticket_manager = TicketManager(project_dir)
+        pr = ticket_manager.load_task(pr_id)
         assert pr.status == "completed"
         assert "closed_at" in pr.metadata
 
@@ -157,8 +157,8 @@ def test_close_with_comment(project_with_tickets):
         assert "Comment: Fixed in v1.2.0" in result.output
 
         # Verify the comment was saved
-        task_manager = TaskManager(project_dir)
-        task = task_manager.load_task(task_id)
+        ticket_manager = TicketManager(project_dir)
+        task = ticket_manager.load_task(task_id)
         assert task.metadata["closing_comment"] == "Fixed in v1.2.0"
 
     run_in_project(project_dir, _test)

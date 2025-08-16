@@ -17,7 +17,7 @@ import yaml
 from typer.testing import CliRunner
 
 from ai_trackdown_pytools.cli import app
-from ai_trackdown_pytools.core.task import TaskManager
+from ai_trackdown_pytools.core.task import TicketManager
 
 
 @pytest.fixture
@@ -526,7 +526,7 @@ class TestSystemInterruptionAndRecovery:
             created_count = 0
             interrupt_at = 5
 
-            original_create = TaskManager.create_task
+            original_create = TicketManager.create_task
 
             def mock_create_task(self, *args, **kwargs):
                 nonlocal created_count
@@ -535,7 +535,7 @@ class TestSystemInterruptionAndRecovery:
                     raise KeyboardInterrupt("Simulated interruption")
                 return original_create(self, *args, **kwargs)
 
-            with patch.object(TaskManager, "create_task", mock_create_task):
+            with patch.object(TicketManager, "create_task", mock_create_task):
                 # Run batch creation that will be interrupted
                 result = runner.invoke(
                     app,

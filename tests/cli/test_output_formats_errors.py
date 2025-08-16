@@ -38,7 +38,7 @@ class TestJSONOutputFormat:
     """Test JSON output format for all commands."""
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_search_json_output(self, mock_task_mgr, mock_exists, output_runner):
         """Test JSON output format for search command."""
         mock_exists.return_value = True
@@ -156,7 +156,7 @@ class TestCSVOutputFormat:
     """Test CSV output format for tabular data."""
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_search_csv_output(self, mock_task_mgr, mock_exists, output_runner):
         """Test CSV output format for search results."""
         mock_exists.return_value = True
@@ -203,7 +203,7 @@ class TestCSVOutputFormat:
             # Check for proper CSV escaping of commas and quotes
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_status_csv_export(self, mock_task_mgr, mock_exists, output_runner):
         """Test CSV export for status reports."""
         mock_exists.return_value = True
@@ -229,7 +229,7 @@ class TestXMLOutputFormat:
     """Test XML output format."""
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_search_xml_output(self, mock_task_mgr, mock_exists, output_runner):
         """Test XML output format for search results."""
         mock_exists.return_value = True
@@ -272,7 +272,7 @@ class TestYAMLOutputFormat:
     """Test YAML output format."""
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_search_yaml_output(self, mock_task_mgr, mock_exists, output_runner):
         """Test YAML output format."""
         mock_exists.return_value = True
@@ -302,7 +302,7 @@ class TestTableFormattingOptions:
     """Test various table formatting options."""
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_table_styles(self, mock_task_mgr, mock_exists, output_runner):
         """Test different table styles."""
         mock_exists.return_value = True
@@ -326,7 +326,7 @@ class TestTableFormattingOptions:
             # Table style option might not exist yet
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_column_customization(self, mock_task_mgr, mock_exists, output_runner):
         """Test custom column selection."""
         mock_exists.return_value = True
@@ -351,7 +351,7 @@ class TestTableFormattingOptions:
         assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_pagination_options(self, mock_task_mgr, mock_exists, output_runner):
         """Test table pagination options."""
         mock_exists.return_value = True
@@ -375,7 +375,7 @@ class TestTableFormattingOptions:
         assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_sorting_options(self, mock_task_mgr, mock_exists, output_runner):
         """Test table sorting options."""
         mock_exists.return_value = True
@@ -517,7 +517,7 @@ class TestValidationErrors:
     """Test validation error handling."""
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     def test_invalid_priority_values(self, mock_create, mock_exists, output_runner):
         """Test handling of invalid priority values."""
         mock_exists.return_value = True
@@ -529,7 +529,7 @@ class TestValidationErrors:
         assert result.exit_code != 0 or "invalid" not in result.output.lower()
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     def test_invalid_status_values(self, mock_create, mock_exists, output_runner):
         """Test handling of invalid status values."""
         mock_exists.return_value = True
@@ -540,7 +540,7 @@ class TestValidationErrors:
         # Should validate status values
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     def test_empty_required_fields(self, mock_create, mock_exists, output_runner):
         """Test handling of empty required fields."""
         mock_exists.return_value = True
@@ -559,7 +559,7 @@ class TestValidationErrors:
         assert "not found" in result.output.lower()
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_circular_dependency_detection(
         self, mock_task_mgr, mock_exists, output_runner
     ):
@@ -590,7 +590,7 @@ class TestOutputRedirection:
     """Test output redirection and file writing."""
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_output_to_file(self, mock_task_mgr, mock_exists, output_runner):
         """Test redirecting output to file."""
         mock_exists.return_value = True
@@ -637,7 +637,7 @@ class TestUnicodeHandling:
     """Test handling of Unicode and special characters."""
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     def test_unicode_task_titles(self, mock_create, mock_exists, output_runner):
         """Test handling of Unicode characters in task titles."""
         mock_exists.return_value = True
@@ -649,7 +649,7 @@ class TestUnicodeHandling:
         assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_unicode_search_queries(self, mock_task_mgr, mock_exists, output_runner):
         """Test Unicode characters in search queries."""
         mock_exists.return_value = True
@@ -681,7 +681,7 @@ class TestUnicodeHandling:
         assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     def test_special_characters_in_descriptions(
         self, mock_create, mock_exists, output_runner
     ):
@@ -708,7 +708,7 @@ class TestLargeDataHandling:
     """Test handling of large datasets."""
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_large_search_results(self, mock_task_mgr, mock_exists, output_runner):
         """Test handling of large search result sets."""
         mock_exists.return_value = True
@@ -732,7 +732,7 @@ class TestLargeDataHandling:
         # Should handle large datasets without performance issues
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     def test_very_long_task_titles(self, mock_create, mock_exists, output_runner):
         """Test handling of very long task titles."""
         mock_exists.return_value = True
@@ -745,7 +745,7 @@ class TestLargeDataHandling:
         assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     def test_many_tags_and_assignees(self, mock_create, mock_exists, output_runner):
         """Test handling of many tags and assignees."""
         mock_exists.return_value = True

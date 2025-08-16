@@ -378,7 +378,7 @@ class GitHubCLI:
         """Pull issues from GitHub and create/update local tasks.
 
         Args:
-            task_manager: TaskManager instance
+            ticket_manager: TicketManager instance
             dry_run: If True, don't actually create/update tasks
 
         Returns:
@@ -401,7 +401,7 @@ class GitHubCLI:
 
             for issue in issues:
                 # Check if we already have this issue locally
-                existing_tasks = task_manager.list_tasks()
+                existing_tasks = ticket_manager.list_tasks()
                 existing_task = None
 
                 for task_obj in existing_tasks:
@@ -412,7 +412,7 @@ class GitHubCLI:
                 if existing_task:
                     # Update existing task
                     if not dry_run:
-                        task_manager.update_task(
+                        ticket_manager.update_task(
                             existing_task.id,
                             title=issue["title"],
                             description=issue.get("body", ""),
@@ -431,7 +431,7 @@ class GitHubCLI:
                 else:
                     # Create new task
                     if not dry_run:
-                        task_manager.create_task(
+                        ticket_manager.create_task(
                             title=issue["title"],
                             description=issue.get("body", ""),
                             status="open" if issue["state"] == "open" else "closed",

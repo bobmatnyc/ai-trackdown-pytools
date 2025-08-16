@@ -11,7 +11,7 @@ from rich.tree import Tree
 
 from ai_trackdown_pytools.core.compatibility import convert_to_unified_status
 from ai_trackdown_pytools.core.project import Project
-from ai_trackdown_pytools.core.task import TaskManager
+from ai_trackdown_pytools.core.task import TicketManager
 from ai_trackdown_pytools.core.workflow import UnifiedStatus
 from ai_trackdown_pytools.utils.git import GitUtils
 
@@ -41,7 +41,7 @@ def project(
         raise typer.Exit(1)
 
     project = Project.load(project_path)
-    task_manager = TaskManager(project_path)
+    ticket_manager = TicketManager(project_path)
     git_utils = GitUtils(project_path)
 
     # Project overview
@@ -59,7 +59,7 @@ def project(
     )
 
     # Task summary with categories
-    tasks = task_manager.list_tasks()
+    tasks = ticket_manager.list_tasks()
 
     # Categorize tasks
     epics = [t for t in tasks if "epic" in t.tags]
@@ -172,9 +172,9 @@ def project(
                     completed = sum(
                         1
                         for st_id in subtasks
-                        if task_manager.load_task(st_id)
+                        if ticket_manager.load_task(st_id)
                         and convert_to_unified_status(
-                            task_manager.load_task(st_id).status
+                            ticket_manager.load_task(st_id).status
                         )
                         == UnifiedStatus.COMPLETED
                     )
@@ -225,8 +225,8 @@ def tasks(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    tasks = task_manager.list_tasks()
+    ticket_manager = TicketManager(project_path)
+    tasks = ticket_manager.list_tasks()
 
     # Apply filters
     if status_filter:

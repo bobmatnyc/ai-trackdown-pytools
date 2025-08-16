@@ -35,10 +35,10 @@ AI Trackdown PyTools brings powerful project management capabilities to your ter
 - 🔍 **Advanced Search** - Filter by status, assignee, tags, priority, and custom fields
 - 🎯 **Schema Validation** - Ensure data integrity with JSON schema validation
 - 🔧 **Deep Git Integration** - Automatic commit tracking, branch management, and PR linking
-- 🔄 **GitHub Sync** - Sync tasks with GitHub issues and pull requests bidirectionally
+- 🔄 **Platform Sync** - Sync with GitHub, ClickUp, and Linear platforms
 - 🎨 **Rich Terminal Output** - Tables, progress bars, syntax highlighting, and more
 - 🌐 **Multi-Project Support** - Manage multiple projects from a single installation
-- 📈 **Analytics and Reporting** - Built-in project analytics and customizable reports
+- 📊 **Workflow States** - Comprehensive workflow management with standardized states
 
 ## Installation
 
@@ -212,22 +212,26 @@ aitrackdown template export feature-template --output feature.yaml
 aitrackdown template import feature.yaml
 ```
 
-### GitHub Sync
+### Platform Sync
 
 ```bash
-# Check sync status
-aitrackdown sync github status
+# List available platforms
+aitrackdown sync list-available
 
-# Push local issues to GitHub (dry-run first)
-aitrackdown sync github push --dry-run
-aitrackdown sync github push
+# Check sync status for a platform
+aitrackdown sync platform github status
 
-# Pull GitHub issues to local tasks
-aitrackdown sync github pull --dry-run
-aitrackdown sync github pull
+# Push local items to platform (dry-run first)
+aitrackdown sync platform github push --dry-run
+aitrackdown sync platform github push
 
-# Specify repository explicitly
-aitrackdown sync github push --repo owner/repo
+# Pull platform items to local tasks
+aitrackdown sync platform github pull --dry-run
+aitrackdown sync platform github pull
+
+# Works with GitHub, ClickUp, and Linear
+aitrackdown sync platform clickup status
+aitrackdown sync platform linear pull
 ```
 
 ## Complete Command Reference
@@ -251,8 +255,8 @@ aitrackdown sync github push --repo owner/repo
 | `epic` | Manage epic tasks | `aitrackdown epic create "Q3 Features"` |
 | `pr` | Create and link pull requests | `aitrackdown pr create --branch feature/auth` |
 | `migrate` | Migrate from other tools | `aitrackdown migrate --from jira` |
-| `sync` | Sync with GitHub issues/PRs | `aitrackdown sync github push` |
-| `report` | Generate reports | `aitrackdown report weekly --format html` |
+| `sync` | Sync with external platforms | `aitrackdown sync platform github push` |
+| `ai` | AI-specific commands | `aitrackdown ai track-tokens --model gpt-4` |
 
 ### Utility Commands
 
@@ -261,14 +265,21 @@ aitrackdown sync github push --repo owner/repo
 | `info` | System information | `aitrackdown info` |
 | `health` | Health check | `aitrackdown health --verbose` |
 | `config` | Configuration management | `aitrackdown config set editor.default "vim"` |
-| `export` | Export data | `aitrackdown export --format json` |
+| `doctor` | Diagnose issues | `aitrackdown doctor` |
 
-### Quick Aliases
+### Global Options
 
-- `atd` → `aitrackdown`
-- `atd-init` → `aitrackdown init`
-- `atd-create` → `aitrackdown create`
-- `atd-status` → `aitrackdown status`
+```bash
+# Use plain output mode (no colors/formatting)
+aitrackdown --plain status
+
+# Get version information
+aitrackdown --version
+
+# Get help for any command
+aitrackdown --help
+aitrackdown create --help
+```
 
 ## Project Structure
 
@@ -461,22 +472,19 @@ aitrackdown health --verbose
 aitrackdown audit --fix
 ```
 
-## Plugin System (Coming Soon)
+## Workflow States
 
-```python
-# Example custom plugin
-from ai_trackdown_pytools.plugins import Plugin
+AI Trackdown PyTools includes a comprehensive workflow state system:
 
-class JiraImporter(Plugin):
-    """Import tasks from Jira."""
-    
-    def execute(self, context):
-        # Implementation here
-        pass
+```bash
+# Available states: OPEN, IN_PROGRESS, BLOCKED, IN_REVIEW, RESOLVED, CLOSED, WONT_FIX
+aitrackdown create task "New feature" --status OPEN
+aitrackdown transition TSK-001 IN_PROGRESS
+aitrackdown transition TSK-001 RESOLVED --resolution "Completed successfully"
 
-# Register and use
-aitrackdown plugin install jira-importer
-aitrackdown import --from jira --project "PROJ"
+# View tasks by status
+aitrackdown status tasks --status IN_PROGRESS
+aitrackdown status tasks --status RESOLVED
 ```
 
 ## Contributing

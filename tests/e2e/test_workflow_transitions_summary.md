@@ -112,7 +112,7 @@ The `test_ticket_workflow_transitions.py` file provides comprehensive end-to-end
 - **Deferred**: DEFERRED, MOVED, BACKLOG
 
 ### Utility Module
-Created `ticket_io.py` utility module for direct YAML serialization of ticket models, useful for testing scenarios that need simple file I/O without the full TaskManager markdown workflow.
+Created `ticket_io.py` utility module for direct YAML serialization of ticket models, useful for testing scenarios that need simple file I/O without the full TicketManager markdown workflow.
 
 ## Usage
 

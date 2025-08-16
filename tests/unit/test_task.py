@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from ai_trackdown_pytools.core.models import TaskModel
-from ai_trackdown_pytools.core.task import Task, TaskError, TaskManager
+from ai_trackdown_pytools.core.task import Task, TaskError, TicketManager
 
 
 class TestTaskModel:
@@ -276,8 +276,8 @@ invalid: yaml: {
         assert Task._extract_frontmatter(content_invalid) is None
 
 
-class TestTaskManager:
-    """Test TaskManager class functionality."""
+class TestTicketManager:
+    """Test TicketManager class functionality."""
 
     def setup_method(self):
         """Setup test environment."""
@@ -306,21 +306,21 @@ tasks:
 """
         )
 
-        return TaskManager(project_path)
+        return TicketManager(project_path)
 
-    def test_task_manager_creation(self):
-        """Test creating TaskManager."""
-        task_manager = self._create_test_manager()
+    def test_ticket_manager_creation(self):
+        """Test creating TicketManager."""
+        ticket_manager = self._create_test_manager()
 
-        assert task_manager.project_path == Path(self.temp_dir)
-        assert task_manager.tasks_dir.name == "tickets"
-        assert task_manager.tasks_dir.exists()
+        assert ticket_manager.project_path == Path(self.temp_dir)
+        assert ticket_manager.tasks_dir.name == "tickets"
+        assert ticket_manager.tasks_dir.exists()
 
     def test_create_task(self):
         """Test creating a new task."""
-        task_manager = self._create_test_manager()
+        ticket_manager = self._create_test_manager()
 
-        task = task_manager.create_task(
+        task = ticket_manager.create_task(
             title="New Test Task",
             description="A new task for testing",
             priority="high",
@@ -338,7 +338,7 @@ tasks:
         task_manager = self._create_test_manager()
 
         # Create a bug
-        bug = task_manager.create_task(type="bug", title="Bug Report", priority="high")
+        bug = ticket_manager.create_task(type="bug", title="Bug Report", priority="high")
 
         assert bug.model.id.startswith("BUG-")
         assert bug.model.title == "Bug Report"
@@ -348,14 +348,14 @@ tasks:
         task_manager = self._create_test_manager()
 
         # Create a task first
-        created_task = task_manager.create_task(
+        created_task = ticket_manager.create_task(
             title="Load Test Task", priority="medium"
         )
 
         task_id = created_task.model.id
 
         # Load task by ID
-        loaded_task = task_manager.load_task(task_id)
+        loaded_task = ticket_manager.load_task(task_id)
 
         assert loaded_task.model.id == task_id
         assert loaded_task.model.title == "Load Test Task"
@@ -365,7 +365,7 @@ tasks:
         task_manager = self._create_test_manager()
 
         with pytest.raises(TaskError, match="Task not found"):
-            task_manager.load_task("TSK-9999")
+            ticket_manager.load_task("TSK-9999")
 
     def test_list_tasks(self):
         """Test listing all tasks."""
@@ -373,10 +373,10 @@ tasks:
 
         # Create multiple tasks
         for i in range(3):
-            task_manager.create_task(title=f"Task {i+1}", priority="medium")
+            ticket_manager.create_task(title=f"Task {i+1}", priority="medium")
 
         # List all tasks
-        all_tasks = task_manager.list_tasks()
+        all_tasks = ticket_manager.list_tasks()
 
         assert len(all_tasks) == 3
         assert all(isinstance(task, Task) for task in all_tasks)
@@ -386,23 +386,23 @@ tasks:
         task_manager = self._create_test_manager()
 
         # Create tasks with different statuses
-        open_task = task_manager.create_task(title="Open Task", status="open")
+        open_task = ticket_manager.create_task(title="Open Task", status="open")
 
         # Create and update another task
-        task2 = task_manager.create_task(title="In Progress Task")
-        task_manager.update_task(task2.model.id, status="in_progress")
+        task2 = ticket_manager.create_task(title="In Progress Task")
+        ticket_manager.update_task(task2.model.id, status="in_progress")
 
         # Create completed task
-        task3 = task_manager.create_task(title="Completed Task")
-        task_manager.update_task(task3.model.id, status="completed")
+        task3 = ticket_manager.create_task(title="Completed Task")
+        ticket_manager.update_task(task3.model.id, status="completed")
 
         # List open tasks
-        open_tasks = task_manager.list_tasks(status="open")
+        open_tasks = ticket_manager.list_tasks(status="open")
         assert len(open_tasks) == 1
         assert open_tasks[0].model.title == "Open Task"
 
         # List completed tasks
-        completed_tasks = task_manager.list_tasks(status="completed")
+        completed_tasks = ticket_manager.list_tasks(status="completed")
         assert len(completed_tasks) == 1
         assert completed_tasks[0].model.title == "Completed Task"
 
@@ -411,14 +411,14 @@ tasks:
         task_manager = self._create_test_manager()
 
         # Create tasks with different tags
-        bug_task = task_manager.create_task(title="Bug Task", tags=["bug"])
-        feature_task = task_manager.create_task(title="Feature Task", tags=["feature"])
-        urgent_bug = task_manager.create_task(
+        bug_task = ticket_manager.create_task(title="Bug Task", tags=["bug"])
+        feature_task = ticket_manager.create_task(title="Feature Task", tags=["feature"])
+        urgent_bug = ticket_manager.create_task(
             title="Urgent Bug", tags=["bug", "urgent"]
         )
 
         # List bug tasks
-        bug_tasks = task_manager.list_tasks(tag="bug")
+        bug_tasks = ticket_manager.list_tasks(tag="bug")
         assert len(bug_tasks) == 2
         bug_titles = [task.model.title for task in bug_tasks]
         assert "Bug Task" in bug_titles
@@ -429,12 +429,12 @@ tasks:
         task_manager = self._create_test_manager()
 
         # Create a task
-        task = task_manager.create_task(title="Original Title", priority="low")
+        task = ticket_manager.create_task(title="Original Title", priority="low")
 
         task_id = task.model.id
 
         # Update the task
-        success = task_manager.update_task(
+        success = ticket_manager.update_task(
             task_id,
             title="Updated Title",
             priority="high",
@@ -444,7 +444,7 @@ tasks:
         assert success is True
 
         # Load and verify updates
-        updated_task = task_manager.load_task(task_id)
+        updated_task = ticket_manager.load_task(task_id)
         assert updated_task.model.title == "Updated Title"
         assert updated_task.model.priority == "high"
         assert updated_task.model.description == "Added description"
@@ -454,7 +454,7 @@ tasks:
         task_manager = self._create_test_manager()
 
         # Create a task
-        task = task_manager.create_task(title="To Delete", priority="medium")
+        task = ticket_manager.create_task(title="To Delete", priority="medium")
 
         task_id = task.model.id
 
@@ -462,7 +462,7 @@ tasks:
         assert task.file_path.exists()
 
         # Delete the task
-        success = task_manager.delete_task(task_id)
+        success = ticket_manager.delete_task(task_id)
         assert success is True
 
         # Verify task is deleted
@@ -470,7 +470,7 @@ tasks:
 
         # Should not be able to load deleted task
         with pytest.raises(TaskError):
-            task_manager.load_task(task_id)
+            ticket_manager.load_task(task_id)
 
     def test_get_recent_tasks(self):
         """Test getting recent tasks."""
@@ -480,15 +480,15 @@ tasks:
         import time
 
         for i in range(7):
-            task_manager.create_task(title=f"Task {i+1}", priority="medium")
+            ticket_manager.create_task(title=f"Task {i+1}", priority="medium")
             time.sleep(0.01)  # Small delay to ensure different timestamps
 
         # Get recent tasks (default limit is 5)
-        recent_tasks = task_manager.get_recent_tasks()
+        recent_tasks = ticket_manager.get_recent_tasks()
         assert len(recent_tasks) == 5
 
         # Get recent tasks with custom limit
-        recent_tasks_3 = task_manager.get_recent_tasks(limit=3)
+        recent_tasks_3 = ticket_manager.get_recent_tasks(limit=3)
         assert len(recent_tasks_3) == 3
 
         # Tasks should be sorted by creation date (newest first)

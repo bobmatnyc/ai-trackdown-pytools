@@ -32,7 +32,7 @@ from .commands import search as search_cmd
 from .commands import validate_typer as validate_cmd
 from .core.config import Config
 from .core.project import Project
-from .core.task import Task, TaskManager
+from .core.task import Task, TicketManager
 from .exceptions import (
     AiTrackdownError,
     FileOperationError,
@@ -127,7 +127,7 @@ def validate_and_normalize_ticket_id(ticket_id: str) -> Tuple[str, str]:
 
 
 def load_ticket_safely(
-    task_manager: TaskManager, normalized_id: str, ticket_type: str
+    ticket_manager: TicketManager, normalized_id: str, ticket_type: str
 ) -> Task:
     """
     Load a ticket with proper error handling.
@@ -136,7 +136,7 @@ def load_ticket_safely(
     This centralizes the loading logic and error messaging.
 
     Args:
-        task_manager: TaskManager instance
+        ticket_manager: TicketManager instance
         normalized_id: Normalized ticket ID
         ticket_type: Type of ticket for error messages
 
@@ -147,7 +147,7 @@ def load_ticket_safely(
         typer.Exit: If ticket cannot be loaded
     """
     try:
-        task = task_manager.load_task(normalized_id)
+        task = ticket_manager.load_task(normalized_id)
         if not task:
             raise TicketNotFoundError(
                 normalized_id,
@@ -182,7 +182,7 @@ def load_ticket_safely(
 
 
 def update_ticket_references(
-    task_manager: TaskManager,
+    ticket_manager: TicketManager,
     old_id: str,
     new_id: Optional[str] = None,
     remove_only: bool = False,
@@ -194,7 +194,7 @@ def update_ticket_references(
     when tickets are moved or removed. This centralizes that logic.
 
     Args:
-        task_manager: TaskManager instance
+        ticket_manager: TicketManager instance
         old_id: Original ticket ID to replace
         new_id: New ticket ID to use (if replacing)
         remove_only: If True, only remove references without replacement
@@ -202,7 +202,7 @@ def update_ticket_references(
     Returns:
         List of ticket IDs that were updated
     """
-    all_tasks = task_manager.list_tasks()
+    all_tasks = ticket_manager.list_tasks()
     updated_tickets = []
 
     for task_item in all_tasks:
@@ -229,7 +229,7 @@ def update_ticket_references(
             updated = True
 
         if updated:
-            task_manager.save_task(task_item)
+            ticket_manager.save_task(task_item)
             updated_tickets.append(task_item.id)
 
     return updated_tickets
@@ -787,14 +787,14 @@ def edit(
     """Edit a task file in your default editor."""
     from pathlib import Path
 
-    from ai_trackdown_pytools.core.task import TaskManager
+    from ai_trackdown_pytools.core.task import TicketManager
     from ai_trackdown_pytools.utils.editor import EditorUtils
 
     project_path = Path.cwd()
     validate_project_exists(project_path)
 
-    task_manager = TaskManager(project_path)
-    task = task_manager.load_task(task_id)
+    ticket_manager = TicketManager(project_path)
+    task = ticket_manager.load_task(task_id)
 
     if not task:
         console.print(f"[red]Task '{task_id}' not found[/red]")
@@ -821,13 +821,13 @@ def search(
     """Search tasks and content."""
     from pathlib import Path
 
-    from ai_trackdown_pytools.core.task import TaskManager
+    from ai_trackdown_pytools.core.task import TicketManager
 
     project_path = Path.cwd()
     validate_project_exists(project_path)
 
-    task_manager = TaskManager(project_path)
-    results = _search_tasks(task_manager, query, task_type, status_filter, limit)
+    ticket_manager = TicketManager(project_path)
+    results = _search_tasks(ticket_manager, query, task_type, status_filter, limit)
 
     if not results:
         console.print(f"[yellow]No tasks found matching '{query}'[/yellow]")
@@ -837,7 +837,7 @@ def search(
 
 
 def _search_tasks(
-    task_manager: TaskManager,
+    ticket_manager: TicketManager,
     query: str,
     task_type: Optional[str],
     status_filter: Optional[str],
@@ -849,7 +849,7 @@ def _search_tasks(
     WHY: The search logic was embedded in the command handler, making it hard
     to test and reuse. This extracts the search logic.
     """
-    all_tasks = task_manager.list_tasks()
+    all_tasks = ticket_manager.list_tasks()
     matching_tasks = []
     query_lower = query.lower()
 
@@ -932,17 +932,17 @@ def show(
     from rich.panel import Panel
     from rich.table import Table
 
-    from ai_trackdown_pytools.core.task import TaskManager
+    from ai_trackdown_pytools.core.task import TicketManager
 
     project_path = Path.cwd()
     validate_project_exists(project_path)
 
     normalized_id, ticket_type = validate_and_normalize_ticket_id(ticket_id)
 
-    task_manager = TaskManager(project_path)
+    ticket_manager = TicketManager(project_path)
 
     try:
-        ticket = task_manager.load_task(normalized_id)
+        ticket = ticket_manager.load_task(normalized_id)
     except Exception as e:
         console.print_error(f"Failed to load {ticket_type} '{normalized_id}': {e}")
         raise typer.Exit(1) from e
@@ -1078,17 +1078,17 @@ def close(
     """Close any ticket (epic, issue, task, or PR)."""
     from pathlib import Path
 
-    from ai_trackdown_pytools.core.task import TaskManager
+    from ai_trackdown_pytools.core.task import TicketManager
 
     project_path = Path.cwd()
     validate_project_exists(project_path)
 
     normalized_id, ticket_type = validate_and_normalize_ticket_id(ticket_id)
 
-    task_manager = TaskManager(project_path)
+    ticket_manager = TicketManager(project_path)
 
     try:
-        ticket = task_manager.load_task(normalized_id)
+        ticket = ticket_manager.load_task(normalized_id)
     except Exception as e:
         console.print_error(f"Failed to load {ticket_type} '{normalized_id}': {e}")
         raise typer.Exit(1) from e
@@ -1103,7 +1103,7 @@ def close(
 
     # Update the ticket
     update_data = _prepare_close_update_data(ticket, comment)
-    success = task_manager.update_task(normalized_id, **update_data)
+    success = ticket_manager.update_task(normalized_id, **update_data)
 
     if success:
         _display_close_success(ticket_type, normalized_id, ticket.title, comment)
@@ -1187,7 +1187,7 @@ def transition(
     """Transition any ticket to a new workflow state."""
     from pathlib import Path
 
-    from ai_trackdown_pytools.core.task import TaskManager
+    from ai_trackdown_pytools.core.task import TicketManager
 
     project_path = Path.cwd()
     validate_project_exists(project_path)
@@ -1203,13 +1203,13 @@ def transition(
     # Validate and map workflow state
     new_status = _validate_workflow_state(state)
 
-    task_manager = TaskManager(project_path)
-    ticket = load_ticket_safely(task_manager, normalized_id, ticket_type)
+    ticket_manager = TicketManager(project_path)
+    ticket = load_ticket_safely(ticket_manager, normalized_id, ticket_type)
 
     # Update the ticket
     old_status = ticket.status
     update_data = _prepare_transition_update_data(ticket, state, new_status, comment)
-    success = task_manager.update_task(normalized_id, **update_data)
+    success = ticket_manager.update_task(normalized_id, **update_data)
 
     if success:
         _display_transition_success(
@@ -1283,7 +1283,7 @@ def archive(
     """Archive any ticket by moving it to an archive subdirectory."""
 
     from ai_trackdown_pytools.core.project import Project
-    from ai_trackdown_pytools.core.task import TaskManager
+    from ai_trackdown_pytools.core.task import TicketManager
     from ai_trackdown_pytools.utils.tickets import (
         infer_ticket_type,
         normalize_ticket_id,
@@ -1310,11 +1310,11 @@ def archive(
         )
         raise typer.Exit(1)
 
-    # Load the ticket using TaskManager
-    task_manager = TaskManager(project_path)
+    # Load the ticket using TicketManager
+    ticket_manager = TicketManager(project_path)
 
     try:
-        ticket = task_manager.load_task(normalized_id)
+        ticket = ticket_manager.load_task(normalized_id)
     except Exception as e:
         console.print_error(f"Failed to load {ticket_type} '{normalized_id}': {e}")
         raise typer.Exit(1) from e
@@ -1330,7 +1330,7 @@ def archive(
     }
 
     type_subdir = type_dir_map.get(ticket_type, "misc")
-    archive_dir = task_manager.tasks_dir / type_subdir / "archive"
+    archive_dir = ticket_manager.tasks_dir / type_subdir / "archive"
     archive_dir.mkdir(parents=True, exist_ok=True)
 
     archive_file_path = archive_dir / ticket.file_path.name
@@ -1344,25 +1344,25 @@ def archive(
 
 
 def _handle_archive_references(
-    task_manager: TaskManager, normalized_id: str, ticket: Task
+    ticket_manager: TicketManager, normalized_id: str, ticket: Task
 ) -> None:
     """Update references when archiving a ticket."""
     # Update parent references if this is a child ticket
     if ticket.parent:
         try:
-            parent_task = task_manager.load_task(ticket.parent)
+            parent_task = ticket_manager.load_task(ticket.parent)
             if normalized_id in parent_task.dependencies:
                 parent_task.dependencies.remove(normalized_id)
-                task_manager.save_task(parent_task)
+                ticket_manager.save_task(parent_task)
         except Exception:
             pass  # Parent might not exist or be accessible
 
     # Update child references if this ticket has children
-    all_tasks = task_manager.list_tasks()
+    all_tasks = ticket_manager.list_tasks()
     for task_item in all_tasks:
         if task_item.parent == normalized_id:
             task_item.data.parent = None
-            task_manager.save_task(task_item)
+            ticket_manager.save_task(task_item)
 
 
 def _display_archive_success(
@@ -1420,7 +1420,7 @@ def convert(
     # Validate conversion
     target_type_lower = _validate_conversion(source_type, to_type)
 
-    task_manager = TaskManager(project_path)
+    ticket_manager = TicketManager(project_path)
     source_ticket = load_ticket_safely(task_manager, normalized_id, source_type)
 
     # Perform conversion
@@ -1437,7 +1437,7 @@ def convert(
     if archive:
         _archive_original_ticket(task_manager, source_ticket, source_type)
     else:
-        task_manager.delete_task(normalized_id)
+        ticket_manager.delete_task(normalized_id)
 
     # Display success
     _display_conversion_success(
@@ -1486,7 +1486,7 @@ def _validate_conversion(source_type: str, to_type: str) -> str:
 
 
 def _create_converted_ticket(
-    task_manager: TaskManager, source_ticket: Task, source_type: str, target_type: str
+    ticket_manager: TicketManager, source_ticket: Task, source_type: str, target_type: str
 ) -> Task:
     """Create a new ticket from conversion."""
     new_ticket_data = {
@@ -1517,14 +1517,14 @@ def _create_converted_ticket(
     ] = source_ticket.created_at.isoformat()
 
     try:
-        return task_manager.create_task(**new_ticket_data)
+        return ticket_manager.create_task(**new_ticket_data)
     except Exception as e:
         console.print_error(f"Failed to create converted ticket: {e}")
         raise typer.Exit(1) from e
 
 
 def _archive_original_ticket(
-    task_manager: TaskManager, source_ticket: Task, source_type: str
+    ticket_manager: TicketManager, source_ticket: Task, source_type: str
 ) -> Path:
     """Archive the original ticket after conversion."""
     type_dir_map = {
@@ -1536,7 +1536,7 @@ def _archive_original_ticket(
     }
 
     type_subdir = type_dir_map.get(source_type, "misc")
-    archive_dir = task_manager.tasks_dir / type_subdir / "archive"
+    archive_dir = ticket_manager.tasks_dir / type_subdir / "archive"
     archive_dir.mkdir(parents=True, exist_ok=True)
 
     archive_file_path = archive_dir / source_ticket.file_path.name
@@ -1596,17 +1596,17 @@ def delete(
     """Permanently delete any ticket (with confirmation)."""
     from pathlib import Path
 
-    from ai_trackdown_pytools.core.task import TaskManager
+    from ai_trackdown_pytools.core.task import TicketManager
 
     project_path = Path.cwd()
     validate_project_exists(project_path)
 
     normalized_id, ticket_type = validate_and_normalize_ticket_id(ticket_id)
 
-    task_manager = TaskManager(project_path)
+    ticket_manager = TicketManager(project_path)
 
     try:
-        ticket = task_manager.load_task(normalized_id)
+        ticket = ticket_manager.load_task(normalized_id)
     except Exception as e:
         console.print_error(f"Failed to load {ticket_type} '{normalized_id}': {e}")
         raise typer.Exit(1) from e
@@ -1645,27 +1645,27 @@ def delete(
     # Update any parent references if this is a child ticket
     if ticket.parent:
         try:
-            parent_task = task_manager.load_task(ticket.parent)
+            parent_task = ticket_manager.load_task(ticket.parent)
             # Remove this task from parent's dependencies if present
             if normalized_id in parent_task.dependencies:
                 parent_task.dependencies.remove(normalized_id)
-                task_manager.save_task(parent_task)
+                ticket_manager.save_task(parent_task)
         except Exception:
             # Parent might not exist or be accessible
             pass
 
     # Update any child references if this ticket has children
-    all_tasks = task_manager.list_tasks()
+    all_tasks = ticket_manager.list_tasks()
     children_updated = []
     for task_item in all_tasks:
         if task_item.parent == normalized_id:
             # Update child to have no parent
             task_item.data.parent = None
-            task_manager.save_task(task_item)
+            ticket_manager.save_task(task_item)
             children_updated.append(task_item.id)
 
     # Delete the ticket
-    success = task_manager.delete_task(normalized_id)
+    success = ticket_manager.delete_task(normalized_id)
 
     if success:
         _display_delete_success(
@@ -1781,8 +1781,8 @@ def _validate_tasks(path: Optional[str]) -> None:
     project_path = Path(path) if path else Path.cwd()
     validate_project_exists(project_path)
 
-    task_manager = TaskManager(project_path)
-    tasks = task_manager.list_tasks()
+    ticket_manager = TicketManager(project_path)
+    tasks = ticket_manager.list_tasks()
 
     console.print(f"[blue]Validating {len(tasks)} tasks[/blue]\n")
 

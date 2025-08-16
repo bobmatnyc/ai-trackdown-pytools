@@ -85,12 +85,12 @@ class TestStrategicCoverage:
         assert result.valid is True
 
     def test_task_manager_coverage(self):
-        """Test TaskManager for coverage."""
-        from ai_trackdown_pytools.core.task import TaskManager
+        """Test TicketManager for coverage."""
+        from ai_trackdown_pytools.core.task import TicketManager
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            # Create task manager
-            manager = TaskManager(Path(tmpdir))
+            # Create ticket manager
+            manager = TicketManager(Path(tmpdir))
 
             # Test task creation
             task = manager.create_task(title="Test Task", description="Test")

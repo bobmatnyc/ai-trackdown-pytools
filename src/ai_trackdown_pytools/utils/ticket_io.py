@@ -2,9 +2,9 @@
 
 This module provides simple functions to save and load ticket models directly
 to/from YAML files, useful for testing and other scenarios where you need
-direct file access without going through TaskManager.
+direct file access without going through TicketManager.
 
-WHY: While TaskManager handles the full workflow with markdown files and frontmatter,
+WHY: While TicketManager handles the full workflow with markdown files and frontmatter,
 tests and other utilities often need simpler direct YAML serialization for
 ticket models. This module provides that functionality.
 """

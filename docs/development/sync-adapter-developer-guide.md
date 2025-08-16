@@ -23,7 +23,6 @@ SyncAdapter (ABC)
 ├── GitHubAdapter
 ├── ClickUpAdapter
 ├── LinearAdapter
-├── JiraAdapter
 └── YourNewAdapter
 ```
 

@@ -9,7 +9,7 @@ from rich.panel import Panel
 from rich.table import Table
 
 from ai_trackdown_pytools.core.project import Project
-from ai_trackdown_pytools.core.task import TaskManager
+from ai_trackdown_pytools.core.task import TicketManager
 from ai_trackdown_pytools.utils.templates import TemplateManager
 
 app = typer.Typer(help="Bug tracking and management")
@@ -92,7 +92,7 @@ def create(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
+    ticket_manager = TicketManager(project_path)
 
     if not title:
         from rich.prompt import Prompt
@@ -140,7 +140,7 @@ def create(
             bug_data = template_manager.apply_template(template_path, bug_data)
 
     # Create the bug
-    bug_id = task_manager.create_task(
+    bug_id = ticket_manager.create_task(
         title=bug_data["title"],
         description=bug_data.get("description", ""),
         ticket_type="bug",
@@ -208,10 +208,10 @@ def list(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
+    ticket_manager = TicketManager(project_path)
 
     # Get all bugs
-    bugs = task_manager.list_tasks(ticket_type="bug")
+    bugs = ticket_manager.list_tasks(ticket_type="bug")
 
     # Apply filters
     if status:
@@ -321,8 +321,8 @@ def show(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    bug = task_manager.load_task(bug_id)
+    ticket_manager = TicketManager(project_path)
+    bug = ticket_manager.load_task(bug_id)
 
     if not bug:
         console.print(f"[red]Bug {bug_id} not found[/red]")
@@ -434,8 +434,8 @@ def update(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    bug = task_manager.load_task(bug_id)
+    ticket_manager = TicketManager(project_path)
+    bug = ticket_manager.load_task(bug_id)
 
     if not bug:
         console.print(f"[red]Bug {bug_id} not found[/red]")
@@ -485,7 +485,7 @@ def update(
         updates["metadata"]["verified_fixed"] = verified
 
     if updates:
-        success = task_manager.update_task(bug_id, updates)
+        success = ticket_manager.update_task(bug_id, updates)
         if success:
             console.print(f"[green]Bug {bug_id} updated successfully[/green]")
         else:
@@ -522,8 +522,8 @@ def close(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    bug = task_manager.load_task(bug_id)
+    ticket_manager = TicketManager(project_path)
+    bug = ticket_manager.load_task(bug_id)
 
     if not bug:
         console.print(f"[red]Bug {bug_id} not found[/red]")
@@ -543,7 +543,7 @@ def close(
     if notes:
         updates["metadata"]["resolution_notes"] = notes
 
-    success = task_manager.update_task(bug_id, **updates)
+    success = ticket_manager.update_task(bug_id, **updates)
     if success:
         console.print(
             Panel(
@@ -570,8 +570,8 @@ def stats(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    bugs = task_manager.list_tasks(ticket_type="bug")
+    ticket_manager = TicketManager(project_path)
+    bugs = ticket_manager.list_tasks(ticket_type="bug")
 
     # Calculate statistics
     total_bugs = len(bugs)

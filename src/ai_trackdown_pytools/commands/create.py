@@ -15,7 +15,7 @@ from ai_trackdown_pytools.core.constants import (
     TicketType,
 )
 from ai_trackdown_pytools.core.project import Project
-from ai_trackdown_pytools.core.task import TaskManager
+from ai_trackdown_pytools.core.task import TicketManager
 from ai_trackdown_pytools.utils.editor import EditorUtils
 from ai_trackdown_pytools.utils.templates import TemplateManager
 
@@ -81,13 +81,13 @@ def task(
         console.print("Run 'aitrackdown init project' to initialize")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
+    ticket_manager = TicketManager(project_path)
 
     # Validate issue if provided
     issue_task = None
     if issue:
         try:
-            issue_task = task_manager.load_task(issue)
+            issue_task = ticket_manager.load_task(issue)
             # Verify it's actually an issue
             if issue_task.metadata.get("type") != "issue":
                 console.print(f"[red]Error: {issue} is not an issue[/red]")
@@ -135,7 +135,7 @@ def task(
             task_data.update(template_data)
             console.print(f"[green]Applied template: {template}[/green]")
 
-    new_task = task_manager.create_task(**task_data)
+    new_task = ticket_manager.create_task(**task_data)
 
     # Update issue's subtasks list if associated with an issue
     if issue and issue_task:
@@ -149,7 +149,7 @@ def task(
             issue_metadata["subtasks"] = subtasks
 
             # Update the issue with new metadata
-            task_manager.update_task(issue, metadata=issue_metadata)
+            ticket_manager.update_task(issue, metadata=issue_metadata)
 
     # Build display message
     display_parts = [
@@ -224,13 +224,13 @@ def issue(
         raise typer.Exit(1)
 
     # For now, create as a task with issue-specific metadata
-    task_manager = TaskManager(project_path)
+    ticket_manager = TicketManager(project_path)
 
     # Validate epic if provided
     epic_task = None
     if epic:
         try:
-            epic_task = task_manager.load_task(epic)
+            epic_task = ticket_manager.load_task(epic)
             # Verify it's actually an epic
             if epic_task.metadata.get("type") != "epic":
                 console.print(f"[red]Error: {epic} is not an epic[/red]")
@@ -270,7 +270,7 @@ def issue(
     if epic:
         create_kwargs["parent"] = epic
 
-    new_issue = task_manager.create_task(**create_kwargs)
+    new_issue = ticket_manager.create_task(**create_kwargs)
 
     # Update epic's subtasks list if associated with an epic
     if epic and epic_task:
@@ -284,7 +284,7 @@ def issue(
             epic_metadata["subtasks"] = subtasks
 
             # Update the epic with new metadata
-            task_manager.update_task(epic, metadata=epic_metadata)
+            ticket_manager.update_task(epic, metadata=epic_metadata)
 
     # Build display message
     display_parts = [
@@ -338,7 +338,7 @@ def epic(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
+    ticket_manager = TicketManager(project_path)
 
     if not title:
         title = Prompt.ask("Epic title")
@@ -350,7 +350,7 @@ def epic(
         goal = Prompt.ask("Epic goal", default="")
 
     # Create epic as a task with specific metadata
-    new_epic = task_manager.create_task(
+    new_epic = ticket_manager.create_task(
         type=TicketType.EPIC.value,
         title=title,
         description=description,
@@ -434,9 +434,9 @@ def pr(
         description = Prompt.ask("Pull request description", default="")
 
     # Create PR as a task with specific metadata
-    task_manager = TaskManager(project_path)
+    ticket_manager = TicketManager(project_path)
 
-    new_pr = task_manager.create_task(
+    new_pr = ticket_manager.create_task(
         type=TicketType.PR.value,  # Specify PR type for correct ID generation
         title=f"PR: {title}",
         description=description,
@@ -503,8 +503,8 @@ def update(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    task = task_manager.load_task(task_id)
+    ticket_manager = TicketManager(project_path)
+    task = ticket_manager.load_task(task_id)
 
     if not task:
         console.print(f"[red]Task '{task_id}' not found[/red]")
@@ -551,7 +551,7 @@ def update(
         return
 
     # Apply updates
-    success = task_manager.update_task(task_id, **updates)
+    success = ticket_manager.update_task(task_id, **updates)
 
     if success:
         console.print(

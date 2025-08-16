@@ -10,7 +10,7 @@ from rich.panel import Panel
 from rich.table import Table
 
 from ai_trackdown_pytools.core.project import Project
-from ai_trackdown_pytools.core.task import TaskManager
+from ai_trackdown_pytools.core.task import TicketManager
 
 app = typer.Typer(help="AI-specific commands for tracking and context management")
 console = Console()
@@ -454,10 +454,10 @@ def context(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
+    ticket_manager = TicketManager(project_path)
 
     if task_id:
-        task = task_manager.load_task(task_id)
+        task = ticket_manager.load_task(task_id)
         if not task:
             console.print(f"[red]Task '{task_id}' not found[/red]")
             raise typer.Exit(1)
@@ -480,19 +480,19 @@ def context(
 
             # Epic tasks
             if task.metadata.get("epic"):
-                epic = task_manager.load_task(task.metadata.get("epic"))
+                epic = ticket_manager.load_task(task.metadata.get("epic"))
                 if epic:
                     related_tasks.append({"type": "epic", "task": epic})
 
             # Subtasks
             for subtask_id in task.metadata.get("subtasks", []):
-                subtask = task_manager.load_task(subtask_id)
+                subtask = ticket_manager.load_task(subtask_id)
                 if subtask:
                     related_tasks.append({"type": "subtask", "task": subtask})
 
             # Blocked by
             for blocked_id in task.metadata.get("blocked_by", []):
-                blocked_task = task_manager.load_task(blocked_id)
+                blocked_task = ticket_manager.load_task(blocked_id)
                 if blocked_task:
                     related_tasks.append({"type": "blocks", "task": blocked_task})
 
@@ -501,7 +501,7 @@ def context(
         output_file = output or f"context_{task_id}.{format}"
     else:
         # Project-wide context
-        all_tasks = task_manager.list_tasks()
+        all_tasks = ticket_manager.list_tasks()
         context_data = {
             "project": {
                 "name": project_path.name,

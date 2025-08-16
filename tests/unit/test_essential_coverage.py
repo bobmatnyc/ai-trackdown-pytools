@@ -162,12 +162,12 @@ class TestEssentialCoverage:
         assert result.valid is True
 
     def test_task_manager_basics(self):
-        """Test TaskManager basics."""
-        from ai_trackdown_pytools.core.task import TaskManager
+        """Test TicketManager basics."""
+        from ai_trackdown_pytools.core.task import TicketManager
 
         with tempfile.TemporaryDirectory() as tmpdir:
             # Create manager
-            manager = TaskManager(Path(tmpdir))
+            manager = TicketManager(Path(tmpdir))
 
             # Create task
             task = manager.create_task(

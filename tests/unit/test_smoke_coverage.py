@@ -137,13 +137,13 @@ Content here"""
     @patch("ai_trackdown_pytools.core.task.Task")
     def test_task_creation_mock(self, mock_task):
         """Test task creation with mocks."""
-        from ai_trackdown_pytools.core.task import TaskManager
+        from ai_trackdown_pytools.core.task import TicketManager
 
         with tempfile.TemporaryDirectory() as tmpdir:
             # Mock the task creation
             mock_task.return_value.model.id = "TSK-001"
 
-            manager = TaskManager(Path(tmpdir))
+            manager = TicketManager(Path(tmpdir))
             assert manager is not None
 
     def test_workflow_functions(self):

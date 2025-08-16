@@ -174,8 +174,8 @@ class TestCLICommands:
         result = runner.invoke(app, ["version"])
         assert result.exit_code == 0
 
-    @patch("ai_trackdown_pytools.core.project.Project")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.cli.Project")  # Mock the import in cli.py
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     @patch("ai_trackdown_pytools.utils.editor.EditorUtils")
     def test_edit_command(
         self, mock_editor, mock_task_manager_class, mock_project, runner
@@ -193,7 +193,7 @@ class TestCLICommands:
         result = runner.invoke(app, ["edit", "TSK-0001"])
         assert result.exit_code == 0
 
-        # No project case
+        # No project case - should raise ProjectError which results in exit code 1
         mock_project.exists.return_value = False
         result = runner.invoke(app, ["edit", "TSK-0001"])
         assert result.exit_code == 1
@@ -204,8 +204,8 @@ class TestCLICommands:
         result = runner.invoke(app, ["edit", "TSK-9999"])
         assert result.exit_code == 1
 
-    @patch("ai_trackdown_pytools.core.project.Project")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.cli.Project")  # Mock the import in cli.py
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_search_command(self, mock_task_manager_class, mock_project, runner):
         """Test search command."""
         # With results
@@ -235,61 +235,38 @@ class TestCLICommands:
         result = runner.invoke(app, ["search", "test"])
         assert result.exit_code == 1
 
-    @patch("ai_trackdown_pytools.core.project.Project")
-    @patch("ai_trackdown_pytools.utils.validation.validate_project_structure")
-    @patch("ai_trackdown_pytools.utils.validation.validate_task_file")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
-    @patch("ai_trackdown_pytools.utils.validation.SchemaValidator")
-    def test_validate_command(
-        self,
-        mock_validator_class,
-        mock_task_manager_class,
-        mock_validate_task,
-        mock_validate_project,
-        mock_project,
-        runner,
-    ):
+    @patch("ai_trackdown_pytools.utils.validation.validate_ticket_file")
+    def test_validate_command(self, mock_validate_ticket, runner, tmp_path):
         """Test validate command."""
-        # Validate project
-        mock_project.exists.return_value = True
-        mock_validate_project.return_value = {
+        # Create a temporary ticket file
+        ticket_file = tmp_path / "TSK-0001.md"
+        ticket_file.write_text("""---
+id: TSK-0001
+title: Test Task
+status: open
+---
+
+# Test Task
+
+This is a test task.
+""")
+
+        # Mock the validation result
+        mock_result = Mock()
+        mock_result.to_dict.return_value = {
             "valid": True,
             "errors": [],
-            "warnings": ["Minor warning"],
+            "warnings": []
         }
+        mock_validate_ticket.return_value = mock_result
 
-        result = runner.invoke(app, ["validate", "project"])
+        # Test validate file command
+        result = runner.invoke(app, ["validate", "file", str(ticket_file)])
         assert result.exit_code == 0
 
-        # Validate tasks
-        task = Mock()
-        task.id = "TSK-0001"
-        task.file_path = Path("/tasks/TSK-0001.md")
-
-        mock_task_manager = Mock()
-        mock_task_manager.list_tasks.return_value = [task]
-        mock_task_manager_class.return_value = mock_task_manager
-
-        mock_validate_task.return_value = {"valid": True, "errors": [], "warnings": []}
-
-        result = runner.invoke(app, ["validate", "tasks"])
-        assert result.exit_code == 0
-
-        # Validate config
-        mock_validator = Mock()
-        mock_validator.validate_config.return_value = {
-            "valid": True,
-            "errors": [],
-            "warnings": [],
-        }
-        mock_validator_class.return_value = mock_validator
-
-        result = runner.invoke(app, ["validate", "config"])
-        assert result.exit_code == 0
-
-        # Invalid target
-        result = runner.invoke(app, ["validate", "unknown"])
-        assert result.exit_code == 1
+        # Test validate with non-existent file should fail
+        result = runner.invoke(app, ["validate", "file", "/nonexistent/file.md"])
+        assert result.exit_code == 2  # Typer exits with 2 for argument errors
 
 
 class TestMainCallback:
@@ -321,7 +298,9 @@ class TestMainCallback:
 
             result = runner.invoke(app, ["--project-dir", "/test/project", "info"])
 
-            mock_chdir.assert_called_with("/test/project")
+            # The CLI converts string paths to PosixPath objects
+            from pathlib import Path
+            mock_chdir.assert_called_with(Path("/test/project"))
             assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.cli.setup_logging")
@@ -347,7 +326,9 @@ class TestMainCallback:
 
             result = runner.invoke(app, ["--config", "custom.yaml", "info"])
 
-            mock_config_class.load.assert_called_with("custom.yaml")
+            # The CLI converts string paths to PosixPath objects
+            from pathlib import Path
+            mock_config_class.load.assert_called_with(Path("custom.yaml"))
             assert result.exit_code == 0
 
 

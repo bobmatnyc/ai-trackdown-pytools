@@ -239,10 +239,10 @@ class TemplateManager:
                     output_path = project_path / "README.md"
                 else:
                     # Create task file
-                    from ai_trackdown_pytools.core.task import TaskManager
+                    from ai_trackdown_pytools.core.task import TicketManager
 
-                    task_manager = TaskManager(project_path)
-                    task = task_manager.create_task(**template_vars)
+                    ticket_manager = TicketManager(project_path)
+                    task = ticket_manager.create_task(**template_vars)
                     output_path = task.file_path
 
             # Write rendered content

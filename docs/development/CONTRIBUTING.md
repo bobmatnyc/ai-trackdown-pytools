@@ -23,7 +23,7 @@ Thank you for your interest in contributing to AI Trackdown PyTools! This docume
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/ai-trackdown/ai-trackdown-pytools.git
+   git clone https://github.com/bobmatnyc/ai-trackdown-pytools.git
    cd ai-trackdown-pytools
    ```
 

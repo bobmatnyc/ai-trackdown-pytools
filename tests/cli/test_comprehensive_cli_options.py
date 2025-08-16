@@ -273,7 +273,7 @@ class TestCreateCommandOptions:
         assert "Create a new task" in result.output
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     def test_create_task_basic(self, mock_create, mock_exists, cli_runner):
         """Test basic task creation."""
         mock_exists.return_value = True
@@ -283,7 +283,7 @@ class TestCreateCommandOptions:
         assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     def test_create_task_with_description(self, mock_create, mock_exists, cli_runner):
         """Test task creation with description option."""
         mock_exists.return_value = True
@@ -295,7 +295,7 @@ class TestCreateCommandOptions:
         assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     def test_create_task_with_assignee(self, mock_create, mock_exists, cli_runner):
         """Test task creation with assignee option."""
         mock_exists.return_value = True
@@ -308,7 +308,7 @@ class TestCreateCommandOptions:
         assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     def test_create_task_with_tags(self, mock_create, mock_exists, cli_runner):
         """Test task creation with tag options."""
         mock_exists.return_value = True
@@ -320,7 +320,7 @@ class TestCreateCommandOptions:
         assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     def test_create_task_with_priority(self, mock_create, mock_exists, cli_runner):
         """Test task creation with priority option."""
         mock_exists.return_value = True
@@ -333,7 +333,7 @@ class TestCreateCommandOptions:
             assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     def test_create_task_with_template(self, mock_create, mock_exists, cli_runner):
         """Test task creation with template option."""
         mock_exists.return_value = True
@@ -355,7 +355,7 @@ class TestTaskCommandOptions:
         assert "Create a new task" in result.output
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     def test_task_create_with_estimate(self, mock_create, mock_exists, cli_runner):
         """Test task creation with estimate option."""
         mock_exists.return_value = True
@@ -367,7 +367,7 @@ class TestTaskCommandOptions:
         assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     def test_task_create_with_epic(self, mock_create, mock_exists, cli_runner):
         """Test task creation with epic option."""
         mock_exists.return_value = True
@@ -379,7 +379,7 @@ class TestTaskCommandOptions:
         assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     def test_task_create_with_parent(self, mock_create, mock_exists, cli_runner):
         """Test task creation with parent option."""
         mock_exists.return_value = True
@@ -391,7 +391,7 @@ class TestTaskCommandOptions:
         assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     def test_task_create_interactive_flag(self, mock_create, mock_exists, cli_runner):
         """Test task creation with interactive flag."""
         mock_exists.return_value = True
@@ -404,7 +404,7 @@ class TestTaskCommandOptions:
             assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     @patch("ai_trackdown_pytools.utils.editor.EditorUtils.open_file")
     def test_task_create_edit_flag(
         self, mock_editor, mock_create, mock_exists, cli_runner
@@ -431,7 +431,7 @@ class TestStatusCommandOptions:
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
     @patch("ai_trackdown_pytools.core.project.Project.load")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     @patch("ai_trackdown_pytools.utils.git.GitUtils")
     def test_status_project_basic(
         self, mock_git, mock_task_mgr, mock_load, mock_exists, cli_runner
@@ -446,7 +446,7 @@ class TestStatusCommandOptions:
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
     @patch("ai_trackdown_pytools.core.project.Project.load")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     @patch("ai_trackdown_pytools.utils.git.GitUtils")
     def test_status_project_verbose(
         self, mock_git, mock_task_mgr, mock_load, mock_exists, cli_runner
@@ -461,7 +461,7 @@ class TestStatusCommandOptions:
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
     @patch("ai_trackdown_pytools.core.project.Project.load")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     @patch("ai_trackdown_pytools.utils.git.GitUtils")
     def test_status_project_custom_path(
         self,
@@ -485,7 +485,7 @@ class TestSearchCommandOptions:
     """Test search command options."""
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_search_basic_query(self, mock_task_mgr, mock_exists, cli_runner):
         """Test basic search query."""
         mock_exists.return_value = True
@@ -511,7 +511,7 @@ class TestSearchCommandOptions:
         assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_search_with_type_filter(self, mock_task_mgr, mock_exists, cli_runner):
         """Test search with type filter."""
         mock_exists.return_value = True
@@ -530,7 +530,7 @@ class TestSearchCommandOptions:
         assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_search_with_status_filter(self, mock_task_mgr, mock_exists, cli_runner):
         """Test search with status filter."""
         mock_exists.return_value = True
@@ -549,7 +549,7 @@ class TestSearchCommandOptions:
         assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_search_with_limit(self, mock_task_mgr, mock_exists, cli_runner):
         """Test search with limit option."""
         mock_exists.return_value = True
@@ -573,7 +573,7 @@ class TestEditCommandOptions:
     """Test edit command options."""
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     @patch("ai_trackdown_pytools.utils.editor.EditorUtils.open_file")
     def test_edit_task_basic(self, mock_editor, mock_task_mgr, mock_exists, cli_runner):
         """Test basic task editing."""
@@ -587,7 +587,7 @@ class TestEditCommandOptions:
         mock_editor.assert_called_once()
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     @patch("ai_trackdown_pytools.utils.editor.EditorUtils.open_file")
     def test_edit_task_with_editor(
         self, mock_editor, mock_task_mgr, mock_exists, cli_runner
@@ -670,7 +670,7 @@ class TestValidateCommandOptions:
         assert result.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     @patch("ai_trackdown_pytools.utils.validation.validate_task_file")
     def test_validate_tasks(
         self, mock_validate_task, mock_task_mgr, mock_exists, cli_runner
@@ -835,7 +835,7 @@ class TestInteractivePrompts:
     """Test interactive prompt functionality."""
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     @patch("rich.prompt.Prompt.ask")
     def test_interactive_task_creation(
         self, mock_prompt, mock_create, mock_exists, cli_runner
@@ -850,7 +850,7 @@ class TestInteractivePrompts:
         assert mock_prompt.call_count == 3
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager.create_task")
+    @patch("ai_trackdown_pytools.core.task.TicketManager.create_task")
     @patch("rich.prompt.Prompt.ask")
     def test_interactive_task_creation_no_title(
         self, mock_prompt, mock_create, mock_exists, cli_runner
@@ -907,7 +907,7 @@ class TestOutputFormats:
     """Test different output formats and display options."""
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_table_output_format(self, mock_task_mgr, mock_exists, cli_runner):
         """Test table output format in search results."""
         mock_exists.return_value = True
@@ -972,14 +972,14 @@ class TestCLIWorkflows:
 
             # Create task
             with patch(
-                "ai_trackdown_pytools.core.task.TaskManager.create_task"
+                "ai_trackdown_pytools.core.task.TicketManager.create_task"
             ) as mock_create:
                 mock_create.return_value = Mock(id="TSK-001")
                 result2 = cli_runner.invoke(app, ["task", "create", "Workflow Task"])
                 assert result2.exit_code == 0
 
     @patch("ai_trackdown_pytools.core.project.Project.exists")
-    @patch("ai_trackdown_pytools.core.task.TaskManager")
+    @patch("ai_trackdown_pytools.core.task.TicketManager")
     def test_create_then_search_workflow(self, mock_task_mgr, mock_exists, cli_runner):
         """Test creating task then searching for it."""
         mock_exists.return_value = True

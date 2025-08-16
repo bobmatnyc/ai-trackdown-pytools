@@ -17,7 +17,7 @@ import yaml
 
 from ai_trackdown_pytools.core.config import Config
 from ai_trackdown_pytools.core.project import Project
-from ai_trackdown_pytools.core.task import TaskManager
+from ai_trackdown_pytools.core.task import TicketManager
 from ai_trackdown_pytools.utils.frontmatter import (
     FrontmatterParser,
     StatusWorkflowValidator,
@@ -769,7 +769,7 @@ class TestTaskRegressions:
 
         Fix: Atomic ID generation with proper locking or collision detection.
         """
-        task_manager = TaskManager(temp_project)
+        ticket_manager = TicketManager(temp_project)
 
         # Create many tasks rapidly
         tasks = []
@@ -779,7 +779,7 @@ class TestTaskRegressions:
                 "priority": "medium",
                 "assignees": [f"user{i % 3}"],
             }
-            task = task_manager.create_task(task_data)
+            task = ticket_manager.create_task(task_data)
             tasks.append(task)
 
         # All tasks should have unique IDs
@@ -798,7 +798,7 @@ class TestTaskRegressions:
 
         Fix: Consistent UTF-8 encoding throughout the system.
         """
-        task_manager = TaskManager(temp_project)
+        ticket_manager = TicketManager(temp_project)
 
         unicode_task_data = {
             "title": "Unicode Task: 测试任务 🚀",
@@ -809,7 +809,7 @@ class TestTaskRegressions:
         }
 
         # Should create task without encoding errors
-        task = task_manager.create_task(unicode_task_data)
+        task = ticket_manager.create_task(unicode_task_data)
 
         # Verify task file was created correctly
         assert task.file_path.exists()
@@ -830,7 +830,7 @@ class TestTaskRegressions:
 
         Fix: Proper escaping and Unicode handling in search.
         """
-        task_manager = TaskManager(temp_project)
+        ticket_manager = TicketManager(temp_project)
 
         # Create tasks with special characters
         special_tasks = [
@@ -844,7 +844,7 @@ class TestTaskRegressions:
         created_tasks = []
         for task_data in special_tasks:
             task_data["priority"] = "medium"
-            task = task_manager.create_task(task_data)
+            task = ticket_manager.create_task(task_data)
             created_tasks.append(task)
 
         # Search should handle special characters gracefully
@@ -860,7 +860,7 @@ class TestTaskRegressions:
         for query in search_queries:
             try:
                 # Search should not crash
-                results = task_manager.search_tasks(query)
+                results = ticket_manager.search_tasks(query)
                 # Should return some results (may or may not find exact matches)
                 assert isinstance(results, list)
             except Exception as e:

@@ -278,8 +278,11 @@ class Task:
         return self.data.model_dump()
 
 
-class TaskManager:
-    """Task manager for AI Trackdown projects."""
+class TicketManager:
+    """Ticket manager for AI Trackdown projects.
+
+    Manages all types of tickets including tasks, issues, epics, and pull requests.
+    """
 
     def __init__(self, project_path):
         """Initialize task manager."""

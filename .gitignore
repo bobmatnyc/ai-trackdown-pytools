@@ -134,6 +134,17 @@ dmypy.json
 .ai-trackdown/logs/
 *.tmp
 
+# Test environments and temporary directories
+test-*/
+test_*/
+backup-*/
+coverage-reports/
+test_env*/
+test_patch*/
+test_pypi*/
+test_workspace*/
+test_show_fix*/
+
 # IDE
 .vscode/
 .idea/

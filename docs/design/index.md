@@ -11,7 +11,9 @@ This section contains design and architectural documentation for the AI Trackdow
 *Schema definitions and documentation will be added here as needed*
 
 ### Decisions
-*Design decision records and architectural decisions will be documented here*
+- [Comment Status Inheritance Implementation](./COMMENT_STATUS_INHERITANCE_IMPLEMENTATION.md) - Status inheritance design and implementation
+
+*Additional design decision records and architectural decisions will be documented here*
 
 ## Contributing to Design Documentation
 

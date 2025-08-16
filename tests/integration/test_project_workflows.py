@@ -6,7 +6,7 @@ from pathlib import Path
 
 from ai_trackdown_pytools.core.config import Config
 from ai_trackdown_pytools.core.project import Project
-from ai_trackdown_pytools.core.task import TaskManager
+from ai_trackdown_pytools.core.task import TicketManager
 from ai_trackdown_pytools.utils.templates import TemplateManager
 from ai_trackdown_pytools.utils.validation import SchemaValidator
 
@@ -59,7 +59,7 @@ class TestProjectLifecycle:
     def test_task_creation_workflow(self):
         """Test complete task creation workflow."""
         project = self._create_temp_project()
-        task_manager = TaskManager(project)
+        ticket_manager = TicketManager(project)
 
         # Create multiple tasks with different attributes
         tasks_data = [
@@ -91,7 +91,7 @@ class TestProjectLifecycle:
 
         created_tasks = []
         for task_data in tasks_data:
-            task = task_manager.create_task(task_data)
+            task = ticket_manager.create_task(task_data)
             created_tasks.append(task)
 
             # Verify task was created correctly
@@ -108,27 +108,27 @@ class TestProjectLifecycle:
                 assert tag in file_content
 
         # Verify all tasks can be listed
-        all_tasks = task_manager.list_tasks()
+        all_tasks = ticket_manager.list_tasks()
         assert len(all_tasks) == 3
 
         # Test filtering
-        critical_tasks = task_manager.list_tasks(priority="critical")
+        critical_tasks = ticket_manager.list_tasks(priority="critical")
         assert len(critical_tasks) == 1
         assert critical_tasks[0].model.title == "High Priority Bug Fix"
 
-        open_tasks = task_manager.list_tasks(status="open")
+        open_tasks = ticket_manager.list_tasks(status="open")
         assert len(open_tasks) == 2
 
-        alice_tasks = task_manager.list_tasks(assignee="alice")
+        alice_tasks = ticket_manager.list_tasks(assignee="alice")
         assert len(alice_tasks) == 1
 
-        bug_tasks = task_manager.list_tasks(tag="bug")
+        bug_tasks = ticket_manager.list_tasks(tag="bug")
         assert len(bug_tasks) == 1
 
     def test_task_lifecycle_workflow(self):
         """Test complete task lifecycle from creation to completion."""
         project = self._create_temp_project()
-        task_manager = TaskManager(project)
+        ticket_manager = TicketManager(project)
 
         # Create a task
         task_data = {
@@ -137,7 +137,7 @@ class TestProjectLifecycle:
             "priority": "medium",
             "assignees": ["developer"],
         }
-        task = task_manager.create_task(task_data)
+        task = ticket_manager.create_task(task_data)
         original_path = task.file_path
 
         # Verify initial state
@@ -149,7 +149,7 @@ class TestProjectLifecycle:
         task.save()
 
         # Reload task and verify status change
-        updated_task = task_manager.load_task(task.model.id)
+        updated_task = ticket_manager.load_task(task.model.id)
         assert updated_task.model.status == "in_progress"
         assert "in_progress" in str(updated_task.file_path)
         assert not original_path.exists()  # Old file should be moved
@@ -167,7 +167,7 @@ class TestProjectLifecycle:
         )
 
         # Reload and verify completion
-        completed_task = task_manager.load_task(task.model.id)
+        completed_task = ticket_manager.load_task(task.model.id)
         assert completed_task.model.status == "completed"
         assert "completed" in str(completed_task.file_path)
         assert completed_task.model.actual_hours == 2.5
@@ -180,7 +180,7 @@ class TestProjectLifecycle:
     def test_template_integration_workflow(self):
         """Test template integration in task creation workflow."""
         project = self._create_temp_project()
-        task_manager = TaskManager(project)
+        ticket_manager = TicketManager(project)
         template_manager = TemplateManager(project.get_templates_directory())
 
         # Create custom template
@@ -262,7 +262,7 @@ updated_at: {{ updated_at or now() }}
             "epic": "EP-0001",
             "story_points": 5,
         }
-        task = task_manager.create_task(task_data)
+        task = ticket_manager.create_task(task_data)
 
         # Verify task creation
         assert task.model.title == "User Story Task"
@@ -271,11 +271,11 @@ updated_at: {{ updated_at or now() }}
     def test_validation_workflow(self):
         """Test validation workflow for project and tasks."""
         project = self._create_temp_project()
-        task_manager = TaskManager(project)
+        ticket_manager = TicketManager(project)
         validator = SchemaValidator()
 
         # Create valid tasks
-        valid_task = task_manager.create_task(
+        valid_task = ticket_manager.create_task(
             {
                 "title": "Valid Task",
                 "description": "This is a valid task",
@@ -308,7 +308,7 @@ This task has multiple validation issues.
         problematic_task_path.write_text(problematic_content)
 
         # Validate all tasks
-        all_tasks = task_manager.list_tasks()
+        all_tasks = ticket_manager.list_tasks()
         validation_results = []
 
         for task in all_tasks:
@@ -338,7 +338,7 @@ This task has multiple validation issues.
     def test_search_and_filter_workflow(self):
         """Test comprehensive search and filtering workflow."""
         project = self._create_temp_project()
-        task_manager = TaskManager(project)
+        ticket_manager = TicketManager(project)
 
         # Create diverse set of tasks
         tasks_data = [
@@ -385,54 +385,54 @@ This task has multiple validation issues.
         ]
 
         for task_data in tasks_data:
-            task_manager.create_task(task_data)
+            ticket_manager.create_task(task_data)
 
         # Test various search scenarios
 
         # Search by text content
-        auth_tasks = task_manager.search_tasks("authentication")
+        auth_tasks = ticket_manager.search_tasks("authentication")
         assert len(auth_tasks) >= 2  # Should find authentication-related tasks
 
-        user_tasks = task_manager.search_tasks("user")
+        user_tasks = ticket_manager.search_tasks("user")
         assert len(user_tasks) >= 3  # Should find user-related tasks
 
         # Filter by status
-        open_tasks = task_manager.list_tasks(status="open")
+        open_tasks = ticket_manager.list_tasks(status="open")
         assert len(open_tasks) == 3
 
-        in_progress_tasks = task_manager.list_tasks(status="in_progress")
+        in_progress_tasks = ticket_manager.list_tasks(status="in_progress")
         assert len(in_progress_tasks) == 1
 
-        completed_tasks = task_manager.list_tasks(status="completed")
+        completed_tasks = ticket_manager.list_tasks(status="completed")
         assert len(completed_tasks) == 1
 
         # Filter by priority
-        critical_tasks = task_manager.list_tasks(priority="critical")
+        critical_tasks = ticket_manager.list_tasks(priority="critical")
         assert len(critical_tasks) == 1
         assert critical_tasks[0].model.title == "Authentication Bug Fix"
 
-        high_tasks = task_manager.list_tasks(priority="high")
+        high_tasks = ticket_manager.list_tasks(priority="high")
         assert len(high_tasks) == 2
 
         # Filter by assignee
-        alice_tasks = task_manager.list_tasks(assignee="alice")
+        alice_tasks = ticket_manager.list_tasks(assignee="alice")
         assert len(alice_tasks) == 2
 
-        charlie_tasks = task_manager.list_tasks(assignee="charlie")
+        charlie_tasks = ticket_manager.list_tasks(assignee="charlie")
         assert len(charlie_tasks) == 1
 
         # Filter by tag
-        security_tasks = task_manager.list_tasks(tag="security")
+        security_tasks = ticket_manager.list_tasks(tag="security")
         assert len(security_tasks) == 2
 
-        feature_tasks = task_manager.list_tasks(tag="feature")
+        feature_tasks = ticket_manager.list_tasks(tag="feature")
         assert len(feature_tasks) == 1
 
         # Combined filters (if supported)
         # This would test more advanced filtering capabilities
 
         # Get statistics
-        stats = task_manager.get_statistics()
+        stats = ticket_manager.get_statistics()
         assert stats["total"] == 5
         assert stats["open"] == 3
         assert stats["in_progress"] == 1
@@ -491,7 +491,7 @@ This task has multiple validation issues.
     def test_error_handling_and_recovery_workflow(self):
         """Test error handling and recovery scenarios."""
         project = self._create_temp_project()
-        task_manager = TaskManager(project)
+        ticket_manager = TicketManager(project)
 
         # Test handling of corrupted task files
         corrupted_task_path = (
@@ -501,7 +501,7 @@ This task has multiple validation issues.
 
         # Should handle corrupted files gracefully
         try:
-            all_tasks = task_manager.list_tasks()
+            all_tasks = ticket_manager.list_tasks()
             # Should either skip corrupted files or handle them gracefully
             assert isinstance(all_tasks, list)
         except Exception as e:
@@ -517,7 +517,7 @@ This task has multiple validation issues.
 
         try:
             # Should handle missing tasks directory
-            empty_tasks = task_manager.list_tasks()
+            empty_tasks = ticket_manager.list_tasks()
             assert isinstance(empty_tasks, list)
             assert len(empty_tasks) == 0
         finally:
@@ -570,7 +570,7 @@ class TestCrossModuleIntegration:
     def test_project_task_template_integration(self):
         """Test integration between project, task, and template modules."""
         project = self._create_temp_project()
-        task_manager = TaskManager(project)
+        ticket_manager = TicketManager(project)
         template_manager = TemplateManager(project.get_templates_directory())
 
         # Test template-based task creation
@@ -589,7 +589,7 @@ class TestCrossModuleIntegration:
         assert "Integration Test Task" in rendered_content
 
         # Create task from template variables
-        task = task_manager.create_task(template_vars)
+        task = ticket_manager.create_task(template_vars)
         assert task.model.title == "Integration Test Task"
         assert task.model.priority == "high"
         assert "integration_tester" in task.model.assignees
@@ -604,7 +604,7 @@ class TestCrossModuleIntegration:
     def test_validation_across_modules(self):
         """Test validation integration across modules."""
         project = self._create_temp_project()
-        task_manager = TaskManager(project)
+        ticket_manager = TicketManager(project)
         validator = SchemaValidator()
 
         # Create task with validation-aware data
@@ -623,7 +623,7 @@ class TestCrossModuleIntegration:
         assert validation_result.valid
 
         # Create task
-        task = task_manager.create_task(task_data)
+        task = ticket_manager.create_task(task_data)
 
         # Validate created task
         created_task_data = task.to_dict()
@@ -654,12 +654,12 @@ class TestCrossModuleIntegration:
         config.save()
 
         # Test that configuration affects task creation
-        task_manager = TaskManager(project)
+        ticket_manager = TicketManager(project)
 
         # Create task with minimal data (should use config defaults)
         minimal_task_data = {"title": "Config Driven Task"}
 
-        task = task_manager.create_task(minimal_task_data)
+        task = ticket_manager.create_task(minimal_task_data)
 
         # Should use configured defaults (if implemented)
         assert task.model.title == "Config Driven Task"
@@ -682,7 +682,7 @@ class TestCrossModuleIntegration:
         config.save()
 
         # Create task manager and template manager
-        task_manager = TaskManager(project)
+        ticket_manager = TicketManager(project)
         template_manager = TemplateManager(project.get_templates_directory())
         validator = SchemaValidator()
 
@@ -701,7 +701,7 @@ class TestCrossModuleIntegration:
         # Some fields might be missing for validation, but core fields should be valid
 
         # Create task
-        task = task_manager.create_task(template_vars)
+        task = ticket_manager.create_task(template_vars)
 
         # Verify task creation
         assert task.file_path.exists()
@@ -713,7 +713,7 @@ class TestCrossModuleIntegration:
 
         # Save and reload
         task.save("# End-to-End Test Task\n\nUpdated task content.")
-        reloaded_task = task_manager.load_task(task.model.id)
+        reloaded_task = ticket_manager.load_task(task.model.id)
 
         # Verify updates persisted
         assert reloaded_task.model.status == "in_progress"

@@ -9,7 +9,7 @@ from rich.panel import Panel
 from rich.table import Table
 
 from ai_trackdown_pytools.core.project import Project
-from ai_trackdown_pytools.core.task import TaskManager
+from ai_trackdown_pytools.core.task import TicketManager
 from ai_trackdown_pytools.utils.templates import TemplateManager
 
 app = typer.Typer(help="Epic management and tracking")
@@ -50,7 +50,7 @@ def create(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
+    ticket_manager = TicketManager(project_path)
 
     if not title:
         from rich.prompt import Prompt
@@ -89,7 +89,7 @@ def create(
             epic_data.update(template_data)
             console.print(f"[green]Applied template: {template}[/green]")
 
-    new_epic = task_manager.create_task(type="epic", **epic_data)
+    new_epic = ticket_manager.create_task(type="epic", **epic_data)
 
     console.print(
         Panel.fit(
@@ -129,8 +129,8 @@ def list(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    all_tasks = task_manager.list_tasks()
+    ticket_manager = TicketManager(project_path)
+    all_tasks = ticket_manager.list_tasks()
 
     # Filter epics
     epics = [task for task in all_tasks if "epic" in task.tags]
@@ -187,8 +187,8 @@ def status(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    epic = task_manager.load_task(epic_id)
+    ticket_manager = TicketManager(project_path)
+    epic = ticket_manager.load_task(epic_id)
 
     if not epic or "epic" not in epic.tags:
         console.print(f"[red]Epic '{epic_id}' not found[/red]")
@@ -200,7 +200,7 @@ def status(
 
     if subtasks:
         for subtask_id in subtasks:
-            subtask = task_manager.load_task(subtask_id)
+            subtask = ticket_manager.load_task(subtask_id)
             if subtask and subtask.status == "completed":
                 completed_subtasks += 1
         progress = int((completed_subtasks / len(subtasks)) * 100)
@@ -236,7 +236,7 @@ def status(
         table.add_column("Priority", style="yellow")
 
         for subtask_id in subtasks:
-            subtask = task_manager.load_task(subtask_id)
+            subtask = ticket_manager.load_task(subtask_id)
             if subtask:
                 table.add_row(
                     subtask.id,
@@ -264,8 +264,8 @@ def add_issue(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    epic = task_manager.load_task(epic_id)
+    ticket_manager = TicketManager(project_path)
+    epic = ticket_manager.load_task(epic_id)
 
     if not epic or "epic" not in epic.tags:
         console.print(f"[red]Epic '{epic_id}' not found[/red]")
@@ -279,7 +279,7 @@ def add_issue(
 
     for issue_id in issue_ids:
         try:
-            issue = task_manager.load_task(issue_id)
+            issue = ticket_manager.load_task(issue_id)
             if not issue:
                 not_found.append(issue_id)
                 continue
@@ -288,7 +288,7 @@ def add_issue(
                 subtasks.append(issue_id)
                 # Update issue's parent field to reference the epic
                 updates = {"parent": epic_id}
-                task_manager.update_task(issue_id, **updates)
+                ticket_manager.update_task(issue_id, **updates)
                 added_issues.append(issue_id)
             else:
                 already_added.append(issue_id)
@@ -298,7 +298,7 @@ def add_issue(
     # Update epic metadata with new subtasks list
     if added_issues:
         epic.metadata["subtasks"] = subtasks
-        task_manager.save_task(epic)
+        ticket_manager.save_task(epic)
 
     # Report results
     if added_issues:
@@ -323,9 +323,9 @@ def add_task(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    epic = task_manager.load_task(epic_id)
-    task = task_manager.load_task(task_id)
+    ticket_manager = TicketManager(project_path)
+    epic = ticket_manager.load_task(epic_id)
+    task = ticket_manager.load_task(task_id)
 
     if not epic or "epic" not in epic.tags:
         console.print(f"[red]Epic '{epic_id}' not found[/red]")
@@ -342,11 +342,11 @@ def add_task(
 
         # Update epic metadata
         epic.metadata["subtasks"] = subtasks
-        task_manager.save_task(epic)
+        ticket_manager.save_task(epic)
 
         # Add epic reference to task
         task.metadata["epic"] = epic_id
-        task_manager.save_task(task)
+        ticket_manager.save_task(task)
 
         console.print(f"[green]Task {task_id} added to epic {epic_id}[/green]")
     else:
@@ -367,8 +367,8 @@ def remove_issue(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    epic = task_manager.load_task(epic_id)
+    ticket_manager = TicketManager(project_path)
+    epic = ticket_manager.load_task(epic_id)
 
     if not epic or "epic" not in epic.tags:
         console.print(f"[red]Epic '{epic_id}' not found[/red]")
@@ -382,7 +382,7 @@ def remove_issue(
 
     for issue_id in issue_ids:
         try:
-            issue = task_manager.load_task(issue_id)
+            issue = ticket_manager.load_task(issue_id)
             if not issue:
                 not_found.append(issue_id)
                 continue
@@ -391,7 +391,7 @@ def remove_issue(
                 subtasks.remove(issue_id)
                 # Clear issue's parent field
                 updates = {"parent": None}
-                task_manager.update_task(issue_id, **updates)
+                ticket_manager.update_task(issue_id, **updates)
                 removed_issues.append(issue_id)
             else:
                 not_in_epic.append(issue_id)
@@ -401,7 +401,7 @@ def remove_issue(
     # Update epic metadata with new subtasks list
     if removed_issues:
         epic.metadata["subtasks"] = subtasks
-        task_manager.save_task(epic)
+        ticket_manager.save_task(epic)
 
     # Report results
     if removed_issues:
@@ -426,9 +426,9 @@ def remove_task(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    epic = task_manager.load_task(epic_id)
-    task = task_manager.load_task(task_id)
+    ticket_manager = TicketManager(project_path)
+    epic = ticket_manager.load_task(epic_id)
+    task = ticket_manager.load_task(task_id)
 
     if not epic or "epic" not in epic.tags:
         console.print(f"[red]Epic '{epic_id}' not found[/red]")
@@ -445,12 +445,12 @@ def remove_task(
 
         # Update epic metadata
         epic.metadata["subtasks"] = subtasks
-        task_manager.save_task(epic)
+        ticket_manager.save_task(epic)
 
         # Remove epic reference from task
         if "epic" in task.metadata:
             del task.metadata["epic"]
-            task_manager.save_task(task)
+            ticket_manager.save_task(task)
 
         console.print(f"[green]Task {task_id} removed from epic {epic_id}[/green]")
     else:
@@ -479,8 +479,8 @@ def update(
         console.print("[red]No AI Trackdown project found[/red]")
         raise typer.Exit(1)
 
-    task_manager = TaskManager(project_path)
-    epic = task_manager.load_task(epic_id)
+    ticket_manager = TicketManager(project_path)
+    epic = ticket_manager.load_task(epic_id)
 
     if not epic or "epic" not in epic.tags:
         console.print(f"[red]Epic '{epic_id}' not found[/red]")
@@ -517,7 +517,7 @@ def update(
         updates["metadata"] = epic.metadata
 
     # Apply updates
-    success = task_manager.update_task(epic_id, **updates)
+    success = ticket_manager.update_task(epic_id, **updates)
 
     if success:
         # Build list of what was updated
