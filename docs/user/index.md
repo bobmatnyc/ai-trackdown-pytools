@@ -13,12 +13,10 @@ Welcome to the user documentation for AI Trackdown Python Tools (`aitrackdown`),
 
 ### Installation
 - [Homebrew Installation](./HOMEBREW_INSTALL.md) - Recommended installation method for macOS/Linux
-- [Homebrew Formula Details](./HOMEBREW_FORMULA.md) - Technical details about the Homebrew formula
-- [Homebrew README](./HOMEBREW_README.md) - Additional Homebrew-specific information
 
 ### Usage
-- [CLI Implementation Summary](./CLI_IMPLEMENTATION_SUMMARY.md) - Comprehensive CLI command reference
-- [Quick Start Guide](./README.md) - Basic usage and examples
+- [CLI Command Reference](./CLI_IMPLEMENTATION_SUMMARY.md) - Complete command reference and examples
+- [Quick Start Guide](./README.md) - Basic usage and getting started
 - [Ticket Type Conversion](./ticket-conversion.md) - Converting between task, issue, and epic types
 
 ### Synchronization
@@ -27,10 +25,10 @@ Welcome to the user documentation for AI Trackdown Python Tools (`aitrackdown`),
 ## Getting Help
 
 If you encounter issues:
-1. Check the [CLI Implementation Summary](./CLI_IMPLEMENTATION_SUMMARY.md) for command syntax
-2. Review the [Development Documentation](../development/index.md) for technical details
-3. Use `aitrackdown doctor` to diagnose common issues
-4. Use `aitrackdown health --verbose` for system health checks
+1. Check the [CLI Command Reference](./CLI_IMPLEMENTATION_SUMMARY.md) for command syntax
+2. Use `aitrackdown doctor` to diagnose common issues
+3. Use `aitrackdown health --verbose` for system health checks
+4. Review the [Development Documentation](../development/index.md) for technical details
 5. Report issues at [GitHub Issues](https://github.com/bobmatnyc/ai-trackdown-pytools/issues)
 
 ## Version Information

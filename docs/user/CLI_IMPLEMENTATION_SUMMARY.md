@@ -1,50 +1,50 @@
-# AI Trackdown PyTools - Complete CLI Implementation
+# AI Trackdown PyTools - CLI Command Reference
 
 ## Overview
 
-I have successfully implemented a comprehensive CLI command set that matches and exceeds the functionality of ai-trackdown-tools. The implementation includes all requested command groups and advanced functionality.
+AI Trackdown PyTools provides a comprehensive command-line interface for project tracking and task management. This reference covers all available commands and their usage.
 
-## Implemented Command Groups
+## Command Groups
 
-### 1. Core Commands (Enhanced)
-- **`init`** - Project initialization with comprehensive setup
-- **`status`** - Enhanced project status with epic progress, type breakdown
-- **`create`** - Enhanced creation with task/issue/epic/PR support
+### 1. Core Commands
+- **`init`** - Project initialization and setup
+- **`status`** - Project status and task overview
+- **`create`** - Create tasks, issues, epics, and PRs
 - **`template`** - Template management and application
-- **`validate`** - Comprehensive validation system
+- **`validate`** - Data validation and project health checks
 
-### 2. Task Management Commands (NEW)
-- **`task`** - Complete task lifecycle management
-  - `create` - Create tasks with epic association, dependencies
-  - `list` - Advanced filtering and display
-  - `show` - Detailed task information
+### 2. Task Management Commands
+- **`task`** - Task lifecycle management
+  - `create` - Create new tasks
+  - `list` - List and filter tasks
+  - `show` - Show detailed task information
   - `update` - Update task properties
-  - `block/unblock` - Task dependency management
-  - `complete/start` - Status transitions
+  - `block/unblock` - Manage task dependencies
+  - `complete/start` - Change task status
   
 - **`epic`** - Epic management and tracking
   - `create` - Create epics with goals and owners
-  - `list` - Epic overview with progress
-  - `status` - Epic progress and subtask tracking
-  - `add-task/remove-task` - Subtask management
-  - `update` - Epic property updates
+  - `list` - List epics with progress overview
+  - `status` - Show epic progress and subtasks
+  - `add-task/remove-task` - Manage epic subtasks
+  - `update` - Update epic properties
 
 - **`issue`** - Issue tracking and management
-  - `create` - Create issues with types and severity
-  - `list` - Issue filtering and display
-  - `show` - Detailed issue information
-  - `update` - Issue property updates
-  - `resolve/close/reopen` - Issue lifecycle
+  - `create` - Create issues with severity levels
+  - `list` - List and filter issues
+  - `show` - Show detailed issue information
+  - `update` - Update issue properties
+  - `resolve/close/reopen` - Manage issue lifecycle
 
 - **`pr`** - Pull request management
-  - `create` - PR creation with metadata
-  - `list` - PR filtering and display
-  - `show` - Detailed PR information with commits
-  - `update` - PR property updates
-  - `review` - Review management
-  - `merge/close` - PR lifecycle
+  - `create` - Create PRs with metadata
+  - `list` - List and filter pull requests
+  - `show` - Show detailed PR information
+  - `update` - Update PR properties
+  - `review` - Manage PR reviews
+  - `merge/close` - Handle PR lifecycle
 
-### 3. Advanced Functionality (NEW)
+### 3. Advanced Functionality
 
 - **`search`** - Advanced search and filtering
   - `tasks` - Multi-field search with regex support

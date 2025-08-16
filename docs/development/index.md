@@ -35,10 +35,7 @@ This section contains technical documentation for developers working on the AI T
 - [Secure Token Usage Guide](./SECURE_TOKEN_USAGE_GUIDE.md) - API key management
 
 ### Architecture
-- [Description](./DESCRIPTION.md) - Project architecture overview
-
-### CLI Development
-- [CLI Standardization Note](./CLI_STANDARDIZATION_NOTE.md) - CLI standards
+- Project architecture is documented in the main README.md and inline code documentation
 
 ## Development Tools
 
