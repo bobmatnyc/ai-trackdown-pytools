@@ -168,6 +168,11 @@ VERSION_HISTORY = [
     "1.2.0",  # Major Enhancements and Archive Management
     "1.3.0",  # Workflow improvements and performance optimizations
     "1.4.0",  # Project configuration simplification and dependency updates
+    "1.5.0",  # Enhanced sync capabilities and platform alignment
+    "1.5.1",  # Bug fixes and stability improvements
+    "1.5.2",  # Additional bug fixes and enhancements
+    "1.5.3",  # Documentation cleanup and reorganization
+    "1.5.4",  # Fix NameError in ticket conversion functionality
 ]
 
 
@@ -206,6 +211,11 @@ FEATURES = {
     "simplified_configuration": "1.4.0",
     "importlib_metadata_versioning": "1.4.0",
     "dependency_updates": "1.4.0",
+    "enhanced_sync_capabilities": "1.5.0",
+    "platform_alignment": "1.5.0",
+    "documentation_cleanup": "1.5.3",
+    "conversion_bug_fix": "1.5.4",
+    "unified_ticket_methods": "1.5.4",
 }
 
 
