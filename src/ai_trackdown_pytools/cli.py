@@ -1421,21 +1421,21 @@ def convert(
     target_type_lower = _validate_conversion(source_type, to_type)
 
     ticket_manager = TicketManager(project_path)
-    source_ticket = load_ticket_safely(task_manager, normalized_id, source_type)
+    source_ticket = load_ticket_safely(ticket_manager, normalized_id, source_type)
 
     # Perform conversion
     new_ticket = _create_converted_ticket(
-        task_manager, source_ticket, source_type, target_type_lower
+        ticket_manager, source_ticket, source_type, target_type_lower
     )
 
     # Update references
     references_updated = update_ticket_references(
-        task_manager, normalized_id, new_ticket.id
+        ticket_manager, normalized_id, new_ticket.id
     )
 
     # Handle original ticket
     if archive:
-        _archive_original_ticket(task_manager, source_ticket, source_type)
+        _archive_original_ticket(ticket_manager, source_ticket, source_type)
     else:
         ticket_manager.delete_task(normalized_id)
 
