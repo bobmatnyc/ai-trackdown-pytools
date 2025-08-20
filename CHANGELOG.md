@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## [1.5.5] - 2025-08-20
+
+### Fixed
+- Fixed GitHub sync for TaskModel and EpicModel items
+- Improved TaskModel and EpicModel synchronization with GitHub issues
+- Enhanced status mapping for unified ticket types in GitHub adapter
+
 ## [Unreleased]
 
 ## [1.5.3] - 2025-08-16
