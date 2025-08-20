@@ -1,17 +1,22 @@
 """GitHub sync adapter implementation."""
 
 import asyncio
+import functools
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Set
 
 from ai_trackdown_pytools.core.models import (
+    EpicModel,
+    EpicStatus,
     IssueModel,
     IssueStatus,
     PRModel,
     PRStatus,
     TaskModel,
+    TaskStatus,
     TicketModel,
 )
+from ai_trackdown_pytools.core.workflow import UnifiedStatus
 from ai_trackdown_pytools.utils.github import GitHubCLI, GitHubError
 
 from .base import SyncAdapter, SyncConfig
@@ -43,7 +48,7 @@ class GitHubAdapter(SyncAdapter):
     @property
     def supported_types(self) -> Set[str]:
         """Get supported ticket types."""
-        return {"issue", "pr", "task"}  # GitHub issues can represent tasks too
+        return {"issue", "pr", "task", "epic"}  # GitHub issues can represent tasks and epics too
 
     def __init__(self, config: SyncConfig):
         """Initialize GitHub adapter.
@@ -191,8 +196,8 @@ class GitHubAdapter(SyncAdapter):
         if not self._authenticated or not self._gh_cli:
             await self.authenticate()
 
-        if isinstance(item, IssueModel):
-            # Create GitHub issue
+        if isinstance(item, (IssueModel, TaskModel, EpicModel)):
+            # Create GitHub issue (Issues, Tasks, and Epics are all created as GitHub issues)
             labels = self.map_labels(item.tags, to_external=True)
 
             result = await self._run_async(
@@ -265,8 +270,8 @@ class GitHubAdapter(SyncAdapter):
                     platform=self.platform_name,
                 )
 
-        if isinstance(item, (IssueModel, TaskModel)):
-            # Update as GitHub issue
+        if isinstance(item, (IssueModel, TaskModel, EpicModel)):
+            # Update as GitHub issue (Issues, Tasks, and Epics all map to GitHub issues)
             labels = self.map_labels(item.tags, to_external=True)
             status = self._map_issue_status(item.status)
 
@@ -355,9 +360,19 @@ class GitHubAdapter(SyncAdapter):
 
         WHY: GitHubCLI is synchronous but our adapter interface is async.
         This bridge allows us to use the existing implementation.
+        
+        FIXED: Use functools.partial to properly pass keyword arguments
+        to run_in_executor which only accepts positional args.
         """
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(None, func, *args, **kwargs)
+        if kwargs:
+            # Use partial to bind keyword arguments since run_in_executor
+            # only accepts positional arguments
+            partial_func = functools.partial(func, *args, **kwargs)
+            return await loop.run_in_executor(None, partial_func)
+        else:
+            # No kwargs, use original approach for better performance
+            return await loop.run_in_executor(None, func, *args)
 
     def _github_issue_to_model(self, gh_issue: Dict[str, Any]) -> IssueModel:
         """Convert GitHub issue to internal model."""
@@ -446,10 +461,39 @@ class GitHubAdapter(SyncAdapter):
             },
         )
 
-    def _map_issue_status(self, status: IssueStatus) -> str:
-        """Map internal issue status to GitHub state."""
-        if status in [IssueStatus.COMPLETED, IssueStatus.CANCELLED]:
-            return "closed"
+    def _map_issue_status(self, status) -> str:
+        """Map internal status to GitHub state.
+        
+        WHY: GitHub only has 'open' and 'closed' states, so we need to map
+        all our internal statuses to one of these two states.
+        """
+        # Handle UnifiedStatus (preferred)
+        if isinstance(status, UnifiedStatus):
+            if status in [
+                UnifiedStatus.COMPLETED,
+                UnifiedStatus.RESOLVED,
+                UnifiedStatus.CANCELLED,
+                UnifiedStatus.CLOSED,
+                UnifiedStatus.REJECTED,
+                UnifiedStatus.MERGED
+            ]:
+                return "closed"
+            return "open"
+        
+        # Handle legacy status enums for backward compatibility
+        if hasattr(status, 'name'):  # It's an enum
+            status_name = status.name
+            if status_name in ['COMPLETED', 'CANCELLED', 'CLOSED', 'RESOLVED', 'REJECTED', 'MERGED']:
+                return "closed"
+            return "open"
+        
+        # Handle string status values
+        if isinstance(status, str):
+            if status.lower() in ['completed', 'cancelled', 'closed', 'resolved', 'rejected', 'merged']:
+                return "closed"
+            return "open"
+        
+        # Default to open for unknown status types
         return "open"
 
 

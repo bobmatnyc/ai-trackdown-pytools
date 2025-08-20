@@ -1,6 +1,7 @@
 """JIRA sync adapter implementation."""
 
 import asyncio
+import functools
 import os
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Set
@@ -598,9 +599,19 @@ class JiraAdapter(SyncAdapter):
         WHY: jira-python is synchronous but our adapter interface is async.
         This bridge allows us to use the official library while maintaining
         async compatibility.
+        
+        FIXED: Use functools.partial to properly pass keyword arguments
+        to run_in_executor which only accepts positional args.
         """
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(None, func, *args, **kwargs)
+        if kwargs:
+            # Use partial to bind keyword arguments since run_in_executor
+            # only accepts positional arguments
+            partial_func = functools.partial(func, *args, **kwargs)
+            return await loop.run_in_executor(None, partial_func)
+        else:
+            # No kwargs, use original approach for better performance
+            return await loop.run_in_executor(None, func, *args)
 
     async def _discover_custom_fields(self) -> None:
         """Discover custom field IDs for the project.
