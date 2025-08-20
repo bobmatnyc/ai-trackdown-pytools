@@ -98,12 +98,21 @@ class GitHubCLI:
         if assignees:
             args.extend(["--assignee", ",".join(assignees)])
 
-        # Add JSON output
-        args.append("--json")
-        args.append("number,title,url,state,createdAt,id")
-
+        # Create issue without --json flag
         output = self._run_gh_command(args)
-        return json.loads(output)
+        
+        # Parse issue number from output URL
+        import re
+        match = re.search(r'/(\d+)$', output.strip())
+        if not match:
+            raise ValueError(f"Could not parse issue number from output: {output}")
+        
+        issue_number = match.group(1)
+        
+        # Get JSON details using view command
+        view_args = ["issue", "view", issue_number, "--json", "number,title,url,state,createdAt,id"]
+        json_output = self._run_gh_command(view_args)
+        return json.loads(json_output)
 
     def list_issues(
         self, state: str = "open", labels: Optional[List[str]] = None, limit: int = 100
@@ -263,12 +272,21 @@ class GitHubCLI:
         if assignees:
             args.extend(["--assignee", ",".join(assignees)])
 
-        # Add JSON output
-        args.append("--json")
-        args.append("number,title,url,state,createdAt,id")
-
+        # Create issue without --json flag
         output = self._run_gh_command(args)
-        return json.loads(output)
+        
+        # Parse issue number from output URL
+        import re
+        match = re.search(r'/(\d+)$', output.strip())
+        if not match:
+            raise ValueError(f"Could not parse issue number from output: {output}")
+        
+        issue_number = match.group(1)
+        
+        # Get JSON details using view command
+        view_args = ["issue", "view", issue_number, "--json", "number,title,url,state,createdAt,id"]
+        json_output = self._run_gh_command(view_args)
+        return json.loads(json_output)
 
     def list_prs(
         self, state: str = "open", labels: Optional[List[str]] = None, limit: int = 100
