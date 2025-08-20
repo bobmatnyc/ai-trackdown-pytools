@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.5.6] - 2025-08-20
+
+### Fixed
+- Fixed run_in_executor() keyword argument error in GitHub sync adapter
+- Fixed run_in_executor() keyword argument error in Jira sync adapter
+- Resolved executor argument compatibility issues in sync adapters
+
 ## [1.5.5] - 2025-08-20
 
 ### Fixed
