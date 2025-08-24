@@ -34,7 +34,8 @@ def create(
         "medium",
         "--severity",
         "-s",
-        help="Issue severity (low, medium, high, critical)",
+        "--priority",  # Alias for compatibility
+        help="Issue severity/priority (low, medium, high, critical)",
     ),
     assignee: Optional[str] = typer.Option(
         None,

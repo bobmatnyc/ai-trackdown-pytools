@@ -197,7 +197,8 @@ def issue(
         "medium",
         "--severity",
         "-s",
-        help="Issue severity (low, medium, high, critical)",
+        "--priority",  # Alias for compatibility
+        help="Issue severity/priority (low, medium, high, critical)",
     ),
     label: Optional[List[str]] = typer.Option(
         None,

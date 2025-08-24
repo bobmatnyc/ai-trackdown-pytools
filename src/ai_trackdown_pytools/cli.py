@@ -1233,12 +1233,13 @@ def _validate_workflow_state(state: str) -> str:
         "in-progress": "in_progress",
         "ready": "completed",
         "tested": "completed",
+        "done": "done",
     }
 
     state_lower = state.lower()
     if state_lower not in workflow_states:
         console.print_error(f"Invalid workflow state: {state}")
-        console.print_info("Valid workflow states: waiting, in-progress, ready, tested")
+        console.print_info("Valid workflow states: waiting, in-progress, ready, tested, done")
         raise typer.Exit(1)
 
     return workflow_states[state_lower]

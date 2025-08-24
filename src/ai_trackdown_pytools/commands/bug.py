@@ -29,7 +29,8 @@ def create(
         "medium",
         "--severity",
         "-s",
-        help="Bug severity (critical, high, medium, low)",
+        "--priority",  # Alias for compatibility
+        help="Bug severity/priority (critical, high, medium, low)",
     ),
     environment: Optional[str] = typer.Option(
         None,
